@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MotionScene 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:motion="http://schemas.android.com/apk/res-auto">
+
+    <ConstraintSet android:id="@+id/Splash_start" />
+    <ConstraintSet android:id="@+id/Splash_end" >
+        <Constraint
+            android:layout_height="wrap_content"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="wrap_content"
+            android:id="@+id/imageView2"
+            motion:layout_editor_absoluteY="731dp"
+            motion:layout_constraintTop_toTopOf="parent" />
+    </ConstraintSet>
+    <Transition
+        motion:constraintSetStart="@+id/Splash_start"
+        motion:constraintSetEnd="@+id/Splash_end"
+        motion:duration="2000"/>
+
+</MotionScene>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/item0"
+        android:icon="@drawable/vector_home"
+        android:title="" />
+
+    <item
+        android:id="@+id/item1"
+        android:title="Profile"
+        android:icon="@drawable/vector_profile"/>
+
+    <item
+        android:id="@+id/item2"
+        android:title="Chats"
+        android:icon="@drawable/vector_heart_message"/>
+
+    <item
+        android:id="@+id/item3"
+        android:title="Pets"
+        android:icon="@drawable/paw_white"/>
+
+</menu>

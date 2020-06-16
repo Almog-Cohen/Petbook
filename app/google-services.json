@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "325565201843",
+    "firebase_url": "https://petbook20.firebaseio.com",
+    "project_id": "petbook20",
+    "storage_bucket": "petbook20.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:325565201843:android:dffe046c18a4158b111fc6",
+        "android_client_info": {
+          "package_name": "com.thegalos.petbook"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "325565201843-0jl944qduq933ud2i9blp7etjk1m4c69.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD5_s9_oW5RXiJCO3vonaSBJZBmQ3pqu1U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "325565201843-0jl944qduq933ud2i9blp7etjk1m4c69.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
