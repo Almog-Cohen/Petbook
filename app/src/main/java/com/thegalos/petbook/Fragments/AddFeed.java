@@ -1,6 +1,5 @@
 package com.thegalos.petbook.Fragments;
 
-import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckedTextView;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -35,13 +36,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.thegalos.petbook.Objects.Pet;
-import com.thegalos.petbook.Fragments.AppFeed;
 import com.thegalos.petbook.R;
 
 import java.lang.reflect.Type;
@@ -69,6 +68,11 @@ public class AddFeed extends Fragment {
     String imageLink;
     FirebaseUser user;
     DatabaseReference db;
+    TextView etDetails;
+    String selectedPet, postText;
+    Spinner spnPet;
+    Button btnPostFeed;
+    ConstraintLayout postingLayout;
 
 
     public AddFeed() {
@@ -84,12 +88,14 @@ public class AddFeed extends Fragment {
     @Override
     public void onViewCreated(@NonNull final View view,  Bundle savedInstanceState) {
         preferences = this.getActivity().getSharedPreferences("pref", Context.MODE_PRIVATE);
-        final Spinner spnPet;
         user = FirebaseAuth.getInstance().getCurrentUser();
         spnPet = view.findViewById(R.id.spnPet);
         etBreed = view.findViewById(R.id.etBreed);
         etName = view.findViewById(R.id.etName);
         progressBar = view.findViewById(R.id.progressBar);
+        etDetails = view.findViewById(R.id.etDetails);
+        btnPostFeed = view.findViewById(R.id.btnPostFeed);
+        postingLayout = view.findViewById(R.id.postingLayout);
         loadData();
         ivPhoto = view.findViewById(R.id.ivPhoto);
         ArrayAdapter<String> nameAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, petNameList);
@@ -121,27 +127,37 @@ public class AddFeed extends Fragment {
         view.findViewById(R.id.btnPostFeed).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                db = FirebaseDatabase.getInstance().getReference().child("Posts").push();
-
-                TextView etDetails = view.findViewById(R.id.etDetails);
-                String postText =  etDetails.getText().toString();
-                String selectedPet = spnPet.getSelectedItem().toString();
+                if (etDetails.getText().toString().equals("")) {
+                    Toast.makeText(getContext(), "Please add details to your post", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                showProgress(true);
 //                String strUri = uri.toString();
-                Toast.makeText(getContext(), "post sent", Toast.LENGTH_SHORT).show();
 //                addToStorage();
-                uploadFiles();
-                db.child("Time").setValue(ServerValue.TIMESTAMP);
-                db.child("postText").setValue(postText);
-                db.child("selectedPet").setValue(selectedPet);
-
-                //TODO if we add option to update name after signup we need to use getUID and make sure to load correct name in fragments
-                db.child("Owner").setValue(user.getDisplayName());
-                FragmentTransaction ft = getParentFragmentManager().beginTransaction();
-                ft.replace(R.id.flFragment, new AppFeed()).commit();
-
 
             }
+
         });
+    }
+
+    private void showProgress(Boolean show) {
+        if (show){
+            //        progressBar.setVisibility(View.VISIBLE);
+            btnPostFeed.setEnabled(false);
+            etDetails.setEnabled(false);
+            spnPet.setEnabled(false);
+            ivPhoto.setEnabled(false);
+            postingLayout.setVisibility(View.VISIBLE);
+            uploadFiles();
+        } else {
+
+            btnPostFeed.setEnabled(true);
+            etDetails.setEnabled(true);
+            spnPet.setEnabled(true);
+            ivPhoto.setEnabled(true);
+            postingLayout.setVisibility(View.GONE);
+        }
+
     }
 
     private void uploadFiles() {
@@ -151,9 +167,9 @@ public class AddFeed extends Fragment {
         storageReference = storage.getReference();
         if(uri != null)
         {
-            final ProgressDialog progressDialog = new ProgressDialog(getContext());
-            progressDialog.setTitle("Uploading...");
-            progressDialog.show();
+//            final ProgressDialog progressDialog = new ProgressDialog(getContext());
+//            progressDialog.setTitle("Uploading...");
+//            progressDialog.show();
             final StorageReference ref = storageReference.child(user.getUid()).child("images/"+ UUID.randomUUID().toString());
             ref.putFile(uri)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -168,27 +184,45 @@ public class AddFeed extends Fragment {
 //                                    Toast.makeText(getContext(), "image link: " + imageLink, Toast.LENGTH_LONG).show();
                                 }
                             });
+                            db = FirebaseDatabase.getInstance().getReference().child("Posts").push();
+                            postText = etDetails.getText().toString();
+                            selectedPet = spnPet.getSelectedItem().toString();
+                            db.child("Time").setValue(ServerValue.TIMESTAMP);
+                            db.child("postText").setValue(postText);
+                            db.child("selectedPet").setValue(selectedPet);
+                            //TODO if we add option to update name after signup we need to use getUID and make sure to load correct name in fragments
+                            db.child("Owner").setValue(user.getDisplayName());
+                            showProgress(false);
+                            changeFragment();
 
-                            progressDialog.dismiss();
-//                            Toast.makeText(getContext(), "Uploaded", Toast.LENGTH_SHORT).show();
+//                            progressDialog.dismiss();
+                            Toast.makeText(getContext(), "Uploaded", Toast.LENGTH_SHORT).show();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            progressDialog.dismiss();
+//                            progressDialog.dismiss();
+                            showProgress(false);
                             Toast.makeText(getContext(), "Failed "+e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
-                    })
-                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                            double progress = (100.0*taskSnapshot.getBytesTransferred()/taskSnapshot
-                                    .getTotalByteCount());
-                            progressDialog.setMessage("Uploaded "+(int)progress+"%");
-                        }
                     });
+//                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+//                        @Override
+//                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+//                            double progress = (100.0*taskSnapshot.getBytesTransferred()/taskSnapshot
+//                                    .getTotalByteCount());
+//
+////                            progressDialog.setMessage("Uploaded "+(int)progress+"%");
+//                        }
+//                    });
         }
+    }
+
+    private void changeFragment() {
+        progressBar.setVisibility(View.GONE);
+        FragmentTransaction ft = getParentFragmentManager().beginTransaction();
+        ft.replace(R.id.flFragment, new AppFeed()).commit();
     }
 
    /* private void addToStorage() {
@@ -277,4 +311,6 @@ public class AddFeed extends Fragment {
         MimeTypeMap mime = MimeTypeMap.getSingleton();
         return mime.getExtensionFromMimeType(cR.getType(uri));
     }
+
+
 }
