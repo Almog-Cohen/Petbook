@@ -44,7 +44,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="String"
+                    android:text="name"
                     android:textColor="@android:color/black"
                     android:textSize="20sp" />
 
@@ -53,7 +53,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="String"
+                    android:text="type"
                     android:textColor="@android:color/black"
                     android:textSize="16sp" />
 
@@ -70,7 +70,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="String"
+                    android:text="age"
                     android:textColor="@android:color/black"
                     android:textSize="15sp" />
 
@@ -79,7 +79,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="String"
+                    android:text="gender`"
                     android:textColor="@android:color/black"
                     android:textSize="16sp" />
 

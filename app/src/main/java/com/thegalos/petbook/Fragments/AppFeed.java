@@ -27,9 +27,12 @@ import com.thegalos.petbook.Objects.Feed;
 import com.thegalos.petbook.Adapters.FeedAdapter;
 import com.thegalos.petbook.R;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class AppFeed extends Fragment {
 
@@ -61,7 +64,7 @@ public class AppFeed extends Fragment {
             tvFeedUser.setText("Hi, " + user.getDisplayName());
 
         }
-        
+
 //        Button btnLogout = view.findViewById(R.id.btnLogout);
 //        btnLogout.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -82,14 +85,14 @@ public class AppFeed extends Fragment {
                     ft.replace(R.id.flFragment, new Login(), "Login").addToBackStack("Login").commit();
 
                 }
-               }
+            }
         });
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         final FeedAdapter feedAdapter = new FeedAdapter((feedList));
         recyclerView.setAdapter(feedAdapter);
-Log.d("progress_galos", "max is: " + recyclerView.getLayoutManager().getHeight());
+        Log.d("progress_galos", "max is: " + recyclerView.getLayoutManager().getHeight());
         progressBar.setMax(/*recyclerView.getLayoutManager().getHeight()*/1000);
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -166,8 +169,15 @@ Log.d("progress_galos", "max is: " + recyclerView.getLayoutManager().getHeight()
                         Feed feed = new Feed();
                         feed.setPostText(snapshot.child("postText").getValue(String.class));
                         feed.setPostOwner(snapshot.child("Owner").getValue(String.class));
-                        feed.setSelectedPet(snapshot.child("selectedPet").getValue(String.class));
+//                        feed.setSelectedPet(snapshot.child("selectedPet").getValue(String.class));
                         feed.setImageURL(snapshot.child("ImageURL").getValue(String.class));
+                        ///////////////////////////////////////////////
+                        Date date = new Date(snapshot.child("Time").getValue(Long.class));
+                        SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss",
+                                Locale.getDefault());
+                        String text = sfd.format(date);
+                        feed.setSelectedPet(text);
+                        //////////////////////////////////////////
                         feedList.add(feed);
                     }
                     Collections.reverse(feedList);

@@ -98,11 +98,11 @@ public class MyPetsAdapter extends RecyclerView.Adapter<MyPetsAdapter.MyPetsView
         holder.tvBreed.setText(pet.getBreed());
         if (pet.getVaccine()){
             holder.cbVaccine.setChecked(true);
-            holder.cbVaccine.setCheckMarkDrawable(R.drawable.checked);
+            holder.cbVaccine.setCheckMarkDrawable(R.drawable.vector_check);
         }
         if (pet.getPureBred()){
             holder.cbPureBred.setChecked(true);
-            holder.cbPureBred.setCheckMarkDrawable(R.drawable.checked);
+            holder.cbPureBred.setCheckMarkDrawable(R.drawable.vector_check);
         }
 
         if (pet.getCurrentImagePath() == null)

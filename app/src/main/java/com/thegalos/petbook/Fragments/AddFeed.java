@@ -33,6 +33,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -129,13 +130,12 @@ public class AddFeed extends Fragment {
                 Toast.makeText(getContext(), "post sent", Toast.LENGTH_SHORT).show();
 //                addToStorage();
                 uploadFiles();
+                db.child("Time").setValue(ServerValue.TIMESTAMP);
                 db.child("postText").setValue(postText);
                 db.child("selectedPet").setValue(selectedPet);
 
                 //TODO if we add option to update name after signup we need to use getUID and make sure to load correct name in fragments
-                db.child("Owner").setValue(user.getUid());
-
-
+                db.child("Owner").setValue(user.getDisplayName());
                 FragmentTransaction ft = getParentFragmentManager().beginTransaction();
                 ft.replace(R.id.flFragment, new AppFeed()).commit();
 
