@@ -6,7 +6,9 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,6 +27,7 @@ import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.thegalos.petbook.MainActivity;
 import com.thegalos.petbook.R;
 
@@ -104,6 +107,12 @@ public class Login extends Fragment {
                                     if (user != null) {
                                         FirebaseDatabase.getInstance().getReference().child("Users").child(user.getUid()).child("Details").child("Name").setValue(etName.getText().toString());
                                         FirebaseDatabase.getInstance().getReference().child("Users").child(user.getUid()).child("Details").child("Email").setValue(etEmail.getText().toString());
+                                        FirebaseDatabase.getInstance().getReference().child("Users").child(user.getUid()).child("Details").child("MemberSince").setValue(ServerValue.TIMESTAMP);
+                                        SharedPreferences preferences = getContext().getSharedPreferences("pref", Context.MODE_PRIVATE);
+                                        SharedPreferences.Editor editor = preferences.edit();
+                                        editor.putString("Name", etName.getText().toString());
+                                        editor.putString("Email", etEmail.getText().toString());
+                                        editor.apply();
                                         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                                                 .setDisplayName(etName.getText().toString())
                                                 .build();

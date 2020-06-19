@@ -1,5 +1,7 @@
 package com.thegalos.petbook.Fragments;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,9 +11,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import androidx.fragment.app.Fragment;
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,8 +26,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.thegalos.petbook.Objects.Feed;
 import com.thegalos.petbook.Adapters.FeedAdapter;
+import com.thegalos.petbook.Objects.Feed;
+import com.thegalos.petbook.Objects.Pet;
 import com.thegalos.petbook.R;
 
 import java.text.SimpleDateFormat;
@@ -40,6 +44,11 @@ public class AppFeed extends Fragment {
     FirebaseUser user;
     ProgressBar progressBar;
     int keepY;
+    TextView tvFeedUser;
+    SharedPreferences preferences;
+    Context context;
+    SharedPreferences.Editor editor;
+    int maxprogress = 0;
 
     public AppFeed() {
     }
@@ -47,32 +56,47 @@ public class AppFeed extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.feed, container, false);
+        return inflater.inflate(R.layout.app_feed, container, false);
     }
 
     @Override
-    public void onViewCreated(@NonNull View view,  Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull final View view, Bundle savedInstanceState) {
         final RecyclerView recyclerView = view.findViewById(R.id.rvFeed);
         Button btnFeedAction = view.findViewById(R.id.btnFeedAction);
+        context = getContext();
         progressBar = view.findViewById(R.id.progressBar2);
+        tvFeedUser = view.findViewById(R.id.tvFeedUser);
         user = FirebaseAuth.getInstance().getCurrentUser();
+        preferences = context.getSharedPreferences("pref", Context.MODE_PRIVATE);
+        editor = preferences.edit();
+
+
+
 
         if (user == null) {
             btnFeedAction.setText(R.string.register);
         } else {
-            TextView tvFeedUser = view.findViewById(R.id.tvFeedUser);
-            tvFeedUser.setText("Hi, " + user.getDisplayName());
+            String str = "Hi " + user.getDisplayName();
+            editor.putString("Name", user.getDisplayName());
+            tvFeedUser.setText(str);
+            if (preferences.getLong("MemberSince", 0) == 0) {
+                DatabaseReference db = FirebaseDatabase.getInstance().getReference().child("Users").child(user.getUid()).child("Details");
+                db.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            editor.putLong("MemberSince", dataSnapshot.child("MemberSince").getValue(Long.class)).apply();
+                            Toast.makeText(context, "saved MemberSince to prefs", Toast.LENGTH_SHORT).show();
+                        }
+                    }
 
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+            }
         }
-
-//        Button btnLogout = view.findViewById(R.id.btnLogout);
-//        btnLogout.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                FirebaseAuth.getInstance().signOut();
-//                //TODO show disconnected change in UI
-//            }
-//        });
 
         btnFeedAction.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,10 +114,11 @@ public class AppFeed extends Fragment {
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        final FeedAdapter feedAdapter = new FeedAdapter((feedList));
+        final FeedAdapter feedAdapter = new FeedAdapter(feedList);
         recyclerView.setAdapter(feedAdapter);
-        Log.d("progress_galos", "max is: " + recyclerView.getLayoutManager().getHeight());
-        progressBar.setMax(/*recyclerView.getLayoutManager().getHeight()*/1000);
+
+//        progressBar.setMax(/*recyclerView.getLayoutManager().getHeight()*/1000);
+
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
@@ -104,7 +129,10 @@ public class AppFeed extends Fragment {
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 keepY += dy;
-                Log.d("progress_galos", ": keepY: " + keepY + " dy: " + dy);
+                if (maxprogress < keepY)
+                    maxprogress = keepY;
+                progressBar.setMax(maxprogress);
+                Log.d("progress_galos", ": keepY: " + keepY + " dy: " + dy + " maxprogress: " + maxprogress);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                     progressBar.setProgress(keepY,true);
                 } else
@@ -112,95 +140,57 @@ public class AppFeed extends Fragment {
             }
         });
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Posts");
-
-//        databaseReference.addChildEventListener(new ChildEventListener() {
-//            @Override
-//            public void onChildAdded(@NonNull DataSnapshot dataSnapshot,  String s) {
-//                DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(dataSnapshot.child("Owner").getValue(String.class));
-//                databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(DataSnapshot dataSnapshot) {
-////                                feedList.clear();
-//                        if (dataSnapshot.exists()) {
-//                            String name = dataSnapshot.child("Details").child("Name").getValue(String.class);
-////                                    holder.tvPostOwner.setText(dataSnapshot.child("postText").getValue(String.class)/*feed.getPostOwner()*/);
-//                            Feed feed = new Feed();
-//                            feed.setPostText(dataSnapshot.child("postText").getValue(String.class));
-//                            feed.setPostOwner(name);
-//                            feed.setSelectedPet(dataSnapshot.child("selectedPet").getValue(String.class));
-//                            feed.setImageURL(dataSnapshot.child("ImageURL").getValue(String.class));
-//                            feedList.add(feed);
-//                            feedAdapter.notifyDataSetChanged();
-//
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(DatabaseError databaseError) {
-//                        Log.w("firebase", "onCancelled", databaseError.toException());
-//                    }
-//                });
-//
-//                //////////////////////////////////////////////////////
-////                        Feed feed = new Feed();
-////                        feed.setPostText(snapshot.child("postText").getValue(String.class));
-////                        feed.setPostOwner(snapshot.child("Owner").getValue(String.class));
-////                        feed.setSelectedPet(snapshot.child("selectedPet").getValue(String.class));
-////                        feed.setImageURL(snapshot.child("ImageUrl").getValue(String.class));
-////                        feedList.add(feed);
-//
-//            }
-//            @Override
-//            public void onChildChanged(@NonNull DataSnapshot dataSnapshot,  String s) { }
-//            @Override
-//            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) { }
-//            @Override
-//            public void onChildMoved(@NonNull DataSnapshot dataSnapshot,  String s) { }
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) { }
-//        });
-
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 feedList.clear();
                 if (dataSnapshot.exists()) {
                     for (final DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         Feed feed = new Feed();
-                        feed.setPostText(snapshot.child("postText").getValue(String.class));
+                        feed.setPet(snapshot.child("Pet").getValue(Pet.class));
+                        feed.setPostText(snapshot.child("PostText").getValue(String.class));
                         feed.setPostOwner(snapshot.child("Owner").getValue(String.class));
-//                        feed.setSelectedPet(snapshot.child("selectedPet").getValue(String.class));
+                        feed.setOwnerUID(snapshot.child("OwnerUID").getValue(String.class));
                         feed.setImageURL(snapshot.child("ImageURL").getValue(String.class));
                         ///////////////////////////////////////////////
+
                         Date date = new Date(snapshot.child("Time").getValue(Long.class));
-                        SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss",
-                                Locale.getDefault());
+                        SimpleDateFormat sfd = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
                         String text = sfd.format(date);
                         feed.setSelectedPet(text);
+
                         //////////////////////////////////////////
                         feedList.add(feed);
                     }
                     Collections.reverse(feedList);
                     feedAdapter.notifyDataSetChanged();
+
+//                    Log.d("progress_galos", "range is: " + range);
+//                    Log.d("progress_galos", "max is: " + recyclerView.getMeasuredHeight()* (feedList.size()-3));
+//                    Log.d("progress_galos", "max * 3 is: " + recyclerView.getHeight()*3);
+//                    Log.d("progress_galos", "max is: " + recyclerView.getMeasuredHeightAndState());
+//                    Log.d("progress_galos", "max is: " + recyclerView.getMinimumHeight());
+//                    Log.d("progress_galos", "max is: " + recyclerView.getLayoutManager().getMinimumHeight());
+//                    Log.d("progress_galos", "max is: " + recyclerView.getLayoutManager().getHeight());
+//                    Log.d("progress_galos", "max is: " + recyclerView.getLayoutManager().getMinimumHeight());
+//                    Log.d("progress_galos", "getHeight/feedlist is: " + recyclerView.getLayoutManager().getHeight()/feedList.size());
+//                    Log.d("progress_galos", "getMinimumHeight is: " + recyclerView.getLayoutManager().getMinimumHeight());
+//                    Log.d("progress_galos", "getMinimumHeight is: " + recyclerView.getMinimumHeight());
+//                    Log.d("progress_galos", "computeVerticalScrollRange is: " + recyclerView.computeVerticalScrollRange());
+//                    Log.d("progress_galos", "computeVerticalScrollExtent is: " + recyclerView.computeVerticalScrollExtent());
+//                    Log.d("progress_galos", "computeVerticalScrollOffset is: " + recyclerView.computeVerticalScrollOffset());
+
+//                    progressBar.setMax(size);
                 }
-                Log.d("progress_galos", "getHeight is: " + recyclerView.getLayoutManager().getHeight());
-//                Log.d("progress_galos", "getHeight/feedlist is: " + recyclerView.getLayoutManager().getHeight()/feedList.size());
-//                Log.d("progress_galos", "getHeightMode/getLayoutManager().getHeight() is: " + recyclerView.getLayoutManager().getHeightMode()/recyclerView.getLayoutManager().getHeight());
-//                Log.d("progress_galos", "getMinimumHeight is: " + recyclerView.getLayoutManager().getMinimumHeight());
-//                Log.d("progress_galos", "getHeight is: " + recyclerView.getHeight());
-//                Log.d("progress_galos", "getMinimumHeight is: " + recyclerView.getMinimumHeight());
-//                Log.d("progress_galos", "computeVerticalScrollRange is: " + recyclerView.computeVerticalScrollRange());
-//                Log.d("progress_galos", "computeVerticalScrollExtent is: " + recyclerView.computeVerticalScrollExtent());
-//                Log.d("progress_galos", "computeVerticalScrollOffset is: " + recyclerView.computeVerticalScrollOffset());
-//                Log.d("progress_galos", "computeHorizontalScrollOffset is: " + recyclerView.computeHorizontalScrollOffset());
-                Log.d("progress_galos", "getBottom is: " + recyclerView.getBottom());
-                Log.d("progress_galos", "both is: " + (recyclerView.getBottom() + recyclerView.getLayoutManager().getHeight()));
-                progressBar.setMax((recyclerView.getBottom() + recyclerView.getLayoutManager().getHeight()));
-//                Log.d("progress_galos", "getPaddingBottom is: " + recyclerView.getPaddingBottom());
-
-
-//                recyclerView.scrollToPosition(recyclerView.getAdapter().getItemCount()-1);
-//                recyclerView.scrollTo(1,1);
+//                recyclerView.scrollToPosition();
+                int size = recyclerView.getBottom() * (feedList.size() / 3);
+                Log.d("progress_galos", "getBottom is: " + size);
+                Log.d("progress_galos", "getHeight is: " + recyclerView.getHeight());
+                Log.d("progress_galos", "getHeight is: " + ((recyclerView.getHeight()*recyclerView.getAdapter().getItemCount()-1)));
+                Log.d("progress_galos", "getHeight is: " + ((recyclerView.getHeight()*recyclerView.getAdapter().getItemCount()-1))/2.5);
+                maxprogress = (int) ((recyclerView.getHeight()*(recyclerView.getAdapter().getItemCount()-1))/2.8);
+                progressBar.setMax(maxprogress);
+                Log.d("progress_galos", "maxprogress: " + maxprogress);
             }
 
             @Override

@@ -19,9 +19,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
@@ -45,6 +48,11 @@ public class MyPets extends Fragment {
     MyPetsAdapter myPetsAdapter;
     Boolean downloadedPets;
     FirebaseUser user;
+    TextView tvTotalPets;
+    String petCount;
+    TextView tvMemberSince;
+    TextView tvUserName;
+
 
 
     public MyPets() {
@@ -59,13 +67,21 @@ public class MyPets extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull final View view,  Bundle savedInstanceState) {
-        sp = this.getActivity().getSharedPreferences("pref", Context.MODE_PRIVATE);
+        sp = getActivity().getSharedPreferences("pref", Context.MODE_PRIVATE);
         downloadedPets = sp.getBoolean("downloadedPets" , false);
         user = FirebaseAuth.getInstance().getCurrentUser();
-        TextView tvUserName = view.findViewById(R.id.tvUserName);
-        if (user != null)
+        tvUserName = view.findViewById(R.id.tvUserName);
+        tvTotalPets = view.findViewById(R.id.tvTotalPets);
+        tvMemberSince = view.findViewById(R.id.tvMemberSince);
+        final Button btnLogout = view.findViewById(R.id.btnLogout);
+        if (user != null) {
+            btnLogout.setVisibility(View.VISIBLE);
             tvUserName.setText(user.getDisplayName());
-
+            Date date = new Date(sp.getLong("MemberSince",0));
+            SimpleDateFormat sfd = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
+            String text = sfd.format(date);
+            tvMemberSince.setText(text);
+        }
         recyclerView = view.findViewById(R.id.rvCards);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -86,18 +102,28 @@ public class MyPets extends Fragment {
         });
 
         // log out from app
-        view.findViewById(R.id.btnLogout).setOnClickListener(new View.OnClickListener() {
+        btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (user != null) {
+                    tvUserName.setText("");
+                    tvTotalPets.setText("");
+                    tvMemberSince.setText("");
+                    btnLogout.setVisibility(View.INVISIBLE);
+                    petList.clear();
+                    myPetsAdapter.notifyDataSetChanged();
                     FirebaseAuth.getInstance().signOut();
                     Snackbar snackbar = Snackbar.make(view, R.string.disconnected_from_petbook, Snackbar.LENGTH_SHORT);
 //                snackbar.setAnchorView(R.id.bottomBar);
                     snackbar.show();
+                    sp.edit().clear().apply();
+
                 } else
                     Toast.makeText(getContext(), "Must be logged in order to logout", Toast.LENGTH_SHORT).show();
             }
         });
+
+        //Load User Details
 
         //load pets - if first time from Firebase else from shared prefs
         if (downloadedPets)
@@ -125,12 +151,16 @@ public class MyPets extends Fragment {
                             pet.setName(snapshot.child("name").getValue(String.class));
                             pet.setPureBred(snapshot.child("pureBred").getValue(Boolean.class));
                             pet.setVaccine(snapshot.child("vaccine").getValue(Boolean.class));
+                            pet.setPetUID(snapshot.getKey());
                             petList.add(pet);
                         }
                         myPetsAdapter = new MyPetsAdapter((petList));
                         recyclerView.setAdapter(myPetsAdapter);
                         Collections.reverse(petList);
                         myPetsAdapter.notifyDataSetChanged();
+                        petCount = "Pets: " + petList.size();
+                        tvTotalPets.setText(petCount);
+                        saveLocaly();
                         sp.edit().putBoolean("downloadedPets", true).apply();
                     }
                 }
@@ -144,10 +174,17 @@ public class MyPets extends Fragment {
         Toast.makeText(getContext(), "Loaded from Firebase", Toast.LENGTH_SHORT).show();
     }
 
-    private void loadLocalData() {
-        SharedPreferences preferences = this.getActivity().getSharedPreferences("pref", Context.MODE_PRIVATE);
+    private void saveLocaly() {
+        SharedPreferences.Editor editor = sp.edit();
         Gson gson = new Gson();
-        String json = preferences.getString("PetList", null);
+        String json = gson.toJson(petList);
+        editor.putString("PetList", json);
+        editor.apply();
+    }
+
+    private void loadLocalData() {
+        Gson gson = new Gson();
+        String json = sp.getString("PetList", "");
         Type type = new TypeToken<ArrayList<Pet>>() {
         }.getType();
         petList = gson.fromJson(json, type);
@@ -158,6 +195,8 @@ public class MyPets extends Fragment {
         myPetsAdapter = new MyPetsAdapter((petList));
         recyclerView.setAdapter(myPetsAdapter);
         myPetsAdapter.notifyDataSetChanged();
+        petCount = "Pets: " + petList.size();
+        tvTotalPets.setText(petCount);
         Toast.makeText(getContext(), "Loaded from Shared Prefs", Toast.LENGTH_SHORT).show();
     }
 }

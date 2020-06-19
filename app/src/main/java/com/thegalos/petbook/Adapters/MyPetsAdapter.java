@@ -105,7 +105,7 @@ public class MyPetsAdapter extends RecyclerView.Adapter<MyPetsAdapter.MyPetsView
             holder.cbPureBred.setCheckMarkDrawable(R.drawable.vector_check);
         }
 
-        if (pet.getCurrentImagePath() == null)
+//        if (pet.getCurrentImagePath() == null)
 //            Glide.with(holder.ivPetType.getContext()).load(R.drawable.missing).into(holder.ivPetType);
 //        else {
             if (pet.getAnimalType().equals("Horse"))

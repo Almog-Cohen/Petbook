@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragments.AppFeed">
+    tools:context=".Fragments.AppFeed"
+    android:id="@+id/feedLayout">
 
 
     <ImageView
@@ -61,6 +62,7 @@
         android:id="@+id/rvFeed"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:background="#BA477FEF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

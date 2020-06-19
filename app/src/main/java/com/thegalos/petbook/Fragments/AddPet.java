@@ -53,7 +53,7 @@ public class AddPet extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull final View view,  Bundle savedInstanceState) {
-        preferences = this.getActivity().getSharedPreferences("pref", Context.MODE_PRIVATE);
+        preferences = getContext().getSharedPreferences("pref", Context.MODE_PRIVATE);
         final Spinner spnGender = view.findViewById(R.id.spnGender);
         final Spinner spnAge = view.findViewById(R.id.spnAge);
         etBreed = view.findViewById(R.id.etBreed);
@@ -163,6 +163,7 @@ public class AddPet extends Fragment {
                     pet.setName(etName.getText().toString());
                     pet.setVaccine(ctvVaccine.isChecked());
                     pet.setPureBred(ctvPurebred.isChecked());
+                    pet.setPetUID(db.getKey());
                     db.setValue(pet);
                     loadData();
                     petArrayList.add(pet);

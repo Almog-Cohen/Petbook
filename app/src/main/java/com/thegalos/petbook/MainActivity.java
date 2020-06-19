@@ -72,6 +72,6 @@ public class MainActivity extends AppCompatActivity {
     private void layoutRefresh() {
 //        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 //        ft.replace(R.id.flNews, new MyPets()).commit();
-        //TODO refresh only main feed and matches
+        //TODO refresh only main app_feed and matches
     }
 }
