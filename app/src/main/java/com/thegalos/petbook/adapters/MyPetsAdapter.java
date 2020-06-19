@@ -1,4 +1,4 @@
-package com.thegalos.petbook.Adapters;
+package com.thegalos.petbook.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.thegalos.petbook.Objects.Pet;
+import com.thegalos.petbook.objects.Pet;
 import com.thegalos.petbook.R;
 
 import java.util.List;
@@ -84,7 +84,7 @@ public class MyPetsAdapter extends RecyclerView.Adapter<MyPetsAdapter.MyPetsView
     @NonNull
     @Override
     public MyPetsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.pet_card,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_pet,parent,false);
         return new MyPetsViewHolder(view);
     }
 
@@ -108,16 +108,20 @@ public class MyPetsAdapter extends RecyclerView.Adapter<MyPetsAdapter.MyPetsView
 //        if (pet.getCurrentImagePath() == null)
 //            Glide.with(holder.ivPetType.getContext()).load(R.drawable.missing).into(holder.ivPetType);
 //        else {
-            if (pet.getAnimalType().equals("Horse"))
+        switch (pet.getAnimalType()) {
+            case "Horse":
                 Glide.with(holder.ivPetType.getContext()).load(R.drawable.icon_horse).into(holder.ivPetType);
-
-            else if (pet.getAnimalType().equals("Dog"))
+                break;
+            case "Dog":
                 Glide.with(holder.ivPetType.getContext()).load(R.drawable.icon_dog).into(holder.ivPetType);
-
-            else if (pet.getAnimalType().equals("Cat"))
+                break;
+            case "Cat":
                 Glide.with(holder.ivPetType.getContext()).load(R.drawable.icon_cat).into(holder.ivPetType);
-            else
+                break;
+            default:
                 Glide.with(holder.ivPetType.getContext()).load(R.drawable.missing).into(holder.ivPetType);
+                break;
+        }
     }
 
 

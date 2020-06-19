@@ -1,31 +1,26 @@
-package com.thegalos.petbook.Fragments;
+package com.thegalos.petbook.fragments;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.MimeTypeMap;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckedTextView;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -40,7 +35,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.thegalos.petbook.Objects.Pet;
+import com.thegalos.petbook.objects.Pet;
 import com.thegalos.petbook.R;
 
 import java.lang.reflect.Type;
@@ -54,10 +49,7 @@ import static android.app.Activity.RESULT_OK;
 public class AddFeed extends Fragment {
 
 
-    int whichAnimal = 0;
-    String animalType = "";
-    EditText etBreed, etName;
-    CheckedTextView ctvVaccine, ctvPurebred;
+    // --Commented out by Inspection (20/06/2020 1:26):EditText etBreed, etName;
     private static List<Pet> petArrayList = new ArrayList<>();
     private static List<String> petNameList = new ArrayList<>();
     SharedPreferences preferences;
@@ -82,7 +74,7 @@ public class AddFeed extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.feed_add, container, false);
+        return inflater.inflate(R.layout.add_feed, container, false);
     }
 
     @Override
@@ -90,8 +82,8 @@ public class AddFeed extends Fragment {
         preferences = this.getActivity().getSharedPreferences("pref", Context.MODE_PRIVATE);
         user = FirebaseAuth.getInstance().getCurrentUser();
         spnPet = view.findViewById(R.id.spnPet);
-        etBreed = view.findViewById(R.id.etBreed);
-        etName = view.findViewById(R.id.etName);
+//        etBreed = view.findViewById(R.id.etBreed);
+//        etName = view.findViewById(R.id.etName);
         progressBar = view.findViewById(R.id.progressBar);
         etDetails = view.findViewById(R.id.etDetails);
         btnPostFeed = view.findViewById(R.id.btnPostFeed);
@@ -110,7 +102,7 @@ public class AddFeed extends Fragment {
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
 
-                //methood 1
+                //method 1
 //                Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 //                startActivityForResult(i, PICK_IMAGE_REQUEST);
 
@@ -191,7 +183,7 @@ public class AddFeed extends Fragment {
                             db.child("PostText").setValue(postText);
                             db.child("SelectedPet").setValue(selectedPet);
                             db.child("Pet").setValue(petArrayList.get(spnPet.getSelectedItemPosition()));
-                            //TODO if we add option to update name after signup we need to use getUID and make sure to load correct name in fragments
+                            //TODO if we add option to update name after Sign up we need to use getUID and make sure to load correct name in fragments
                             db.child("Owner").setValue(user.getDisplayName());
                             db.child("OwnerUID").setValue(user.getUid());
                             showProgress(false);
@@ -224,7 +216,7 @@ public class AddFeed extends Fragment {
     private void changeFragment() {
         progressBar.setVisibility(View.GONE);
         FragmentTransaction ft = getParentFragmentManager().beginTransaction();
-        ft.replace(R.id.flFragment, new AppFeed()).commit();
+        ft.replace(R.id.flFragment, new MainFeed()).commit();
     }
 
 
@@ -241,12 +233,12 @@ public class AddFeed extends Fragment {
 
     // load data
     private void loadData() {
+        petNameList.clear();
         Gson gson = new Gson();
         String json = preferences.getString("PetList", null);
         Type type = new TypeToken<ArrayList<Pet>>() {
         }.getType();
         petArrayList = gson.fromJson(json, type);
-
         if (petArrayList == null) {
             petArrayList = new ArrayList<>();
         }
@@ -254,14 +246,5 @@ public class AddFeed extends Fragment {
             petNameList.add(pet.getName());
         }
     }
-
-
-    private String getFileExtension(Uri uri) {
-
-        ContentResolver cR = getContext().getContentResolver();
-        MimeTypeMap mime = MimeTypeMap.getSingleton();
-        return mime.getExtensionFromMimeType(cR.getType(uri));
-    }
-
 
 }

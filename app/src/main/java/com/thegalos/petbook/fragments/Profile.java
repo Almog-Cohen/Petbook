@@ -1,4 +1,4 @@
-package com.thegalos.petbook.Fragments;
+package com.thegalos.petbook.fragments;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -36,12 +36,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.thegalos.petbook.Adapters.MyPetsAdapter;
-import com.thegalos.petbook.Objects.Pet;
+import com.thegalos.petbook.adapters.MyPetsAdapter;
+import com.thegalos.petbook.objects.Pet;
 import com.thegalos.petbook.R;
 
 
-public class MyPets extends Fragment {
+public class Profile extends Fragment {
     private static List<Pet> petList = new ArrayList<>();
     SharedPreferences sp;
     RecyclerView recyclerView;
@@ -55,14 +55,14 @@ public class MyPets extends Fragment {
 
 
 
-    public MyPets() {
+    public Profile() {
 
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.my_pets, container, false);
+        return inflater.inflate(R.layout.profile, container, false);
     }
 
     @Override
@@ -74,8 +74,10 @@ public class MyPets extends Fragment {
         tvTotalPets = view.findViewById(R.id.tvTotalPets);
         tvMemberSince = view.findViewById(R.id.tvMemberSince);
         final Button btnLogout = view.findViewById(R.id.btnLogout);
+        Button btnAddPet = view.findViewById(R.id.btnAddPet);
         if (user != null) {
             btnLogout.setVisibility(View.VISIBLE);
+            btnAddPet.setVisibility(View.VISIBLE);
             tvUserName.setText(user.getDisplayName());
             Date date = new Date(sp.getLong("MemberSince",0));
             SimpleDateFormat sfd = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
@@ -88,7 +90,7 @@ public class MyPets extends Fragment {
 //            loadData();
 
         // Change to add pet fragment
-        Button btnAddPet = view.findViewById(R.id.btnAddPet);
+
 
         btnAddPet.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,7 +141,7 @@ public class MyPets extends Fragment {
             DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(user.getUid()).child("Pets");
             databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
                         petList.clear();
                         for (final DataSnapshot snapshot : dataSnapshot.getChildren()) {

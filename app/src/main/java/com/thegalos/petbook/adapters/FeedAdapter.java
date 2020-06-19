@@ -1,4 +1,4 @@
-package com.thegalos.petbook.Adapters;
+package com.thegalos.petbook.adapters;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,8 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
-import com.thegalos.petbook.Objects.Feed;
-import com.thegalos.petbook.Objects.Pet;
+import com.thegalos.petbook.objects.Feed;
+import com.thegalos.petbook.objects.Pet;
 import com.thegalos.petbook.R;
 
 import java.util.List;
@@ -90,7 +90,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyFeedViewHold
     @NonNull
     @Override
     public MyFeedViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.feed_card,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_feed,parent,false);
 
         return new MyFeedViewHolder(view);
     }
@@ -111,16 +111,20 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyFeedViewHold
         else
             str = "";
         holder.tvPurebred.setText(str);
-        if (feed.getPet().getAnimalType().equals("Horse"))
-            Glide.with(holder.ivType.getContext()).load(R.drawable.icon_horse).into(holder.ivType);
-
-        else if (feed.getPet().getAnimalType().equals("Dog"))
-            Glide.with(holder.ivType.getContext()).load(R.drawable.icon_dog).into(holder.ivType);
-
-        else if (feed.getPet().getAnimalType().equals("Cat"))
-            Glide.with(holder.ivType.getContext()).load(R.drawable.icon_cat).into(holder.ivType);
-        else
-            Glide.with(holder.ivType.getContext()).load(R.drawable.missing).into(holder.ivType);
+        switch (feed.getPet().getAnimalType()) {
+            case "Horse":
+                Glide.with(holder.ivType.getContext()).load(R.drawable.icon_horse).into(holder.ivType);
+                break;
+            case "Dog":
+                Glide.with(holder.ivType.getContext()).load(R.drawable.icon_dog).into(holder.ivType);
+                break;
+            case "Cat":
+                Glide.with(holder.ivType.getContext()).load(R.drawable.icon_cat).into(holder.ivType);
+                break;
+            default:
+                Glide.with(holder.ivType.getContext()).load(R.drawable.missing).into(holder.ivType);
+                break;
+        }
 
 
 //        RequestOptions options = new RequestOptions()

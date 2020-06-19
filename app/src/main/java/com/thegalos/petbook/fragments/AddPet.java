@@ -1,4 +1,4 @@
-package com.thegalos.petbook.Fragments;
+package com.thegalos.petbook.fragments;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -16,7 +16,6 @@ import android.widget.CheckedTextView;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -25,7 +24,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.thegalos.petbook.Objects.Pet;
+import com.thegalos.petbook.objects.Pet;
 import com.thegalos.petbook.R;
 
 import java.lang.reflect.Type;
@@ -48,7 +47,7 @@ public class AddPet extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.pet_add, container, false);
+        return inflater.inflate(R.layout.add_pet, container, false);
     }
 
     @Override
@@ -153,7 +152,7 @@ public class AddPet extends Fragment {
                 if (user != null){
                     DatabaseReference db = FirebaseDatabase.getInstance().getReference().child("Users").child(user.getUid()).child("Pets").push();
                     Toast.makeText(getContext(), "post sent", Toast.LENGTH_SHORT).show();
-                    //TODO if we add option to update name after signup we need to use getUID and make sure to load correct name in fragments
+                    //TODO if we add option to update name after sign up we need to use getUID and make sure to load correct name in fragments
 //                    db.child("Owner").setValue(user.getUid());
                     Pet pet = new Pet();
                     pet.setAge(spnAge.getSelectedItem().toString());
@@ -169,7 +168,7 @@ public class AddPet extends Fragment {
                     petArrayList.add(pet);
                     saveData();
                     FragmentTransaction ft = getParentFragmentManager().beginTransaction();
-                    ft.replace(R.id.flFragment, new MyPets());
+                    ft.replace(R.id.flFragment, new Profile());
                     ft.commit();
 
                 }

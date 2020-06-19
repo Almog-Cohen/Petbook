@@ -19,7 +19,7 @@
             android:id="@+id/tvPostOwner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="author rwerlkwejrwlekrjwelrkj"
+            android:text="@string/string"
             android:textSize="18sp"
             android:textStyle="bold"
             tools:layout_editor_absoluteX="5dp"
@@ -32,7 +32,7 @@
             android:layout_alignParentEnd="true"
             android:layout_marginTop="3dp"
             android:gravity="center"
-            android:text="time"
+            android:text="@string/string"
             tools:layout_editor_absoluteX="5dp"
             tools:layout_editor_absoluteY="32dp" />
 
@@ -60,7 +60,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
-                android:text="animal name" />
+                android:text="@string/string" />
 
             <TextView
                 android:id="@+id/tvAge"
@@ -68,7 +68,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
-                android:text="pet age" />
+                android:text="@string/string" />
 
             <TextView
                 android:id="@+id/tvPurebred"
@@ -76,7 +76,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
-                android:text="purebred?" />
+                android:text="@string/string" />
 
         </LinearLayout>
 
@@ -100,7 +100,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/ivFeedPhoto"
             android:padding="10dp"
-            android:text="@string/large_text"
+            android:text="@string/string"
             android:textAlignment="textStart"
             android:textSize="16sp"
             android:textStyle="bold"

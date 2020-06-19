@@ -1,4 +1,4 @@
-package com.thegalos.petbook.Fragments;
+package com.thegalos.petbook.fragments;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -26,9 +26,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.thegalos.petbook.Adapters.FeedAdapter;
-import com.thegalos.petbook.Objects.Feed;
-import com.thegalos.petbook.Objects.Pet;
+import com.thegalos.petbook.adapters.FeedAdapter;
+import com.thegalos.petbook.objects.Feed;
+import com.thegalos.petbook.objects.Pet;
 import com.thegalos.petbook.R;
 
 import java.text.SimpleDateFormat;
@@ -38,7 +38,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class AppFeed extends Fragment {
+public class MainFeed extends Fragment {
 
     private static List<Feed> feedList = new ArrayList<>();
     FirebaseUser user;
@@ -48,15 +48,15 @@ public class AppFeed extends Fragment {
     SharedPreferences preferences;
     Context context;
     SharedPreferences.Editor editor;
-    int maxprogress = 0;
+    int maxProgress = 0;
 
-    public AppFeed() {
+    public MainFeed() {
     }
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.app_feed, container, false);
+        return inflater.inflate(R.layout.main_feed, container, false);
     }
 
     @Override
@@ -129,10 +129,10 @@ public class AppFeed extends Fragment {
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 keepY += dy;
-                if (maxprogress < keepY)
-                    maxprogress = keepY;
-                progressBar.setMax(maxprogress);
-                Log.d("progress_galos", ": keepY: " + keepY + " dy: " + dy + " maxprogress: " + maxprogress);
+                if (maxProgress < keepY)
+                    maxProgress = keepY;
+                progressBar.setMax(maxProgress);
+                Log.d("progress_galos", ": keepY: " + keepY + " dy: " + dy + " maxProgress: " + maxProgress);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                     progressBar.setProgress(keepY,true);
                 } else
@@ -142,7 +142,7 @@ public class AppFeed extends Fragment {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Posts");
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 feedList.clear();
                 if (dataSnapshot.exists()) {
                     for (final DataSnapshot snapshot : dataSnapshot.getChildren()) {
@@ -173,7 +173,7 @@ public class AppFeed extends Fragment {
 //                    Log.d("progress_galos", "max is: " + recyclerView.getLayoutManager().getMinimumHeight());
 //                    Log.d("progress_galos", "max is: " + recyclerView.getLayoutManager().getHeight());
 //                    Log.d("progress_galos", "max is: " + recyclerView.getLayoutManager().getMinimumHeight());
-//                    Log.d("progress_galos", "getHeight/feedlist is: " + recyclerView.getLayoutManager().getHeight()/feedList.size());
+//                    Log.d("progress_galos", "getHeight/feedList is: " + recyclerView.getLayoutManager().getHeight()/feedList.size());
 //                    Log.d("progress_galos", "getMinimumHeight is: " + recyclerView.getLayoutManager().getMinimumHeight());
 //                    Log.d("progress_galos", "getMinimumHeight is: " + recyclerView.getMinimumHeight());
 //                    Log.d("progress_galos", "computeVerticalScrollRange is: " + recyclerView.computeVerticalScrollRange());
@@ -188,9 +188,9 @@ public class AppFeed extends Fragment {
                 Log.d("progress_galos", "getHeight is: " + recyclerView.getHeight());
                 Log.d("progress_galos", "getHeight is: " + ((recyclerView.getHeight()*recyclerView.getAdapter().getItemCount()-1)));
                 Log.d("progress_galos", "getHeight is: " + ((recyclerView.getHeight()*recyclerView.getAdapter().getItemCount()-1))/2.5);
-                maxprogress = (int) ((recyclerView.getHeight()*(recyclerView.getAdapter().getItemCount()-1))/2.8);
-                progressBar.setMax(maxprogress);
-                Log.d("progress_galos", "maxprogress: " + maxprogress);
+                maxProgress = (int) ((recyclerView.getHeight()*(recyclerView.getAdapter().getItemCount()-1))/2.8);
+                progressBar.setMax(maxProgress);
+                Log.d("progress_galos", "maxProgress: " + maxProgress);
             }
 
             @Override

@@ -1,4 +1,4 @@
-package com.thegalos.petbook.Fragments;
+package com.thegalos.petbook.fragments;
 
 import android.os.Bundle;
 
@@ -51,7 +51,7 @@ public class Splash extends Fragment {
 
     private void signInTransaction() {
         FragmentTransaction ft = getParentFragmentManager().beginTransaction();
-        ft.replace(R.id.flFragment, new AppFeed(), "main_fragment");
+        ft.replace(R.id.flFragment, new MainFeed(), "main_fragment");
         ft.commit();
     }
 }

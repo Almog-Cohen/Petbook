@@ -44,7 +44,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="name"
+                    android:text="@string/name"
                     android:textColor="@android:color/black"
                     android:textSize="20sp" />
 
@@ -53,7 +53,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="type"
+                    android:text="@string/type"
                     android:textColor="@android:color/black"
                     android:textSize="16sp" />
 
@@ -70,7 +70,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="age"
+                    android:text="@string/age"
                     android:textColor="@android:color/black"
                     android:textSize="15sp" />
 
@@ -79,7 +79,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="gender`"
+                    android:text="@string/gender"
                     android:textColor="@android:color/black"
                     android:textSize="16sp" />
 
@@ -90,7 +90,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:text="Breed" />
+                android:text="@string/breed" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -103,14 +103,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Vaccineted" />
+                    android:text="@string/vaccinated" />
 
                 <CheckedTextView
                     android:id="@+id/cbPureBred"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Purebred" />
+                    android:text="@string/purebred" />
             </LinearLayout>
 
         </LinearLayout>

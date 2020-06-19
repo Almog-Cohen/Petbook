@@ -10,7 +10,7 @@
     android:paddingBottom="@dimen/fragment_vertical_margin"
     android:id="@+id/motionLogin"
     app:layoutDescription="@xml/fragment_login_scene"
-    tools:context=".Fragments.Login">
+    tools:context=".fragments.Login">
 
     <ImageView
         android:id="@+id/imageView"

@@ -1,4 +1,4 @@
-package com.thegalos.petbook.Objects;
+package com.thegalos.petbook.objects;
 
 public class Feed {
     private String postOwner;

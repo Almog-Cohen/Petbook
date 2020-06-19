@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragments.AddPet">
+    tools:context=".fragments.AddPet">
 
     <TextView
         android:id="@+id/textView"
@@ -14,7 +14,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginEnd="20dp"
         android:gravity="center"
-        android:text="Add a new Pet"
+        android:text="@string/add_pets"
         android:textSize="26sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -79,7 +79,7 @@
             android:id="@+id/etName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Name" />
+            android:hint="@string/name" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -99,7 +99,7 @@
             android:id="@+id/etBreed"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Breed" />
+            android:hint="@string/breed" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <CheckedTextView
@@ -111,7 +111,7 @@
         android:layout_marginEnd="20dp"
         android:checkMark="@drawable/vector_check"
         android:gravity="center"
-        android:text="Vaccinated ?"
+        android:text="@string/vaccinated"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -147,7 +147,7 @@
         android:layout_marginEnd="20dp"
         android:checkMark="@drawable/vector_check"
         android:gravity="center"
-        android:text="Purebred ?"
+        android:text="@string/is_purebred"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -159,7 +159,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="30dp"
         android:background="@drawable/button_shape_selector"
-        android:text="Finish"
+        android:text="@string/add"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

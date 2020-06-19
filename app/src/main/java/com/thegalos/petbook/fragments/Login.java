@@ -1,4 +1,4 @@
-package com.thegalos.petbook.Fragments;
+package com.thegalos.petbook.fragments;
 
 import androidx.constraintlayout.motion.widget.MotionLayout;
 import androidx.fragment.app.FragmentTransaction;
@@ -7,7 +7,6 @@ import androidx.fragment.app.Fragment;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -28,7 +27,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
-import com.thegalos.petbook.MainActivity;
 import com.thegalos.petbook.R;
 
 public class Login extends Fragment {
@@ -141,6 +139,6 @@ public class Login extends Fragment {
 
     private void signInTransaction() {
         FragmentTransaction ft = getParentFragmentManager().beginTransaction();
-        ft.replace(R.id.flFragment, new AppFeed(), "main_fragment").commit();
+        ft.replace(R.id.flFragment, new MainFeed(), "main_fragment").commit();
     }
 }

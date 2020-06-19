@@ -21,7 +21,7 @@ public class Temp_func {
                             Toast.makeText(getContext(), "image upload", Toast.LENGTH_LONG).show();
                             progressBar.setVisibility(View.INVISIBLE);
                             FragmentTransaction ft = getParentFragmentManager().beginTransaction();
-                            ft.replace(R.id.flNews, new AppFeed()).commit();
+                            ft.replace(R.id.flNews, new MainFeed()).commit();
 ;
                         }
                     });
@@ -33,7 +33,7 @@ public class Temp_func {
                     progressBar.setVisibility(View.INVISIBLE);
                     FirebaseDatabase.getInstance().getReference().child(user.getUid()).child("Images").setValue("null");
                     FragmentTransaction ft = getParentFragmentManager().beginTransaction();
-                    ft.replace(R.id.flNews, new AppFeed()).commit();
+                    ft.replace(R.id.flNews, new MainFeed()).commit();
                 }
             }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                 @Override
@@ -49,7 +49,7 @@ public class Temp_func {
             progressBar.setVisibility(View.INVISIBLE);
             FirebaseDatabase.getInstance().getReference().child(user.getUid()).child("Images").setValue("empty");
             FragmentTransaction ft = getParentFragmentManager().beginTransaction();
-            ft.replace(R.id.flNews, new AppFeed()).commit();
+            ft.replace(R.id.flNews, new MainFeed()).commit();
         }
     }
 */
