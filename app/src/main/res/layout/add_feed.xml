@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.AddFeed">
-
 
     <TextView
         android:id="@+id/textView"
@@ -18,20 +17,104 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <RadioGroup
+        android:id="@+id/rgIsFree"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="30dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/spnPet">
+
+        <RadioButton
+            android:id="@+id/rbFree"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/radio_group_selector"
+            android:button="@drawable/vector_money_off" />
+
+
+        <RadioButton
+            android:id="@+id/rbPay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/radio_group_selector"
+            android:button="@drawable/vector_money" />
+
+
+    </RadioGroup>
+
+
+    <RadioGroup
+        android:id="@+id/rgWhoPays"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:orientation="horizontal"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rgIsFree">
+
+        <RadioButton
+            android:id="@+id/rbToGet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:text="I get" />
+
+        <RadioButton
+            android:id="@+id/rbToPay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:text="I Pay" />
+    </RadioGroup>
+
+    <EditText
+        android:id="@+id/etAmount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:inputType="number|numberDecimal"
+        android:text="amount"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rgWhoPays" />
+
     <EditText
         android:id="@+id/etDetails"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginEnd="20dp"
+        android:layout_marginTop="20dp"
+        android:autofillHints=""
         android:hint="@string/enter_post_details"
+        android:inputType="textMultiLine"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
-        android:autofillHints=""
-        android:inputType="textMultiLine" />
+        app:layout_constraintTop_toBottomOf="@+id/etAmount" />
 
+    <EditText
+        android:id="@+id/etPrice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:autofillHints=""
+        android:hint="@string/enter_post_details"
+        android:inputType="textMultiLine"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etDetails" />
 
     <Spinner
         android:id="@+id/spnPet"
@@ -41,20 +124,18 @@
         android:background="@android:color/holo_green_dark"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etDetails" />
+        app:layout_constraintTop_toBottomOf="@id/textView" />
 
     <ImageView
         android:id="@+id/ivPhoto"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="100dp"
-        android:layout_marginEnd="20dp"
+        android:contentDescription="@string/none"
         android:src="@android:drawable/ic_input_add"
+        app:layout_constraintBottom_toTopOf="@+id/btnPostFeed"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spnPet"
-        android:contentDescription="@string/none" />
+        app:layout_constraintTop_toBottomOf="@+id/etPrice" />
 
     <Button
         android:id="@+id/btnPostFeed"
@@ -72,7 +153,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#4B484C4E"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -99,6 +180,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/progressBar" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

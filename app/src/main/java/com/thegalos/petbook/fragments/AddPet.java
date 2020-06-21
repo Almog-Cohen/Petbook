@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentTransaction;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,7 +53,7 @@ public class AddPet extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull final View view,  Bundle savedInstanceState) {
-        preferences = getContext().getSharedPreferences("pref", Context.MODE_PRIVATE);
+        preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         final Spinner spnGender = view.findViewById(R.id.spnGender);
         final Spinner spnAge = view.findViewById(R.id.spnAge);
         etBreed = view.findViewById(R.id.etBreed);

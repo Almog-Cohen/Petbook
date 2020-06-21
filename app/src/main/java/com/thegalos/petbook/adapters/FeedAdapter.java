@@ -1,5 +1,7 @@
 package com.thegalos.petbook.adapters;
 
+import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,22 +21,23 @@ import com.thegalos.petbook.R;
 
 import java.util.List;
 
-
 public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyFeedViewHolder> {
 
+    private final Context context;
     private final List<Feed> feedList;
     private myFeedListener listener;
 
-    interface myFeedListener {
-        void onClickListener(int position);
-        void onCardLongClicked();
+    public interface myFeedListener {
+        void onFeedListener(int position);
+//        void onCardLongClicked();
     }
 
     public void setListener(myFeedListener listener){
         this.listener = listener;
     }
 
-    public FeedAdapter(List<Feed> feedList) {
+    public FeedAdapter(Context context, List<Feed> feedList) {
+        this.context = context;
         this.feedList = feedList;
     }
 
@@ -42,9 +45,9 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyFeedViewHold
 
         final TextView tvPostOwner;
         final TextView tvPostText;
-        final TextView tvSelectedPet, tvPurebred, tvName, tvPetAge;
+        final TextView tvPay, tvName, tvPetAge, tvPostTime;
         final ImageView ivFeedPhoto;
-        final ImageView ivType;
+        final ImageView ivType/*, ivIsFree*/;
         //////////////////////////////////////////////////////////////////////////////////////////
 
         //////////////////////////////////////////////////////////////////////////////////////////
@@ -54,13 +57,15 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyFeedViewHold
 
             tvPostOwner = itemView.findViewById(R.id.tvPostOwner);
             tvPostText = itemView.findViewById(R.id.tvPostText);
-            tvSelectedPet =  itemView.findViewById(R.id.tvPostTime);
+//            tvSelectedPet =  itemView.findViewById(R.id.tvPostTime);
             ivFeedPhoto =  itemView.findViewById(R.id.ivFeedPhoto);
+            tvPostTime = itemView.findViewById(R.id.tvPostTime);
 
-            tvPurebred = itemView.findViewById(R.id.tvPurebred);
+            tvPay = itemView.findViewById(R.id.tvPay);
             tvName = itemView.findViewById(R.id.tvName);
             tvPetAge = itemView.findViewById(R.id.tvAge);
             ivType = itemView.findViewById(R.id.ivType);
+//            ivIsFree = itemView.findViewById(R.id.ivIsFree);
 
             itemView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
             int height = itemView.getMeasuredHeight();
@@ -71,19 +76,20 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyFeedViewHold
                 @Override
                 public void onClick(View view) {
                     if(listener != null){
-                        listener.onClickListener(getAdapterPosition());
+                        listener.onFeedListener(getAdapterPosition());
                     }
                 }
             });
 
-            itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    if(listener != null)
-                        listener.onCardLongClicked();
-                    return true;
-                }
-            });
+//            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+//                @Override
+//                public boolean onLongClick(View view) {
+//                    if(listener != null)
+//                        listener.onCardLongClicked();
+//                    return true;
+//                }
+//            });
+
         }
     }
 
@@ -99,32 +105,64 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyFeedViewHold
     public void onBindViewHolder(@NonNull final MyFeedViewHolder holder, int position) {
         final Feed feed = feedList.get(position);
         final Pet pet = feed.getPet();
-        holder.tvPostOwner.setText(feed.getPostOwner());
-        holder.tvPostText.setText(feed.getPostText());
-        holder.tvSelectedPet.setText(feed.getSelectedPet());
-        String str = "Age: " + pet.getAge();
+        String str;
+        ////////////PET///////
+        str = "Age: " + pet.getAge();
         holder.tvPetAge.setText(str);
-        str = pet.getName();
-        holder.tvName.setText(str);
-        if (pet.getPureBred())
-            str = "Purebred";
-        else
-            str = "";
-        holder.tvPurebred.setText(str);
-        switch (feed.getPet().getAnimalType()) {
+//        str = pet.getName();
+//        holder.tvName.setText(str);
+        switch (pet.getAnimalType()) {
             case "Horse":
-                Glide.with(holder.ivType.getContext()).load(R.drawable.icon_horse).into(holder.ivType);
+                Glide.with(context).load(R.drawable.icon_horse).into(holder.ivType);
                 break;
             case "Dog":
-                Glide.with(holder.ivType.getContext()).load(R.drawable.icon_dog).into(holder.ivType);
+                Glide.with(context).load(R.drawable.icon_dog).into(holder.ivType);
                 break;
             case "Cat":
-                Glide.with(holder.ivType.getContext()).load(R.drawable.icon_cat).into(holder.ivType);
+                Glide.with(context).load(R.drawable.icon_cat).into(holder.ivType);
                 break;
             default:
-                Glide.with(holder.ivType.getContext()).load(R.drawable.missing).into(holder.ivType);
+                Glide.with(context).load(R.drawable.missing).into(holder.ivType);
                 break;
         }
+
+
+        /////////////FEED//////NEED 9//////////
+        if (!feed.getImageURL().equals("null")) {
+//            holder.ivFeedPhoto.setVisibility(View.GONE);
+//            Glide.with(holder.ivFeedPhoto.getContext()).load(feed.getImageURL()).into(holder.ivFeedPhoto);
+            holder.ivFeedPhoto.setVisibility(View.VISIBLE);
+            Glide.with(holder.ivFeedPhoto.getContext())
+                    .load(feed.getImageURL())
+                    .diskCacheStrategy(DiskCacheStrategy.DATA)
+                    .thumbnail(0.05f).transition(DrawableTransitionOptions.withCrossFade())
+                    .into(holder.ivFeedPhoto);
+        }
+        holder.tvPostTime.setText(feed.getTime());
+        holder.tvPostOwner.setText(feed.getPostOwner());
+        holder.tvPostText.setText(feed.getPostText());
+        holder.tvName.setText(feed.getSelectedPet());
+        str = feed.getFree();
+        if (str.equals("yes")){
+//             item is free
+            holder.tvPay.setText("Free");
+//            Glide.with(context).load(R.drawable.vector_money_off).into(holder.ivIsFree);
+        } else {
+//            item isn't free
+//            Glide.with(context).load(R.drawable.vector_money).into(holder.ivIsFree);
+            if (feed.getWhoPays().equals("user")) {
+                holder.tvPay.setText("Pay");
+                holder.tvPay.setTextColor(Color.RED);
+            } else {
+                holder.tvPay.setText("Earn");
+                holder.tvPay.setVisibility(View.VISIBLE);
+                holder.tvPay.setTextColor(Color.GREEN);
+            }
+        }
+
+
+
+
 
 
 //        RequestOptions options = new RequestOptions()
@@ -134,14 +172,6 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyFeedViewHold
 //                .transform(new CircleCrop());
 
 
-        if (feed.getImageURL() == null)
-            Glide.with(holder.ivFeedPhoto.getContext()).load(R.drawable.missing).into(holder.ivFeedPhoto);
-        else
-            Glide.with(holder.ivFeedPhoto.getContext())
-                    .load(feed.getImageURL())
-                    .diskCacheStrategy(DiskCacheStrategy.DATA)
-                    .thumbnail(0.05f).transition(DrawableTransitionOptions.withCrossFade())
-                    .into(holder.ivFeedPhoto);
     }
 
     @Override

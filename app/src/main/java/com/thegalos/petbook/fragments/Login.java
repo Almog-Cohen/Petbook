@@ -6,9 +6,9 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,9 +25,21 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
+import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
 import com.thegalos.petbook.R;
+import com.thegalos.petbook.adapters.MyPetsAdapter;
+import com.thegalos.petbook.objects.Pet;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class Login extends Fragment {
 
@@ -35,6 +47,8 @@ public class Login extends Fragment {
     FirebaseAuth mAuth;
     Button btnAction;
     boolean readyToRegister = false;
+    SharedPreferences sp;
+
 
     public Login() {
     }
@@ -55,6 +69,7 @@ public class Login extends Fragment {
         etName.setVisibility(View.INVISIBLE);
         final MotionLayout motionLayout;
         motionLayout = view.findViewById(R.id.motionLogin);
+        sp = PreferenceManager.getDefaultSharedPreferences(getContext());
 
 
         etEmail = view.findViewById(R.id.etEmail);
@@ -80,6 +95,7 @@ public class Login extends Fragment {
                             if (task.isSuccessful()) {
                                 Log.d("auth", "signInWithCredential:success");
                                 signInTransaction();
+                                loadFirebaseDB();
                             } else {
                                 Log.d("auth", "signInWithCredential:failure", task.getException());
                                 if (task.getException() instanceof FirebaseAuthInvalidUserException) {
@@ -106,8 +122,7 @@ public class Login extends Fragment {
                                         FirebaseDatabase.getInstance().getReference().child("Users").child(user.getUid()).child("Details").child("Name").setValue(etName.getText().toString());
                                         FirebaseDatabase.getInstance().getReference().child("Users").child(user.getUid()).child("Details").child("Email").setValue(etEmail.getText().toString());
                                         FirebaseDatabase.getInstance().getReference().child("Users").child(user.getUid()).child("Details").child("MemberSince").setValue(ServerValue.TIMESTAMP);
-                                        SharedPreferences preferences = getContext().getSharedPreferences("pref", Context.MODE_PRIVATE);
-                                        SharedPreferences.Editor editor = preferences.edit();
+                                        SharedPreferences.Editor editor = sp.edit();
                                         editor.putString("Name", etName.getText().toString());
                                         editor.putString("Email", etEmail.getText().toString());
                                         editor.apply();
@@ -137,8 +152,49 @@ public class Login extends Fragment {
         });
     }
 
+    private void loadFirebaseDB() {
+        boolean downloadedPets = sp.getBoolean("downloadedPets" , false);
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(user.getUid()).child("Pets");
+            databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        List<Pet> petList = new ArrayList<>();
+                        for (final DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            Pet pet = snapshot.getValue(Pet.class);
+//                            pet.setAge(snapshot.child("age").getValue(String.class));
+//                            pet.setAnimalType(snapshot.child("animalType").getValue(String.class));
+//                            pet.setBreed(snapshot.child("breed").getValue(String.class));
+//                            pet.setGender(snapshot.child("gender").getValue(String.class));
+//                            pet.setName(snapshot.child("name").getValue(String.class));
+//                            pet.setPureBred(snapshot.child("pureBred").getValue(Boolean.class));
+//                            pet.setVaccine(snapshot.child("vaccine").getValue(Boolean.class));
+//                            pet.setPetUID(snapshot.getKey());
+                            petList.add(pet);
+                        }
+                        Collections.reverse(petList);
+
+                        Gson gson = new Gson();
+                        String json = gson.toJson(petList);
+                        sp.edit().putString("PetList", json).apply();
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Log.w("firebase", "onCancelled", databaseError.toException());
+                }
+            });
+        }
+        Toast.makeText(getContext(), "Loaded from Firebase", Toast.LENGTH_SHORT).show();
+    }
+
+
     private void signInTransaction() {
         FragmentTransaction ft = getParentFragmentManager().beginTransaction();
         ft.replace(R.id.flFragment, new MainFeed(), "main_fragment").commit();
+
     }
 }

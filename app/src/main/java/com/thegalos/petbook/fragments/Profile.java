@@ -10,6 +10,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -67,7 +68,7 @@ public class Profile extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull final View view,  Bundle savedInstanceState) {
-        sp = getActivity().getSharedPreferences("pref", Context.MODE_PRIVATE);
+        sp = PreferenceManager.getDefaultSharedPreferences(getContext());
         downloadedPets = sp.getBoolean("downloadedPets" , false);
         user = FirebaseAuth.getInstance().getCurrentUser();
         tvUserName = view.findViewById(R.id.tvUserName);
@@ -113,7 +114,7 @@ public class Profile extends Fragment {
                     tvMemberSince.setText("");
                     btnLogout.setVisibility(View.INVISIBLE);
                     petList.clear();
-                    myPetsAdapter.notifyDataSetChanged();
+//                    myPetsAdapter.notifyDataSetChanged();
                     FirebaseAuth.getInstance().signOut();
                     Snackbar snackbar = Snackbar.make(view, R.string.disconnected_from_petbook, Snackbar.LENGTH_SHORT);
 //                snackbar.setAnchorView(R.id.bottomBar);
@@ -128,10 +129,10 @@ public class Profile extends Fragment {
         //Load User Details
 
         //load pets - if first time from Firebase else from shared prefs
-        if (downloadedPets)
-            loadLocalData();
-        else
-            loadFirebaseData();
+//        if (downloadedPets)
+//            loadLocalData();
+//        else
+//            loadFirebaseData();
 
     }
 

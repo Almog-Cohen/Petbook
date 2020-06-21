@@ -1,18 +1,20 @@
 package com.thegalos.petbook.fragments;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -65,6 +67,10 @@ public class AddFeed extends Fragment {
     Spinner spnPet;
     Button btnPostFeed;
     ConstraintLayout postingLayout;
+    boolean PhotoSelected = false;
+    RadioGroup rgIsFree, rgWhoPays;
+    EditText etAmount;
+    boolean isFree = true;
 
 
     public AddFeed() {
@@ -79,7 +85,7 @@ public class AddFeed extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull final View view,  Bundle savedInstanceState) {
-        preferences = this.getActivity().getSharedPreferences("pref", Context.MODE_PRIVATE);
+        preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         user = FirebaseAuth.getInstance().getCurrentUser();
         spnPet = view.findViewById(R.id.spnPet);
 //        etBreed = view.findViewById(R.id.etBreed);
@@ -88,6 +94,40 @@ public class AddFeed extends Fragment {
         etDetails = view.findViewById(R.id.etDetails);
         btnPostFeed = view.findViewById(R.id.btnPostFeed);
         postingLayout = view.findViewById(R.id.postingLayout);
+        rgIsFree = view.findViewById(R.id.rgIsFree);
+        rgWhoPays = view.findViewById(R.id.rgWhoPays);
+        etAmount = view.findViewById(R.id.etAmount);
+
+        rgIsFree.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if (checkedId == R.id.rbFree) {
+                    rgWhoPays.setVisibility(View.INVISIBLE);
+                    rgWhoPays.clearCheck();
+                    etAmount.setVisibility(View.INVISIBLE);
+                    etAmount.setText("");
+                    isFree = true;
+                } else if (checkedId == R.id.rbPay) {
+                    rgWhoPays.setVisibility(View.VISIBLE);
+                    isFree = false;
+                }
+            }
+        });
+        rgWhoPays.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if (checkedId == R.id.rbToGet) {
+                    etAmount.setVisibility(View.VISIBLE);
+                    etAmount.setText("");
+                } else if (checkedId == R.id.rbToPay) {
+                    etAmount.setVisibility(View.VISIBLE);
+                    etAmount.setText("");
+                    rgWhoPays.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+
         loadData();
         ivPhoto = view.findViewById(R.id.ivPhoto);
         ArrayAdapter<String> nameAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, petNameList);
@@ -122,9 +162,15 @@ public class AddFeed extends Fragment {
                 if (etDetails.getText().toString().equals("")) {
                     Toast.makeText(getContext(), "Please add details to your post", Toast.LENGTH_SHORT).show();
                     return;
+
+                }
+                if ((rgIsFree.getCheckedRadioButtonId() == R.id.rbPay)
+                        && (rgWhoPays.getCheckedRadioButtonId() == R.id.rbToPay || rgWhoPays.getCheckedRadioButtonId() == R.id.rbToGet)
+                        && etAmount.getText().toString().equals("")) {
+                    Toast.makeText(getContext(), "Please set Amount", Toast.LENGTH_SHORT).show();
+                    return;
                 }
                 showProgress(true);
-//                String strUri = uri.toString();
 //                addToStorage();
 
             }
@@ -140,15 +186,55 @@ public class AddFeed extends Fragment {
             spnPet.setEnabled(false);
             ivPhoto.setEnabled(false);
             postingLayout.setVisibility(View.VISIBLE);
-            uploadFiles();
+            if (PhotoSelected)
+                uploadFiles();
+            else
+                justPost();
         } else {
-
             btnPostFeed.setEnabled(true);
             etDetails.setEnabled(true);
             spnPet.setEnabled(true);
             ivPhoto.setEnabled(true);
             postingLayout.setVisibility(View.GONE);
         }
+
+    }
+
+    private void justPost() {
+        db = FirebaseDatabase.getInstance().getReference().child("Posts").push();
+        db.child("Time").setValue(ServerValue.TIMESTAMP);
+        db.child("PostText").setValue(etDetails.getText().toString());
+        db.child("SelectedPet").setValue(spnPet.getSelectedItem().toString());
+        db.child("Pet").setValue(petArrayList.get(spnPet.getSelectedItemPosition()));
+        db.child("Owner").setValue(user.getDisplayName());
+        db.child("OwnerUID").setValue(user.getUid());
+        db.child("ImageURL").setValue("null");
+        if (!isFree){
+            db.child("IsFree").setValue("no");
+            if (rgWhoPays.getCheckedRadioButtonId() == R.id.rbToGet)
+                db.child("WhoPays").setValue("user");
+            else
+                db.child("WhoPays").setValue("owner");
+            db.child("Amount").setValue(etAmount.getText().toString());
+        } else {
+            db.child("IsFree").setValue("yes");
+            db.child("WhoPays").setValue("free");
+            db.child("Amount").setValue("0");
+        }
+
+
+//        Feed feed = new Feed();
+//        feed.setSelectedPet(spnPet.getSelectedItem().toString());
+//        feed.setPostText(etDetails.getText().toString());
+//        feed.setOwnerUID(user.getUid());
+//        feed.setPet(petArrayList.get(spnPet.getSelectedItemPosition()));
+//        feed.setPostOwner(user.getDisplayName());
+//        db.setValue(feed);
+//        db.child("Time").setValue(ServerValue.TIMESTAMP);
+//        //TODO if we add option to update name after Sign up we need to use getUID and make sure to load correct name in fragments
+        showProgress(false);
+        changeFragment();
+        Toast.makeText(getContext(), "Uploaded no ", Toast.LENGTH_SHORT).show();
 
     }
 
@@ -168,29 +254,57 @@ public class AddFeed extends Fragment {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
+                            db = FirebaseDatabase.getInstance().getReference().child("Posts").push();
+                            db.child("Time").setValue(ServerValue.TIMESTAMP);
+                            db.child("PostText").setValue(etDetails.getText().toString());
+                            db.child("SelectedPet").setValue(spnPet.getSelectedItem().toString());
+                            db.child("Pet").setValue(petArrayList.get(spnPet.getSelectedItemPosition()));
+                            db.child("Owner").setValue(user.getDisplayName());
+                            db.child("OwnerUID").setValue(user.getUid());
+//                            db.child("ImageURL").setValue("null");
+                            if (!isFree){
+                                db.child("IsFree").setValue("no");
+                                if (rgWhoPays.getCheckedRadioButtonId() == R.id.rbToGet)
+                                    db.child("WhoPays").setValue("user");
+                                else
+                                    db.child("WhoPays").setValue("owner");
+                                db.child("Amount").setValue(etAmount.getText().toString());
+                            } else {
+                                db.child("IsFree").setValue("yes");
+                                db.child("WhoPays").setValue("free");
+                                db.child("Amount").setValue("0");
+                            }
                             ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                 @Override
                                 public void onSuccess(Uri uri) {
                                     imageLink = (uri.toString());
                                     db.child("ImageURL").setValue(imageLink);
-//                                    Toast.makeText(getContext(), "image link: " + imageLink, Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getContext(), "image link: " + imageLink, Toast.LENGTH_LONG).show();
                                 }
                             });
-                            db = FirebaseDatabase.getInstance().getReference().child("Posts").push();
-                            postText = etDetails.getText().toString();
-                            selectedPet = spnPet.getSelectedItem().toString();
-                            db.child("Time").setValue(ServerValue.TIMESTAMP);
-                            db.child("PostText").setValue(postText);
-                            db.child("SelectedPet").setValue(selectedPet);
-                            db.child("Pet").setValue(petArrayList.get(spnPet.getSelectedItemPosition()));
-                            //TODO if we add option to update name after Sign up we need to use getUID and make sure to load correct name in fragments
-                            db.child("Owner").setValue(user.getDisplayName());
-                            db.child("OwnerUID").setValue(user.getUid());
+//                            db = FirebaseDatabase.getInstance().getReference().child("Posts").push();
+//                            db.child("Time").setValue(ServerValue.TIMESTAMP);
+//                            db.child("PostText").setValue(etDetails.getText().toString());
+//                            db.child("SelectedPet").setValue(spnPet.getSelectedItem().toString());
+//                            db.child("Pet").setValue(petArrayList.get(spnPet.getSelectedItemPosition()));
+//                            db.child("Owner").setValue(user.getDisplayName());
+//                            db.child("OwnerUID").setValue(user.getUid());
+//                            if (!isFree){
+//                                db.child("IsFree").setValue("no");
+//                                if (rgWhoPays.getCheckedRadioButtonId() == R.id.rbToGet)
+//                                    db.child("WhoPays").setValue("user");
+//                                else
+//                                    db.child("WhoPays").setValue("owner");
+//
+//                                db.child("Amount").setValue(etAmount.getText().toString());
+//                            } else {
+//                                db.child("IsFree").setValue("yes");
+//                                db.child("WhoPays").setValue("free");
+//                                db.child("Amount").setValue("0");
+//                            }
                             showProgress(false);
                             changeFragment();
-
-//                            progressDialog.dismiss();
-                            Toast.makeText(getContext(), "Uploaded", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "Uploaded with photo", Toast.LENGTH_SHORT).show();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -223,6 +337,7 @@ public class AddFeed extends Fragment {
     public void onActivityResult(int requestCode, int resultCode,  Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            PhotoSelected = true;
             uri = data.getData();
             Glide.with(this).load(uri).into(ivPhoto);
             Toast.makeText(getContext(), "uri is: " + uri, Toast.LENGTH_SHORT).show();
