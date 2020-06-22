@@ -82,7 +82,7 @@ public class ViewPost extends Fragment {
             Glide.with(context).load(feed.getImageURL()).into(imageURL);
         postText.setText(feed.getPostText());
         time.setText(feed.getTime());
-        str = getString(R.string.owned_by) + feed.getPostOwner();
+        str = getString(R.string.owned_by_space) + feed.getPostOwner();
         ownerName.setText(str);
 
 

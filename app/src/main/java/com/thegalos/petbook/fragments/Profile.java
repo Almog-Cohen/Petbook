@@ -12,7 +12,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -39,6 +41,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import me.ibrahimsn.lib.SmoothBottomBar;
+
 
 public class Profile extends Fragment {
     private static List<Pet> petList = new ArrayList<>();
@@ -51,6 +55,7 @@ public class Profile extends Fragment {
     String petCount;
     TextView tvMemberSince;
     TextView tvUserName;
+    FragmentManager manager;
 
 
 
@@ -73,10 +78,14 @@ public class Profile extends Fragment {
         tvTotalPets = view.findViewById(R.id.tvTotalPets);
         tvMemberSince = view.findViewById(R.id.tvMemberSince);
         final Button btnLogout = view.findViewById(R.id.btnLogout);
-        Button btnAddPet = view.findViewById(R.id.btnAddPet);
+        final Button btnAddPet = view.findViewById(R.id.btnAddPet);
+
+        manager = getParentFragmentManager();
         if (user != null) {
             btnLogout.setVisibility(View.VISIBLE);
             btnAddPet.setVisibility(View.VISIBLE);
+
+
             tvUserName.setText(user.getDisplayName());
             Date date = new Date(sp.getLong("MemberSince",0));
             SimpleDateFormat sfd = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
@@ -107,16 +116,22 @@ public class Profile extends Fragment {
             @Override
             public void onClick(View v) {
                 if (user != null) {
-                    tvUserName.setText("");
+                    tvUserName.setText(getString(R.string.details_would_show_once_signed_in));
                     tvTotalPets.setText("");
                     tvMemberSince.setText("");
+
                     btnLogout.setVisibility(View.INVISIBLE);
+                    btnAddPet.setVisibility(View.INVISIBLE);
                     petList.clear();
 //                    myPetsAdapter.notifyDataSetChanged();
                     FirebaseAuth.getInstance().signOut();
                     Snackbar snackbar = Snackbar.make(view, R.string.disconnected_from_petbook, Snackbar.LENGTH_SHORT);
 //                snackbar.setAnchorView(R.id.bottomBar);
-                    snackbar.show();
+                    FragmentTransaction ft = getParentFragmentManager().beginTransaction();
+                    ft.replace(R.id.flFragment, new MainFeed(), "MainFeed").commit();
+                    SmoothBottomBar smoothBottomBar = getActivity().findViewById(R.id.bottomBar);
+                    smoothBottomBar.setItemActiveIndex(0);
+                   snackbar.show();
                     sp.edit().clear().apply();
 
                 } else
@@ -131,7 +146,6 @@ public class Profile extends Fragment {
             loadLocalData();
         else
             loadFirebaseData();
-
     }
 
     private void loadFirebaseData() {
@@ -155,14 +169,15 @@ public class Profile extends Fragment {
                             pet.setPetUID(snapshot.getKey());
                             petList.add(pet);
                         }
-                        myPetsAdapter = new MyPetsAdapter((petList));
-                        recyclerView.setAdapter(myPetsAdapter);
-                        Collections.reverse(petList);
-                        myPetsAdapter.notifyDataSetChanged();
-                        petCount = "Pets: " + petList.size();
-                        tvTotalPets.setText(petCount);
-                        saveLocaly();
-                        sp.edit().putBoolean("downloadedPets", true).apply();
+//                        myPetsAdapter = new MyPetsAdapter(manager, getContext(), petList);
+//                        recyclerView.setAdapter(myPetsAdapter);
+//                        Collections.reverse(petList);
+//                        myPetsAdapter.notifyDataSetChanged();
+//                        petCount = "Pets: " + petList.size();
+//                        tvTotalPets.setText(petCount);
+//                        sp.edit().putBoolean("downloadedPets", true).apply();
+                        setAdapter(false);
+//                        saveLocaly();
                     }
                 }
 
@@ -193,12 +208,56 @@ public class Profile extends Fragment {
         if (petList == null) {
             petList = new ArrayList<>();
         }
-        myPetsAdapter = new MyPetsAdapter((petList));
+//        myPetsAdapter = new MyPetsAdapter(manager, getContext(), petList);
+//        recyclerView.setAdapter(myPetsAdapter);
+//        myPetsAdapter.notifyDataSetChanged();
+//        petCount = "Pets: " + petList.size();
+//        tvTotalPets.setText(petCount);
+//        Toast.makeText(getContext(), "Loaded from Shared Prefs", Toast.LENGTH_SHORT).show();
+        setAdapter(true);
+    }
+
+    private void setAdapter(boolean b) {
+        myPetsAdapter = new MyPetsAdapter(manager, getContext(), petList);
         recyclerView.setAdapter(myPetsAdapter);
+        if (!b){
+            Collections.reverse(petList);
+            Toast.makeText(getContext(), "Loaded from FireBase", Toast.LENGTH_SHORT).show();
+            SharedPreferences.Editor editor = sp.edit();
+            Gson gson = new Gson();
+            String json = gson.toJson(petList);
+            editor.putBoolean("downloadedPets", true);
+            editor.putString("PetList", json);
+            editor.apply();
+        } else
+            Toast.makeText(getContext(), "Loaded from Shared Prefs", Toast.LENGTH_SHORT).show();
         myPetsAdapter.notifyDataSetChanged();
         petCount = "Pets: " + petList.size();
         tvTotalPets.setText(petCount);
-        Toast.makeText(getContext(), "Loaded from Shared Prefs", Toast.LENGTH_SHORT).show();
+
+        myPetsAdapter.setListener(new MyPetsAdapter.myPetsListener() {
+            @Override
+            public void onCardLongClicked(int position) {
+                Toast.makeText(getContext(), "Long clicked position: " + position, Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
+
+
+//    myPetsAdapter = new MyPetsAdapter(manager, getContext(), petList);
+//        recyclerView.setAdapter(myPetsAdapter);
+//        myPetsAdapter.notifyDataSetChanged();
+//    petCount = "Pets: " + petList.size();
+//        tvTotalPets.setText(petCount);
+//        Toast.makeText(getContext(), "Loaded from Shared Prefs", Toast.LENGTH_SHORT).show();
+
+    //    myPetsAdapter = new MyPetsAdapter(manager, getContext(), petList);
+//                        recyclerView.setAdapter(myPetsAdapter);
+//                        Collections.reverse(petList);
+//                        myPetsAdapter.notifyDataSetChanged();
+//    petCount = "Pets: " + petList.size();
+//                        tvTotalPets.setText(petCount);
+
 }
 

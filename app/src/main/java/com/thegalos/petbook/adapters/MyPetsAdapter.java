@@ -1,37 +1,57 @@
 package com.thegalos.petbook.adapters;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckedTextView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.thegalos.petbook.fragments.AddPet;
+import com.thegalos.petbook.fragments.Profile;
 import com.thegalos.petbook.objects.Pet;
 import com.thegalos.petbook.R;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 
 public class MyPetsAdapter extends RecyclerView.Adapter<MyPetsAdapter.MyPetsViewHolder> {
-
-    private final List<Pet> petList;
+    private final FragmentManager manager;
+    private final Context context;
+    private List<Pet> petList;
     private myPetsListener listener;
 
-    interface myPetsListener {
-        void onClickListener(int position);
-        void onCardLongClicked();
+    public interface myPetsListener {
+        void onCardLongClicked(int position);
     }
 
     public void setListener(myPetsListener listener){
         this.listener = listener;
     }
 
-    public MyPetsAdapter(List<Pet> petList) {
+    public MyPetsAdapter(FragmentManager manager, Context context, List<Pet> petList) {
+        this.manager = manager;
+        this.context = context;
         this.petList = petList;
     }
 
@@ -43,6 +63,7 @@ public class MyPetsAdapter extends RecyclerView.Adapter<MyPetsAdapter.MyPetsView
         final TextView tvGender;
         final TextView tvBreed;
         final ImageView ivPetType;
+        final ImageView ivDelete;
         final CheckedTextView cbVaccine;
         final CheckedTextView cbPureBred;
 
@@ -56,25 +77,17 @@ public class MyPetsAdapter extends RecyclerView.Adapter<MyPetsAdapter.MyPetsView
             tvGender = itemView.findViewById(R.id.tvGender);
             tvBreed = itemView.findViewById(R.id.tvBreed);
             ivPetType =  itemView.findViewById(R.id.ivPetType);
+            ivDelete = itemView.findViewById(R.id.ivDelete);
             cbPureBred = itemView.findViewById(R.id.cbPureBred);
             cbVaccine = itemView.findViewById(R.id.cbVaccine);
-
-
-
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if(listener != null){
-                        listener.onClickListener(getAdapterPosition());
-                    }
-                }
-            });
 
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
                     if(listener != null)
-                        listener.onCardLongClicked();
+                        listener.onCardLongClicked(getAdapterPosition());
+//                    Toast.makeText(context, "Long clicked position: " + getAdapterPosition(), Toast.LENGTH_SHORT).show();
+                    ivDelete.setVisibility(View.VISIBLE);
                     return true;
                 }
             });
@@ -89,11 +102,13 @@ public class MyPetsAdapter extends RecyclerView.Adapter<MyPetsAdapter.MyPetsView
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyPetsViewHolder holder, int position) {
-        Pet pet = petList.get(position);
+    public void onBindViewHolder(@NonNull final MyPetsViewHolder holder, final int position) {
+        final Pet pet = petList.get(position);
+        String str = "";
         holder.tvPetName.setText(pet.getName());
         holder.tvAnimalType.setText(pet.getAnimalType());
-        holder.tvAge.setText(pet.getAge());
+        str = context.getString(R.string.age_space) + pet.getAge();
+        holder.tvAge.setText(str);
         holder.tvGender.setText(pet.getGender());
         holder.tvBreed.setText(pet.getBreed());
         if (pet.getVaccine()){
@@ -108,6 +123,7 @@ public class MyPetsAdapter extends RecyclerView.Adapter<MyPetsAdapter.MyPetsView
 //        if (pet.getCurrentImagePath() == null)
 //            Glide.with(holder.ivPetType.getContext()).load(R.drawable.missing).into(holder.ivPetType);
 //        else {
+
         switch (pet.getAnimalType()) {
             case "Horse":
                 Glide.with(holder.ivPetType.getContext()).load(R.drawable.icon_horse).into(holder.ivPetType);
@@ -122,7 +138,52 @@ public class MyPetsAdapter extends RecyclerView.Adapter<MyPetsAdapter.MyPetsView
                 Glide.with(holder.ivPetType.getContext()).load(R.drawable.missing).into(holder.ivPetType);
                 break;
         }
+
+        holder.ivDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(context); //alert for confirm to delete
+                builder.setTitle("Delete pet");
+                builder.setMessage("Are you sure?");    //set message
+                builder.setPositiveButton("YES", new DialogInterface.OnClickListener() { //when click on DELETE
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //TODO delete from firebase and sharedprefs
+                        removePet(position, pet.getPetUID());
+                    }
+                }).setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        holder.ivDelete.setVisibility(View.INVISIBLE);
+                    }
+                }).show();  //show alert dialog
+            }
+        });
+
     }
+
+    private void removePet(int position, String petUID) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        Gson gson = new Gson();
+        String json = sp.getString("PetList", "");
+        Type type = new TypeToken<ArrayList<Pet>>() {
+        }.getType();
+        petList = gson.fromJson(json, type);
+        petList.remove(position);
+        SharedPreferences.Editor editor = sp.edit();
+
+        json = gson.toJson(petList);
+        editor.putString("PetList", json);
+        editor.apply();
+
+        Toast.makeText(context, "removed from sharedprefs", Toast.LENGTH_SHORT).show();
+        manager.beginTransaction().replace(R.id.flFragment, new Profile(), "Profile").commit();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(user.getUid()).child("Pets").child(petUID);
+            databaseReference.removeValue();
+        }
+        }
 
 
     @Override

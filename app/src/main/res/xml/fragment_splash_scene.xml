@@ -17,6 +17,6 @@
     <Transition
         motion:constraintSetStart="@+id/Splash_start"
         motion:constraintSetEnd="@+id/Splash_end"
-        motion:duration="4000"/>
+        motion:duration="2000"/>
 
 </MotionScene>

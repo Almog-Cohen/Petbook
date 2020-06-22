@@ -2,11 +2,14 @@ package com.thegalos.petbook;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.thegalos.petbook.fragments.Chats;
 import com.thegalos.petbook.fragments.MainFeed;
 import com.thegalos.petbook.fragments.Profile;
@@ -22,10 +25,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        SmoothBottomBar smoothBottomBar = findViewById(R.id.bottomBar);
+        final SmoothBottomBar smoothBottomBar = findViewById(R.id.bottomBar);
         smoothBottomBar.setVisibility(View.INVISIBLE);
         getSupportFragmentManager().beginTransaction().add(R.id.mainLayout, new Splash(),"splash").commit();
-
 
         smoothBottomBar.setOnItemSelectedListener(new OnItemSelectedListener() {
             @Override
@@ -35,11 +37,20 @@ public class MainActivity extends AppCompatActivity {
                         handleFragment(new MainFeed(),"MainFeed");
                         break;
                     case 1:
-                        handleFragment(new Chats(), "Chats");
+                        if (FirebaseAuth.getInstance().getCurrentUser() != null)
+                            handleFragment(new Chats(), "Chats");
+                        else {
+                            Toast.makeText(MainActivity.this, "Sign in First", Toast.LENGTH_SHORT).show();
+                            smoothBottomBar.setItemActiveIndex(0);
+                        }
                         break;
                     case 2:
-                        handleFragment(new Profile(), "Profile");
-                        break;
+                        if (FirebaseAuth.getInstance().getCurrentUser() != null)
+                            handleFragment(new Profile(), "Profile");
+                        else {
+                            Toast.makeText(MainActivity.this, "Sign in First", Toast.LENGTH_SHORT).show();
+                            smoothBottomBar.setItemActiveIndex(0);
+                        }
                 }
                 return false;
             }

@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -53,6 +54,7 @@ public class MainFeed extends Fragment {
     int maxProgress = 0;
     SwipeRefreshLayout refreshLayout;
     SharedPreferences sp;
+    ConstraintLayout constraintLayout;
 
 
     public MainFeed() {
@@ -71,6 +73,7 @@ public class MainFeed extends Fragment {
         context = getContext();
         progressBar = view.findViewById(R.id.progressBar2);
         tvFeedUser = view.findViewById(R.id.tvFeedUser);
+        constraintLayout = view.findViewById(R.id.loadingLayout);
         user = FirebaseAuth.getInstance().getCurrentUser();
         sp = PreferenceManager.getDefaultSharedPreferences(getContext());
 
@@ -78,7 +81,7 @@ public class MainFeed extends Fragment {
         refreshLayout = view.findViewById(R.id.mainLayout);
 
         if (user == null) {
-            btnFeedAction.setText(R.string.register);
+            btnFeedAction.setText(R.string.login);
         } else {
             String str = "Hi " + user.getDisplayName();
             editor.putString("Name", user.getDisplayName());
@@ -153,6 +156,7 @@ public class MainFeed extends Fragment {
                     }
                     Collections.reverse(feedList);
                     feedAdapter.notifyDataSetChanged();
+                    constraintLayout.setVisibility(View.GONE);
 
 //                    Log.d("progress_galos", "range is: " + range);
 //                    Log.d("progress_galos", "max is: " + recyclerView.getMeasuredHeight()* (feedList.size()-3));
@@ -177,7 +181,7 @@ public class MainFeed extends Fragment {
                 Log.d("progress_galos", "getHeight is: " + recyclerView.getHeight());
                 Log.d("progress_galos", "getHeight is: " + ((recyclerView.getHeight() * recyclerView.getAdapter().getItemCount() - 1)));
                 Log.d("progress_galos", "getHeight is: " + ((recyclerView.getHeight() * recyclerView.getAdapter().getItemCount() - 1)) / 2.5);
-                maxProgress = (int) ((recyclerView.getHeight() * (recyclerView.getAdapter().getItemCount() - 1)) / 2.8);
+                maxProgress = (int) ((recyclerView.getHeight() * (recyclerView.getAdapter().getItemCount() - 1)) / 3);
                 progressBar.setMax(maxProgress);
                 Log.d("progress_galos", "maxProgress: " + maxProgress);
             }

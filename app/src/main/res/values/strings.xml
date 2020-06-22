@@ -42,10 +42,13 @@
     <string name="profile">Profile</string>
     <string name="pet_feed">Pet Feed</string>
     <string name="free">Free</string>
-    <string name="pay_space">\"Pay \"</string>
-    <string name="earn_space">\"Earn \"</string>
-    <string name="owned_by">\"Owned by \"</string>
-    <string name="breed_space">\"Breed \"</string>
-    <string name="age_space">\"Age \"</string>
+    <string name="pay_space">"Pay "</string>
+    <string name="earn_space">"Earn "</string>
+    <string name="owned_by_space">"Owned by "</string>
+    <string name="breed_space">"Breed "</string>
+    <string name="age_space">"Age "</string>
+    <string name="details_would_show_once_signed_in">Details would show once Signed in</string>
+    <string name="loading_from_db">Loading from DB</string>
+    <string name="login">Login</string>
 
 </resources>
