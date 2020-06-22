@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 
 import com.thegalos.petbook.R;
 
+import me.ibrahimsn.lib.SmoothBottomBar;
+
 public class Splash extends Fragment {
 
 
@@ -42,7 +44,8 @@ public class Splash extends Fragment {
             public void onTransitionChange(MotionLayout motionLayout, int i, int i1, float v) { }
 
             @Override
-            public void onTransitionCompleted(MotionLayout motionLayout, int i) { signInTransaction(); }
+            public void onTransitionCompleted(MotionLayout motionLayout, int i) {
+                signInTransaction(); }
 
             @Override
             public void onTransitionTrigger(MotionLayout motionLayout, int i, boolean b, float v) { }
@@ -51,7 +54,10 @@ public class Splash extends Fragment {
 
     private void signInTransaction() {
         FragmentTransaction ft = getParentFragmentManager().beginTransaction();
-        ft.replace(R.id.flFragment, new MainFeed(), "main_fragment");
+        Fragment fragment =getParentFragmentManager().findFragmentByTag("splash");
+        ft.remove(fragment).replace(R.id.flFragment, new MainFeed(), "main_fragment");
+        SmoothBottomBar smoothBottomBar = getActivity().findViewById(R.id.bottomBar);
+        smoothBottomBar.setVisibility(View.VISIBLE);
         ft.commit();
     }
 }

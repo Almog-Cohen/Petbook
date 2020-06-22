@@ -1,15 +1,7 @@
 package com.thegalos.petbook.fragments;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,13 +11,11 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.lang.reflect.Type;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
@@ -37,9 +27,17 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.thegalos.petbook.R;
 import com.thegalos.petbook.adapters.MyPetsAdapter;
 import com.thegalos.petbook.objects.Pet;
-import com.thegalos.petbook.R;
+
+import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 
 public class Profile extends Fragment {
@@ -129,10 +127,10 @@ public class Profile extends Fragment {
         //Load User Details
 
         //load pets - if first time from Firebase else from shared prefs
-//        if (downloadedPets)
-//            loadLocalData();
-//        else
-//            loadFirebaseData();
+        if (downloadedPets)
+            loadLocalData();
+        else
+            loadFirebaseData();
 
     }
 

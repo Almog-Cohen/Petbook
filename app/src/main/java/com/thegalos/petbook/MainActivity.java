@@ -1,6 +1,7 @@
 package com.thegalos.petbook;
 
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -11,6 +12,7 @@ import com.thegalos.petbook.fragments.MainFeed;
 import com.thegalos.petbook.fragments.Profile;
 import com.thegalos.petbook.fragments.Splash;
 
+import me.ibrahimsn.lib.BottomBarItem;
 import me.ibrahimsn.lib.OnItemSelectedListener;
 import me.ibrahimsn.lib.SmoothBottomBar;
 
@@ -20,9 +22,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        getSupportFragmentManager().beginTransaction().add(R.id.flFragment, new Splash()).commit();
-
         SmoothBottomBar smoothBottomBar = findViewById(R.id.bottomBar);
+        smoothBottomBar.setVisibility(View.INVISIBLE);
+        getSupportFragmentManager().beginTransaction().add(R.id.mainLayout, new Splash(),"splash").commit();
+
+
         smoothBottomBar.setOnItemSelectedListener(new OnItemSelectedListener() {
             @Override
             public boolean onItemSelect(int position) {
