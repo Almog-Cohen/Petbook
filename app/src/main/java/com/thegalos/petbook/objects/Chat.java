@@ -6,19 +6,25 @@ public class Chat {
     private String receiver;
     private String message;
 <<<<<<< HEAD
+<<<<<<< HEAD
     private String time;
 
 =======
 >>>>>>> galos 24/06 fix almog problems
+=======
+>>>>>>> mog 24.6
 
     public Chat(String sender, String receiver, String message) {
         this.sender = sender;
         this.receiver = receiver;
         this.message = message;
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
 >>>>>>> galos 24/06 fix almog problems
+=======
+>>>>>>> mog 24.6
     }
 
     public Chat() {
@@ -48,8 +54,11 @@ public class Chat {
         this.message = message;
     }
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 
 =======
 >>>>>>> galos 24/06 fix almog problems
+=======
+>>>>>>> mog 24.6
 }

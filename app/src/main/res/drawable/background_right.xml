@@ -7,10 +7,14 @@
         android:topRightRadius="0dp"/>
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     <solid android:color="#C8E6C9"/>
 =======
     <solid android:color="@color/primary"/>
 >>>>>>> galos 24/06 fix almog problems
+=======
+    <solid android:color="@color/primary"/>
+>>>>>>> mog 24.6
 
 
 </shape>

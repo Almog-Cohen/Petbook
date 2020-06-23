@@ -5,6 +5,7 @@
     <corners
         android:radius="10dp"
 <<<<<<< HEAD
+<<<<<<< HEAD
         android:topLeftRadius="0dp"/>
 
     <solid android:color="#C5CAE9"/>
@@ -13,6 +14,11 @@
 
     <solid android:color="@android:color/white"/>
 >>>>>>> galos 24/06 fix almog problems
+=======
+        android:topRightRadius="0dp"/>
+
+    <solid android:color="@android:color/white"/>
+>>>>>>> mog 24.6
 
 
 </shape>
