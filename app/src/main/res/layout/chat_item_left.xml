@@ -5,6 +5,7 @@
     android:layout_height="wrap_content"
     android:padding="8dp">
 
+<<<<<<< HEAD
     <TextView
         android:id="@+id/tvChatMessage"
         android:layout_width="wrap_content"
@@ -16,5 +17,23 @@
         android:paddingEnd="8dp"
         android:text="@string/string"
         android:textSize="18sp" />
+=======
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@mipmap/ic_launcher"
+        android:id="@+id/profile_image"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/profile_image"
+        android:background="@drawable/background_left"
+        android:layout_marginLeft="5dp"
+        android:text="hello"
+        android:id="@+id/show_message"
+        android:textSize="18sp"
+        android:padding="8dp"/>
+>>>>>>> galos 24/06 fix almog problems
 
 </RelativeLayout>

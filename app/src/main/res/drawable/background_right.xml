@@ -6,7 +6,11 @@
         android:radius="10dp"
         android:topRightRadius="0dp"/>
 
+<<<<<<< HEAD
     <solid android:color="#C8E6C9"/>
+=======
+    <solid android:color="@color/primary"/>
+>>>>>>> galos 24/06 fix almog problems
 
 
 </shape>
