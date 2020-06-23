@@ -129,7 +129,7 @@ public class AddFeed extends Fragment {
 
 
         loadData();
-        ivPhoto = view.findViewById(R.id.ivPhoto);
+        ivPhoto = view.findViewById(R.id.tvAddPhoto);
         ArrayAdapter<String> nameAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, petNameList);
         nameAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spnPet.setAdapter(nameAdapter);

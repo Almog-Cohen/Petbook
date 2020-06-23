@@ -50,5 +50,8 @@
     <string name="details_would_show_once_signed_in">Details would show once Signed in</string>
     <string name="loading_from_db">Loading from DB</string>
     <string name="login">Login</string>
+    <string name="remove_pet">Remove pet</string>
+    <string name="related_post_would_be_removed">Once you remove this pet\nAll related posts would be removed!</string>
+    <string name="chat_with_owner">Chat With Owner</string>
 
 </resources>

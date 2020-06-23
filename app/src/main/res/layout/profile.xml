@@ -7,15 +7,15 @@
     tools:context=".fragments.Profile">
 
     <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/ivUserAvatar"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
-        android:src="@drawable/checked"
+        android:contentDescription="@string/none"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:contentDescription="@string/none" />
+        app:srcCompat="@drawable/dog_cat_horse" />
 
     <TextView
         android:id="@+id/tvUserName"
@@ -23,15 +23,16 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
-        android:text="@string/details_would_show_once_signed_in"
+        android:text="@string/full_name"
         android:textSize="18sp"
-        app:layout_constraintStart_toEndOf="@+id/imageView3"
+        app:layout_constraintStart_toEndOf="@+id/ivUserAvatar"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tvTotalPets"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="@string/total_pets"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/tvMemberSince"
         app:layout_constraintTop_toTopOf="@+id/tvMemberSince" />
@@ -41,6 +42,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
+        android:text="@string/member_since"
         app:layout_constraintStart_toStartOf="@+id/tvUserName"
         app:layout_constraintTop_toBottomOf="@+id/tvUserName" />
 
@@ -52,7 +54,7 @@
         android:background="@color/colorAccent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+        app:layout_constraintTop_toBottomOf="@+id/ivUserAvatar" />
 
     <Button
         android:id="@+id/btnLogout"

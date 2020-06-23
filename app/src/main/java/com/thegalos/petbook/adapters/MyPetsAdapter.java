@@ -21,8 +21,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.thegalos.petbook.fragments.AddPet;
@@ -143,12 +146,12 @@ public class MyPetsAdapter extends RecyclerView.Adapter<MyPetsAdapter.MyPetsView
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(context); //alert for confirm to delete
-                builder.setTitle("Delete pet");
-                builder.setMessage("Are you sure?");    //set message
+                builder.setIcon(context.getResources().getDrawable(android.R.drawable.ic_dialog_alert));
+                builder.setTitle(R.string.remove_pet);
+                builder.setMessage(R.string.related_post_would_be_removed);    //set message
                 builder.setPositiveButton("YES", new DialogInterface.OnClickListener() { //when click on DELETE
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        //TODO delete from firebase and sharedprefs
                         removePet(position, pet.getPetUID());
                     }
                 }).setNegativeButton("NO", new DialogInterface.OnClickListener() {
@@ -162,7 +165,7 @@ public class MyPetsAdapter extends RecyclerView.Adapter<MyPetsAdapter.MyPetsView
 
     }
 
-    private void removePet(int position, String petUID) {
+    private void removePet(int position, final String petUID) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         Gson gson = new Gson();
         String json = sp.getString("PetList", "");
@@ -176,14 +179,34 @@ public class MyPetsAdapter extends RecyclerView.Adapter<MyPetsAdapter.MyPetsView
         editor.putString("PetList", json);
         editor.apply();
 
-        Toast.makeText(context, "removed from sharedprefs", Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, "removed from prefs", Toast.LENGTH_SHORT).show();
         manager.beginTransaction().replace(R.id.flFragment, new Profile(), "Profile").commit();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(user.getUid()).child("Pets").child(petUID);
             databaseReference.removeValue();
+            databaseReference = FirebaseDatabase.getInstance().getReference().child("Posts");
+            final DatabaseReference finalDatabaseReference = databaseReference;
+            databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                            if (snapshot.child("Pet").child("petUID").getValue().equals(petUID)) {
+                                String str = snapshot.getKey();
+                                finalDatabaseReference.child(str).removeValue();
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
         }
-        }
+    }
 
 
     @Override

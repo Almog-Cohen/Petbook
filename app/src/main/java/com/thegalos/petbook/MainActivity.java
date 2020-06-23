@@ -9,13 +9,11 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.thegalos.petbook.fragments.Chats;
 import com.thegalos.petbook.fragments.MainFeed;
 import com.thegalos.petbook.fragments.Profile;
 import com.thegalos.petbook.fragments.Splash;
 
-import me.ibrahimsn.lib.BottomBarItem;
 import me.ibrahimsn.lib.OnItemSelectedListener;
 import me.ibrahimsn.lib.SmoothBottomBar;
 
