@@ -1,16 +1,41 @@
 package com.thegalos.petbook.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.thegalos.petbook.MessageActivity;
 import com.thegalos.petbook.R;
+import com.thegalos.petbook.objects.Chat;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Chats extends Fragment {
+
+    private ListView listView;
+
+    private List<String> usersList;
+    private String userId;
+    String userIdChat;
+
+
 
     public Chats() {
     }
@@ -25,8 +50,66 @@ public class Chats extends Fragment {
     @Override
     public void onViewCreated(@NonNull final View view,  Bundle savedInstanceState) {
 
+        listView = view.findViewById(R.id.list_view);
+        usersList = new ArrayList<>();
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (user != null) {
+            userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        }
+
+        DatabaseReference usersChatRef = FirebaseDatabase.getInstance().getReference().child("Messages");
+        usersChatRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                usersList.clear();
+
+                if (dataSnapshot.exists()) {
+
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        Chat chat = snapshot.getValue(Chat.class);
+
+                        if (chat.getSender().equals(userId)){
+                            usersList.add(chat.getReceiver());
+                            Log.d("SHAG", "onDataChange:sssss " + chat.getSender() +chat.getReceiver());
+                        }
+                        if (chat.getReceiver().equals(userId)){
+                            usersList.add(chat.getSender());
+                            Log.d("SHAG", "onDataChange:sssss " + chat.getReceiver());
+                        }
+
+                        if (getActivity()!=null) {
+
+                            ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, usersList);
+
+                            listView.setAdapter(adapter);
+                        }
+                    }
 
 
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                userIdChat = usersList.get(position);
+
+                Intent intent = new Intent(getActivity(), MessageActivity.class);
+                intent.putExtra("ownerId",userIdChat);
+                startActivity(intent);
+
+            }
+        });
     }
 }
+
 

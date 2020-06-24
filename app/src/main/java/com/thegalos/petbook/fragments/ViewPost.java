@@ -1,6 +1,7 @@
 package com.thegalos.petbook.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -13,10 +14,12 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.thegalos.petbook.MessageActivity;
 import com.thegalos.petbook.R;
 import com.thegalos.petbook.objects.Feed;
 import com.thegalos.petbook.objects.Pet;
@@ -26,6 +29,7 @@ import java.lang.reflect.Type;
 public class ViewPost extends Fragment {
 
     Context context;
+    SharedPreferences sp;
 
     public ViewPost() {
     }
@@ -38,7 +42,7 @@ public class ViewPost extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull final View view, Bundle savedInstanceState) {
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getContext());
+        sp = PreferenceManager.getDefaultSharedPreferences(getContext());
 //        user = FirebaseAuth.getInstance().getCurrentUser();
 
         context = getContext();
@@ -65,7 +69,7 @@ public class ViewPost extends Fragment {
         TextView pureBred = view.findViewById(R.id.pureBred);
         TextView vaccine = view.findViewById(R.id.vaccine);
 
-        Feed feed = gson.fromJson(json, type);
+        final Feed feed = gson.fromJson(json, type);
         Pet pet  = feed.getPet();
         String str;
         if (feed.getFree().equals("yes"))
@@ -119,6 +123,13 @@ public class ViewPost extends Fragment {
             @Override
             public void onClick(View v) {
                 //TODO Check If Chat with user Is already created, if not CREATE, change fragment,  maybe? mark as contacted
+                String ownerId = feed.getOwnerUID();
+                /*FirebaseDatabase.getInstance().getReference("Messages").child(ownerId).child(userId).setValue("null");*/
+
+                sp.edit().putString("ownerId", ownerId).apply();
+                FragmentTransaction ft = getParentFragmentManager().beginTransaction();
+                ft.replace(R.id.flFragment, new MessageActivity(), "MessageActivity").commit();
+
 
 
             }

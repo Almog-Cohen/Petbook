@@ -246,6 +246,5 @@ public class MainFeed extends Fragment {
     private void startRefresh() {
         FragmentTransaction ft = getParentFragmentManager().beginTransaction();
         ft.replace(R.id.flFragment, new MainFeed(), "MainFeed").commit();
-
     }
 }

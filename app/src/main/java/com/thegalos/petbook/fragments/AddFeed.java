@@ -261,7 +261,7 @@ public class AddFeed extends Fragment {
                             db.child("Pet").setValue(petArrayList.get(spnPet.getSelectedItemPosition()));
                             db.child("Owner").setValue(user.getDisplayName());
                             db.child("OwnerUID").setValue(user.getUid());
-//                            db.child("ImageURL").setValue("null");
+                            db.child("ImageURL").setValue("null");
                             if (!isFree){
                                 db.child("IsFree").setValue("no");
                                 if (rgWhoPays.getCheckedRadioButtonId() == R.id.rbToGet)
@@ -279,7 +279,9 @@ public class AddFeed extends Fragment {
                                 public void onSuccess(Uri uri) {
                                     imageLink = (uri.toString());
                                     db.child("ImageURL").setValue(imageLink);
-                                    Toast.makeText(getContext(), "image link: " + imageLink, Toast.LENGTH_LONG).show();
+//                                    Toast.makeText(getContext(), "image link: " + imageLink, Toast.LENGTH_LONG).show();
+                                    showProgress(false);
+                                    changeFragment();
                                 }
                             });
 //                            db = FirebaseDatabase.getInstance().getReference().child("Posts").push();
@@ -302,8 +304,8 @@ public class AddFeed extends Fragment {
 //                                db.child("WhoPays").setValue("free");
 //                                db.child("Amount").setValue("0");
 //                            }
-                            showProgress(false);
-                            changeFragment();
+//                            showProgress(false);
+//                            changeFragment();
                             Toast.makeText(getContext(), "Uploaded with photo", Toast.LENGTH_SHORT).show();
                         }
                     })
