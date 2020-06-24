@@ -60,13 +60,13 @@ Context context;
         listView = view.findViewById(R.id.list_view);
         usersList = new ArrayList<>();
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
         if (user != null) {
             userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         }
 
-        DatabaseReference usersChatRef = FirebaseDatabase.getInstance().getReference().child("Messages");
+        DatabaseReference usersChatRef = FirebaseDatabase.getInstance().getReference().child("Messages").child(userId);
         usersChatRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -75,16 +75,19 @@ Context context;
                 if (dataSnapshot.exists()) {
 
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        Chat chat = snapshot.getValue(Chat.class);
 
-                        if (chat.getSender().equals(userId)){
-                            usersList.add(chat.getReceiver());
-                            Log.d("SHAG", "onDataChange:sssss " + chat.getSender() +chat.getReceiver());
-                        }
-                        if (chat.getReceiver().equals(userId)){
-                            usersList.add(chat.getSender());
-                            Log.d("SHAG", "onDataChange:sssss " + chat.getReceiver());
-                        }
+                        if (!snapshot.getKey().equals("message")&&!snapshot.getKey().equals("receiver")&&!snapshot.getKey().equals("sender"))
+                        usersList.add(snapshot.getKey());
+//                        Chat chat = snapshot.getValue(Chat.class);
+//
+//                        if (chat.getSender().equals(userId)){
+//                            usersList.add(chat.getReceiver());
+//                            Log.d("SHAG", "onDataChange:sssss " + chat.getSender() +chat.getReceiver());
+//                        }
+//                        if (chat.getReceiver().equals(userId)){
+//                            usersList.add(chat.getSender());
+//                            Log.d("SHAG", "onDataChange:sssss " + chat.getReceiver());
+//                        }
 
                         if (getActivity() != null) {
 
@@ -111,7 +114,7 @@ Context context;
                 userIdChat = usersList.get(position);
 
 
-                sp.edit().putString("ownerId", userId).apply();
+                sp.edit().putString("ownerId", userIdChat).apply();
                 FragmentTransaction ft = getParentFragmentManager().beginTransaction();
                 ft.replace(R.id.flFragment, new MessageActivity(), "MessageActivity").addToBackStack("MessageActivity").commit();
 

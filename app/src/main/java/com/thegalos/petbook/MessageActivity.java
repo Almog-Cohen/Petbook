@@ -119,41 +119,63 @@ public class MessageActivity extends Fragment {
         hashMap.put("receiver",receiver);
         hashMap.put("message",message);
 
-        FirebaseDatabase.getInstance().getReference().child("Messages").push().setValue(hashMap);
-//        FirebaseDatabase.getInstance().getReference().child("Messages").child(ownerId).child(userId).push().setValue(hashMap);
-//        FirebaseDatabase.getInstance().getReference().child("Messages").child(userId).child(ownerId).push().setValue(hashMap);
+//        FirebaseDatabase.getInstance().getReference().child("Messages").push().setValue(hashMap);
+        FirebaseDatabase.getInstance().getReference().child("Messages").child(ownerId).child(userId).push().setValue(hashMap);
+        FirebaseDatabase.getInstance().getReference().child("Messages").child(userId).child(ownerId).push().setValue(hashMap);
 
     }
 
     private void readMessages(final String myId , final String userid){
 
-
-        DatabaseReference chatRef = FirebaseDatabase.getInstance().getReference().child("Messages");
+        DatabaseReference chatRef = FirebaseDatabase.getInstance().getReference().child("Messages").child(myId).child(userid);
         chatRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
                 chatList = new ArrayList<>();
                 chatList.clear();
+
                 if (dataSnapshot.exists()){
-
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()){
                         Chat chat = snapshot.getValue(Chat.class);
-                        if (chat.getReceiver().equals(myId) && chat.getSender().equals(userid) || chat.getReceiver().equals(userid) && chat.getSender().equals(myId)) {
-                            chatList.add(chat);
-                            Log.d("NAG", "onDataChange: " + chat.getReceiver() +"       SENDER ::" +chat.getSender());
-                        }
-
-                        messageAdapter = new MessageAdapter(context, chatList);
+                        chatList.add(chat);
+                        messageAdapter = new MessageAdapter(context,chatList);
                         recyclerView.setAdapter(messageAdapter);
                     }
                 }
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
         });
+
+//        DatabaseReference chatRef = FirebaseDatabase.getInstance().getReference().child("Messages");
+//        chatRef.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//
+//                chatList = new ArrayList<>();
+//                chatList.clear();
+//                if (dataSnapshot.exists()){
+//
+//                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+//                        Chat chat = snapshot.getValue(Chat.class);
+//                        if (chat.getReceiver().equals(myId) && chat.getSender().equals(userid) || chat.getReceiver().equals(userid) && chat.getSender().equals(myId)) {
+//                            chatList.add(chat);
+//                            Log.d("NAG", "onDataChange: " + chat.getReceiver() +"       SENDER ::" +chat.getSender());
+//                        }
+//
+//                        messageAdapter = new MessageAdapter(context, chatList);
+//                        recyclerView.setAdapter(messageAdapter);
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//            }
+//        });
 
 
     }
