@@ -1,7 +1,10 @@
 package com.thegalos.petbook.fragments;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +15,7 @@ import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -30,10 +34,11 @@ import java.util.List;
 public class Chats extends Fragment {
 
     private ListView listView;
-
+Context context;
     private List<String> usersList;
     private String userId;
     String userIdChat;
+    SharedPreferences sp;
 
 
 
@@ -49,6 +54,8 @@ public class Chats extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull final View view,  Bundle savedInstanceState) {
+        context = getContext();
+        sp = PreferenceManager.getDefaultSharedPreferences(context);
 
         listView = view.findViewById(R.id.list_view);
         usersList = new ArrayList<>();
@@ -79,7 +86,7 @@ public class Chats extends Fragment {
                             Log.d("SHAG", "onDataChange:sssss " + chat.getReceiver());
                         }
 
-                        if (getActivity()!=null) {
+                        if (getActivity() != null) {
 
                             ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, usersList);
 
@@ -103,9 +110,11 @@ public class Chats extends Fragment {
 
                 userIdChat = usersList.get(position);
 
-                Intent intent = new Intent(getActivity(), MessageActivity.class);
-                intent.putExtra("ownerId",userIdChat);
-                startActivity(intent);
+
+                sp.edit().putString("ownerId", userId).apply();
+                FragmentTransaction ft = getParentFragmentManager().beginTransaction();
+                ft.replace(R.id.flFragment, new MessageActivity(), "MessageActivity").addToBackStack("MessageActivity").commit();
+
 
             }
         });

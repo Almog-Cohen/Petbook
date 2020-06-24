@@ -30,7 +30,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     public MessageAdapter(Context context, List<Chat> chatList){
 
         this.chatList = chatList;
-        this.context=context;
+        this.context = context;
     }
 
     @NonNull
@@ -39,7 +39,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         if (viewType == MSG_TYPE_RIGHT){
             View view = LayoutInflater.from(context).inflate(R.layout.chat_item_right,parent,false);
             return  new MessageAdapter.ViewHolder(view);
-        }else {
+        } else {
             View view = LayoutInflater.from(context).inflate(R.layout.chat_item_left,parent,false);
             return  new MessageAdapter.ViewHolder(view);
         }
@@ -70,7 +70,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
         if (chatList.get(position).getSender().equals(firebaseUser.getUid())){
             return MSG_TYPE_RIGHT;
-        }else {
+        } else {
             return MSG_TYPE_LEFT;
         }
     }

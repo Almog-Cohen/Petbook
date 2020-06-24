@@ -243,7 +243,7 @@ public class AddFeed extends Fragment {
         StorageReference storageReference;
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
-        if(uri != null)
+        if (uri != null)
         {
 //            final ProgressDialog progressDialog = new ProgressDialog(getContext());
 //            progressDialog.setTitle("Uploading...");

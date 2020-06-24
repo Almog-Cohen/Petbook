@@ -75,7 +75,7 @@ public class MainFeed extends Fragment {
         tvFeedUser = view.findViewById(R.id.tvFeedUser);
         constraintLayout = view.findViewById(R.id.loadingLayout);
         user = FirebaseAuth.getInstance().getCurrentUser();
-        sp = PreferenceManager.getDefaultSharedPreferences(getContext());
+        sp = PreferenceManager.getDefaultSharedPreferences(context);
 
         editor = sp.edit();
         refreshLayout = view.findViewById(R.id.mainLayout);

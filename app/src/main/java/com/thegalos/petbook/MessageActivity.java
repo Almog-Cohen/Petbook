@@ -14,7 +14,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -34,8 +33,6 @@ import java.util.HashMap;
 import java.util.List;
 
 public class MessageActivity extends Fragment {
-
-
 
     DatabaseReference reference;
     TextView userNameTv;
@@ -64,9 +61,9 @@ public class MessageActivity extends Fragment {
 //    protected void onCreate(Bundle savedInstanceState) {
 //        super.onCreate(savedInstanceState);
 //        setContentView(R.layout.activity_message);
-//
         sp = PreferenceManager.getDefaultSharedPreferences(getContext());
         context = getContext();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         userNameTv = view.findViewById(R.id.user_name_tv);
         messageEt = view.findViewById(R.id.msg_et);
         sendBtn = view.findViewById(R.id.btn_send);
@@ -79,14 +76,9 @@ public class MessageActivity extends Fragment {
 
         ownerId = sp.getString("ownerId", "");
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
         if (user != null) {
             userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         }
-
-
-
 
         reference = FirebaseDatabase.getInstance().getReference("Users").child(ownerId).child("Details").child("Name");
         reference.addValueEventListener(new ValueEventListener() {
@@ -95,7 +87,6 @@ public class MessageActivity extends Fragment {
                 if (dataSnapshot.exists()) {
                     String username = dataSnapshot.getValue(String.class);
                     userNameTv.setText(username);
-
                     readMessages(userId, ownerId);
                 }
             }
@@ -105,6 +96,7 @@ public class MessageActivity extends Fragment {
 
             }
         });
+
         /*reference = FirebaseDatabase.getInstance().getReference("Users").child(userId);*/
 
         sendBtn.setOnClickListener(new View.OnClickListener() {
@@ -127,9 +119,9 @@ public class MessageActivity extends Fragment {
         hashMap.put("receiver",receiver);
         hashMap.put("message",message);
 
-//        FirebaseDatabase.getInstance().getReference().child("Messages").push().setValue(hashMap);
-        FirebaseDatabase.getInstance().getReference().child("Messages").child(ownerId).child(userId).push().setValue(hashMap);
-        FirebaseDatabase.getInstance().getReference().child("Messages").child(userId).child(ownerId).push().setValue(hashMap);
+        FirebaseDatabase.getInstance().getReference().child("Messages").push().setValue(hashMap);
+//        FirebaseDatabase.getInstance().getReference().child("Messages").child(ownerId).child(userId).push().setValue(hashMap);
+//        FirebaseDatabase.getInstance().getReference().child("Messages").child(userId).child(ownerId).push().setValue(hashMap);
 
     }
 
@@ -155,13 +147,11 @@ public class MessageActivity extends Fragment {
                         messageAdapter = new MessageAdapter(context, chatList);
                         recyclerView.setAdapter(messageAdapter);
                     }
-
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
             }
         });
 

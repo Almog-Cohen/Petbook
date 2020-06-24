@@ -87,7 +87,7 @@ public class MyPetsAdapter extends RecyclerView.Adapter<MyPetsAdapter.MyPetsView
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
-                    if(listener != null)
+                    if (listener != null)
                         listener.onCardLongClicked(getAdapterPosition());
 //                    Toast.makeText(context, "Long clicked position: " + getAdapterPosition(), Toast.LENGTH_SHORT).show();
                     ivDelete.setVisibility(View.VISIBLE);

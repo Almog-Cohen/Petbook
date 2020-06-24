@@ -128,10 +128,7 @@ public class ViewPost extends Fragment {
 
                 sp.edit().putString("ownerId", ownerId).apply();
                 FragmentTransaction ft = getParentFragmentManager().beginTransaction();
-                ft.replace(R.id.flFragment, new MessageActivity(), "MessageActivity").commit();
-
-
-
+                ft.replace(R.id.flFragment, new MessageActivity(), "MessageActivity").addToBackStack("MessageActivity").commit();
             }
         });
 
