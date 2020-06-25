@@ -16,6 +16,8 @@ import android.widget.ListView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -26,6 +28,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.thegalos.petbook.MessageActivity;
 import com.thegalos.petbook.R;
+import com.thegalos.petbook.adapters.UserAdapter;
 import com.thegalos.petbook.objects.Chat;
 
 import java.util.ArrayList;
@@ -33,8 +36,9 @@ import java.util.List;
 
 public class Chats extends Fragment {
 
-    private ListView listView;
-Context context;
+    RecyclerView usersRecyclerView;
+    UserAdapter userAdapter;
+    Context context;
     private List<String> usersList;
     private List<String> userNamesList;
     private String userId;
@@ -59,9 +63,13 @@ Context context;
         context = getContext();
         sp = PreferenceManager.getDefaultSharedPreferences(context);
 
-
+        usersRecyclerView = view.findViewById(R.id.chat_recycler_view);
         usersList = new ArrayList<>();
         userNamesList = new ArrayList<>();
+        usersRecyclerView.setHasFixedSize(true);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
+        linearLayoutManager.setStackFromEnd(true);
+        usersRecyclerView.setLayoutManager(linearLayoutManager);
 
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -81,14 +89,29 @@ Context context;
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
                         if (!snapshot.getKey().equals("1"))
-                        usersList.add(snapshot.getKey());
+                            usersList.add(snapshot.getKey());
 
                         if (snapshot.child("1").getKey().equals("1"))
                             userNamesList.add(snapshot.child("1").getValue(String.class));
 
 
+                        if (userNamesList != null)
+                            userAdapter = new UserAdapter(context, userNamesList);
+                            userAdapter.setListener(new UserAdapter.MyUserListener() {
+                                @Override
+                                public void onUserClicked(int position, View view) {
 
-                            //TODO add username as child below userid.
+                                    String userId = usersList.get(position);
+                                    sp.edit().putString("ownerId", userId).apply();
+                                    FragmentTransaction ft = getParentFragmentManager().beginTransaction();
+                                    ft.replace(R.id.flFragment, new MessageActivity(), "MessageActivity").addToBackStack("MessageActivity").commit();
+
+                                }
+                            });
+
+                        usersRecyclerView.setAdapter(userAdapter);
+
+                        //TODO add username as child below userid.
 //                           userNameChat. = snapshot.getValue(Chat.class);
 //                        Chat chat = snapshot.getValue(Chat.class);
 //
@@ -101,12 +124,7 @@ Context context;
 //                            Log.d("SHAG", "onDataChange:sssss " + chat.getReceiver());
 //                        }
 
-                        if (getActivity() != null) {
 
-                            ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, userNamesList);
-
-                            listView.setAdapter(adapter);
-                        }
                     }
 
 
@@ -119,22 +137,10 @@ Context context;
             }
         });
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                userIdChat = usersList.get(position);
 
 
 
 
-                sp.edit().putString("ownerId", userIdChat).apply();
-                FragmentTransaction ft = getParentFragmentManager().beginTransaction();
-                ft.replace(R.id.flFragment, new MessageActivity(), "MessageActivity").addToBackStack("MessageActivity").commit();
-
-
-            }
-        });
     }
 }
 

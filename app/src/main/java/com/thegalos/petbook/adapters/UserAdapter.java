@@ -24,13 +24,23 @@ import java.util.List;
 public class UserAdapter  extends RecyclerView.Adapter<UserAdapter.ViewHolder>  {
 
     private Context context;
-    private List<String> usersIdList;
     private List<String>userNamesList;
+    private MyUserListener myUserListener;
+
+    public interface MyUserListener {
+        void onUserClicked(int position,View view);
+    }
 
 
-    public UserAdapter(@NonNull Context context, List<String> usersIdList,List<String> userNamesList) {
+    public void setListener(MyUserListener myUserListener){
+        this.myUserListener=myUserListener;
+    }
+
+
+
+    public UserAdapter(@NonNull Context context,List<String> userNamesList) {
         this.context=context;
-        this.usersIdList = usersIdList;
+
         this.userNamesList = userNamesList;
 
     }
@@ -47,42 +57,52 @@ public class UserAdapter  extends RecyclerView.Adapter<UserAdapter.ViewHolder>  
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        String userId = usersIdList.get(position);
+
         String userName = userNamesList.get(position);
 
         holder.userNameTv.setText(userName);
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sp.edit().putString("ownerId", ownerId).apply();
 
-            }
-        });
+
+
+
 
     }
 
     @Override
     public int getItemCount() {
-        return usersIdList.size();
+        return userNamesList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
 
         public TextView userNameTv;
         public ImageView profileImage;
+        private TextView lastMsg;
 
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            userNameTv=itemView.findViewById(R.id.user_name);
-            profileImage=itemView.findViewById(R.id.profile_image);
+            userNameTv = itemView.findViewById(R.id.user_name);
+            profileImage = itemView.findViewById(R.id.profile_image);
+            lastMsg = itemView.findViewById(R.id.last_msg);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    if (myUserListener!=null){
+                        myUserListener.onUserClicked(getAdapterPosition(),v);
+                    }
+                }
+            });
 
         }
 
+    }
 
-
+    private  void lastMessage(String userId , TextView last_msg){
 
     }
 }
