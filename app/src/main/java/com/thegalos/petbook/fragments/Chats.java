@@ -36,8 +36,10 @@ public class Chats extends Fragment {
     private ListView listView;
 Context context;
     private List<String> usersList;
+    private List<String> userNamesList;
     private String userId;
     String userIdChat;
+    String userNameChat;
     SharedPreferences sp;
 
 
@@ -57,8 +59,9 @@ Context context;
         context = getContext();
         sp = PreferenceManager.getDefaultSharedPreferences(context);
 
-        listView = view.findViewById(R.id.list_view);
+
         usersList = new ArrayList<>();
+        userNamesList = new ArrayList<>();
 
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -71,13 +74,22 @@ Context context;
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 usersList.clear();
+                userNamesList.clear();
 
                 if (dataSnapshot.exists()) {
 
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
-                        if (!snapshot.getKey().equals("message")&&!snapshot.getKey().equals("receiver")&&!snapshot.getKey().equals("sender"))
+                        if (!snapshot.getKey().equals("1"))
                         usersList.add(snapshot.getKey());
+
+                        if (snapshot.child("1").getKey().equals("1"))
+                            userNamesList.add(snapshot.child("1").getValue(String.class));
+
+
+
+                            //TODO add username as child below userid.
+//                           userNameChat. = snapshot.getValue(Chat.class);
 //                        Chat chat = snapshot.getValue(Chat.class);
 //
 //                        if (chat.getSender().equals(userId)){
@@ -91,7 +103,7 @@ Context context;
 
                         if (getActivity() != null) {
 
-                            ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, usersList);
+                            ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, userNamesList);
 
                             listView.setAdapter(adapter);
                         }
@@ -112,6 +124,8 @@ Context context;
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 userIdChat = usersList.get(position);
+
+
 
 
                 sp.edit().putString("ownerId", userIdChat).apply();

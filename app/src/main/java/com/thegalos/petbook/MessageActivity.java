@@ -45,6 +45,9 @@ public class MessageActivity extends Fragment {
     EditText messageEt;
     String ownerId;
     String userId;
+    String userName;
+    String ownerUserName;
+
 
     public MessageActivity() {
     }
@@ -74,10 +77,14 @@ public class MessageActivity extends Fragment {
         linearLayoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(linearLayoutManager);
 
+
         ownerId = sp.getString("ownerId", "");
 
         if (user != null) {
             userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            userName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+
+
         }
 
         reference = FirebaseDatabase.getInstance().getReference("Users").child(ownerId).child("Details").child("Name");
@@ -85,8 +92,8 @@ public class MessageActivity extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    String username = dataSnapshot.getValue(String.class);
-                    userNameTv.setText(username);
+                    ownerUserName = dataSnapshot.getValue(String.class);
+                    userNameTv.setText(ownerUserName);
                     readMessages(userId, ownerId);
                 }
             }
@@ -119,9 +126,13 @@ public class MessageActivity extends Fragment {
         hashMap.put("receiver",receiver);
         hashMap.put("message",message);
 
+
+
 //        FirebaseDatabase.getInstance().getReference().child("Messages").push().setValue(hashMap);
         FirebaseDatabase.getInstance().getReference().child("Messages").child(ownerId).child(userId).push().setValue(hashMap);
         FirebaseDatabase.getInstance().getReference().child("Messages").child(userId).child(ownerId).push().setValue(hashMap);
+        FirebaseDatabase.getInstance().getReference().child("Messages").child(ownerId).child(userId).child("1").setValue(userName);
+        FirebaseDatabase.getInstance().getReference().child("Messages").child(userId).child(ownerId).child("1").setValue(ownerUserName);
 
     }
 
@@ -135,11 +146,14 @@ public class MessageActivity extends Fragment {
                 chatList.clear();
 
                 if (dataSnapshot.exists()){
+
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()){
-                        Chat chat = snapshot.getValue(Chat.class);
-                        chatList.add(chat);
-                        messageAdapter = new MessageAdapter(context,chatList);
-                        recyclerView.setAdapter(messageAdapter);
+                        if (!snapshot.getKey().equals("1")) {
+                            Chat chat = snapshot.getValue(Chat.class);
+                            chatList.add(chat);
+                            messageAdapter = new MessageAdapter(context, chatList);
+                            recyclerView.setAdapter(messageAdapter);
+                        }
                     }
                 }
             }
