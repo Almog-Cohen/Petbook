@@ -53,7 +53,7 @@
         android:id="@+id/btn_send"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        />
+        android:contentDescription="@string/none" />
 
     </RelativeLayout>
 

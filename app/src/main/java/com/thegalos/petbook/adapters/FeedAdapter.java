@@ -107,10 +107,13 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyFeedViewHold
         final Pet pet = feed.getPet();
         String str;
         ////////////PET///////
-        str = "Age: " + pet.getAge();
+        if (pet.getAge().equals(""))
+            str ="";
+        else
+            str = "Age: " + pet.getAge();
         holder.tvPetAge.setText(str);
-//        str = pet.getName();
-//        holder.tvName.setText(str);
+        str = pet.getName();
+        holder.tvName.setText(str);
         switch (pet.getAnimalType()) {
             case "Horse":
                 Glide.with(context).load(R.drawable.icon_horse).into(holder.ivType);
@@ -143,10 +146,12 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyFeedViewHold
         holder.tvPostText.setText(feed.getPostText());
         holder.tvName.setText(feed.getSelectedPet());
         str = feed.getFree();
-        if (str.equals("yes")){
+        if (str.equals("yes")) {
 //             item is free
             holder.tvPay.setText("Free");
 //            Glide.with(context).load(R.drawable.vector_money_off).into(holder.ivIsFree);
+        } else if (str.equals("Looking")) {
+            holder.tvPay.setText("Looking");
         } else {
 //            item isn't free
 //            Glide.with(context).load(R.drawable.vector_money).into(holder.ivIsFree);
@@ -159,19 +164,6 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyFeedViewHold
                 holder.tvPay.setTextColor(Color.GREEN);
             }
         }
-
-
-
-
-
-
-//        RequestOptions options = new RequestOptions()
-//                .skipMemoryCache(true)
-//                .centerInside()
-//                .placeholder(R.drawable.restaurant_icon)
-//                .transform(new CircleCrop());
-
-
     }
 
     @Override

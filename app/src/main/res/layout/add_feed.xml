@@ -85,9 +85,10 @@
 
     <EditText
         android:id="@+id/etAmount"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
+        android:hint="Amount"
         android:inputType="number|numberDecimal"
         android:text="amount"
         android:visibility="invisible"

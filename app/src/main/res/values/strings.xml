@@ -22,9 +22,9 @@
     <string name="add_feed">New Advertising</string>
     <string name="post">Post</string>
     <string name="posting">Posting…</string>
-    <string name="enter_post_details">enter post details</string>
-    <string name="total_pets">totalPets</string>
-    <string name="member_since">member since</string>
+    <string name="enter_post_details">Post details</string>
+    <string name="total_pets">"Pets: "</string>
+    <string name="member_since">"Member since: "</string>
     <string name="logout">Logout</string>
     <string name="add_pets">add Pets</string>
     <string name="add">add</string>
@@ -52,6 +52,6 @@
     <string name="login">Login</string>
     <string name="remove_pet">Remove pet</string>
     <string name="related_post_would_be_removed">Once you remove this pet\nAll related posts would be removed!</string>
-    <string name="chat_with_owner">Chat With Owner</string>
+    <string name="chat_with_owner">Chat with</string>
 
 </resources>

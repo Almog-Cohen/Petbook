@@ -122,7 +122,9 @@
         android:layout_width="100dp"
         android:layout_height="30dp"
         android:layout_marginTop="30dp"
-        android:background="@android:color/holo_green_dark"
+        android:backgroundTint="@color/colorAccent"
+        android:hapticFeedbackEnabled="true"
+        android:popupBackground="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/spnGender"
         app:layout_constraintTop_toBottomOf="@+id/ctvPurebred" />
@@ -133,7 +135,9 @@
         android:layout_height="30dp"
         android:layout_marginTop="30dp"
         android:layout_marginEnd="106dp"
-        android:background="@android:color/holo_green_dark"
+        android:backgroundTint="@color/colorAccent"
+        android:hapticFeedbackEnabled="true"
+        android:popupBackground="@color/colorPrimary"
         app:layout_constraintEnd_toStartOf="@+id/spnAge"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ctvPurebred" />

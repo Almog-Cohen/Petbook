@@ -109,8 +109,12 @@ public class MainFeed extends Fragment {
             @Override
             public void onClick(View v) {
                 if (user != null) {
-                    FragmentTransaction ft = getParentFragmentManager().beginTransaction();
-                    ft.replace(R.id.flFragment, new AddFeed(), "AddFeed").addToBackStack("AddFeed").commit();
+                    if (sp.contains("PetList")) {
+                        FragmentTransaction ft = getParentFragmentManager().beginTransaction();
+                        ft.replace(R.id.flFragment, new AddFeed(), "AddFeed").addToBackStack("AddFeed").commit();
+                    } else {
+                        Toast.makeText(context, "Please add Pets first in Profile screen", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
                     FragmentTransaction ft = getParentFragmentManager().beginTransaction();
                     ft.replace(R.id.flFragment, new Login(), "Login").addToBackStack("Login").commit();
@@ -120,7 +124,7 @@ public class MainFeed extends Fragment {
         });
 
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
         final FeedAdapter feedAdapter = new FeedAdapter(context, feedList);
         recyclerView.setAdapter(feedAdapter);
 
@@ -136,11 +140,32 @@ public class MainFeed extends Fragment {
                     for (final DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         Feed feed = new Feed();
                         feed.setAmount(snapshot.child("Amount").getValue(String.class));
-                        feed.setImageURL(snapshot.child("ImageURL").getValue(String.class));
-                        feed.setFree(snapshot.child("IsFree").getValue(String.class));
+                        if (snapshot.hasChild("ImageURL"))
+                            feed.setImageURL(snapshot.child("ImageURL").getValue(String.class));
+                        else
+                            feed.setImageURL("null");
+                        if (snapshot.hasChild("IsFree"))
+                            feed.setFree(snapshot.child("IsFree").getValue(String.class));
+                        else
+                            feed.setFree("Looking");
                         feed.setPostOwner(snapshot.child("Owner").getValue(String.class));
                         feed.setOwnerUID(snapshot.child("OwnerUID").getValue(String.class));
-                        feed.setPet(snapshot.child("Pet").getValue(Pet.class));
+//                        if (dataSnapshot.hasChild("Pet")) {
+                            feed.setPet(snapshot.child("Pet").getValue(Pet.class));
+//                        } else {
+//                            Pet pet = new Pet();
+//                            pet.setAge("");
+//                            pet.setAnimalType("");
+//                            pet.setBreed("");
+//                            pet.setCurrentImagePath("null");
+//                            pet.setGender("");
+//                            pet.setName("");
+//                            pet.setPetUID("");
+//                            pet.setPureBred(false);
+//                            pet.setVaccine(false);
+//                            feed.setPet(pet);
+//
+//                        }
                         feed.setPostText(snapshot.child("PostText").getValue(String.class));
                         feed.setSelectedPet(snapshot.child("SelectedPet").getValue(String.class));
                         feed.setWhoPays(snapshot.child("WhoPays").getValue(String.class));

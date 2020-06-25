@@ -16,7 +16,8 @@
         android:layout_height="wrap_content"
         android:src="@mipmap/ic_launcher"
         android:id="@+id/profile_image"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        android:contentDescription="TODO" />
 
     <TextView
         android:layout_width="wrap_content"

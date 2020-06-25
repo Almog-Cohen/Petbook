@@ -1,5 +1,6 @@
 package com.thegalos.petbook.fragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -71,6 +72,7 @@ public class AddFeed extends Fragment {
     RadioGroup rgIsFree, rgWhoPays;
     EditText etAmount;
     boolean isFree = true;
+Context context;
 
 
     public AddFeed() {
@@ -85,7 +87,8 @@ public class AddFeed extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull final View view,  Bundle savedInstanceState) {
-        preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        context = getContext();
+        preferences = PreferenceManager.getDefaultSharedPreferences(context);
         user = FirebaseAuth.getInstance().getCurrentUser();
         spnPet = view.findViewById(R.id.spnPet);
 //        etBreed = view.findViewById(R.id.etBreed);
@@ -160,16 +163,23 @@ public class AddFeed extends Fragment {
             @Override
             public void onClick(View v) {
                 if (etDetails.getText().toString().equals("")) {
-                    Toast.makeText(getContext(), "Please add details to your post", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Please add details to your post", Toast.LENGTH_SHORT).show();
                     return;
 
                 }
                 if ((rgIsFree.getCheckedRadioButtonId() == R.id.rbPay)
-                        && (rgWhoPays.getCheckedRadioButtonId() == R.id.rbToPay || rgWhoPays.getCheckedRadioButtonId() == R.id.rbToGet)
+                        && (rgWhoPays.getCheckedRadioButtonId() == R.id.rbToPay
+                        || rgWhoPays.getCheckedRadioButtonId() == R.id.rbToGet)
                         && etAmount.getText().toString().equals("")) {
-                    Toast.makeText(getContext(), "Please set Amount", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Please set Amount", Toast.LENGTH_SHORT).show();
                     return;
                 }
+
+                if (spnPet == null || spnPet.getSelectedItem() == null) {
+                    Toast.makeText(context, "Must Add A pet in order to advertise", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 showProgress(true);
 //                addToStorage();
 
@@ -234,7 +244,7 @@ public class AddFeed extends Fragment {
 //        //TODO if we add option to update name after Sign up we need to use getUID and make sure to load correct name in fragments
         showProgress(false);
         changeFragment();
-        Toast.makeText(getContext(), "Uploaded no ", Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, "Uploaded no ", Toast.LENGTH_SHORT).show();
 
     }
 
@@ -245,7 +255,7 @@ public class AddFeed extends Fragment {
         storageReference = storage.getReference();
         if (uri != null)
         {
-//            final ProgressDialog progressDialog = new ProgressDialog(getContext());
+//            final ProgressDialog progressDialog = new ProgressDialog(context);
 //            progressDialog.setTitle("Uploading...");
 //            progressDialog.show();
             final StorageReference ref = storageReference.child(user.getUid()).child("images/"+ UUID.randomUUID().toString());
@@ -279,11 +289,12 @@ public class AddFeed extends Fragment {
                                 public void onSuccess(Uri uri) {
                                     imageLink = (uri.toString());
                                     db.child("ImageURL").setValue(imageLink);
-//                                    Toast.makeText(getContext(), "image link: " + imageLink, Toast.LENGTH_LONG).show();
+//                                    Toast.makeText(context, "image link: " + imageLink, Toast.LENGTH_LONG).show();
                                     showProgress(false);
                                     changeFragment();
                                 }
                             });
+
 //                            db = FirebaseDatabase.getInstance().getReference().child("Posts").push();
 //                            db.child("Time").setValue(ServerValue.TIMESTAMP);
 //                            db.child("PostText").setValue(etDetails.getText().toString());
@@ -306,7 +317,8 @@ public class AddFeed extends Fragment {
 //                            }
 //                            showProgress(false);
 //                            changeFragment();
-                            Toast.makeText(getContext(), "Uploaded with photo", Toast.LENGTH_SHORT).show();
+
+                            Toast.makeText(context, "Uploaded with photo", Toast.LENGTH_SHORT).show();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -314,9 +326,10 @@ public class AddFeed extends Fragment {
                         public void onFailure(@NonNull Exception e) {
 //                            progressDialog.dismiss();
                             showProgress(false);
-                            Toast.makeText(getContext(), "Failed "+e.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, "Failed "+e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });
+
 //                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
 //                        @Override
 //                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
@@ -326,6 +339,7 @@ public class AddFeed extends Fragment {
 ////                            progressDialog.setMessage("Uploaded "+(int)progress+"%");
 //                        }
 //                    });
+
         }
     }
 
@@ -342,7 +356,7 @@ public class AddFeed extends Fragment {
             PhotoSelected = true;
             uri = data.getData();
             Glide.with(this).load(uri).into(ivPhoto);
-            Toast.makeText(getContext(), "uri is: " + uri, Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "uri is: " + uri, Toast.LENGTH_SHORT).show();
             Log.d("URI_Galos", "uri is: " + uri);
 
         }

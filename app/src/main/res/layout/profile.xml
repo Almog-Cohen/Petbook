@@ -6,78 +6,109 @@
     android:layout_height="match_parent"
     tools:context=".fragments.Profile">
 
-    <ImageView
-        android:id="@+id/ivUserAvatar"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:contentDescription="@string/none"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/dog_cat_horse" />
-
-    <TextView
-        android:id="@+id/tvUserName"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:text="@string/full_name"
-        android:textSize="18sp"
-        app:layout_constraintStart_toEndOf="@+id/ivUserAvatar"
-        app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/tvTotalPets"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/total_pets"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/tvMemberSince"
-        app:layout_constraintTop_toTopOf="@+id/tvMemberSince" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/tvMemberSince"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:text="@string/member_since"
-        app:layout_constraintStart_toStartOf="@+id/tvUserName"
-        app:layout_constraintTop_toBottomOf="@+id/tvUserName" />
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="0dp"
+            android:layout_height="106dp"
+            android:alpha="0.2"
+            android:contentDescription="@string/none"
+            android:scaleType="centerCrop"
+            android:src="@drawable/bgr3"
+            app:layout_constraintBottom_toBottomOf="@+id/btnLogout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnLogout" />
+
+        <TextView
+            android:id="@+id/tvUserName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:text="@string/full_name"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/tvMemberSince"
+            app:layout_constraintStart_toStartOf="@+id/tvMemberSince" />
+
+        <TextView
+            android:id="@+id/tvMemberSince"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="139dp"
+            android:layout_marginBottom="3dp"
+            android:text="@string/member_since"
+            app:layout_constraintBottom_toTopOf="@+id/tvTotalPets"
+            app:layout_constraintEnd_toStartOf="@+id/btnAddPet"
+            app:layout_constraintStart_toEndOf="@+id/ivUserAvatar" />
+
+        <Button
+            android:id="@+id/btnAddPet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:background="@drawable/button_shape_selector"
+            android:text="@string/add_pets"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@+id/imageView3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/tvMemberSince" />
+
+        <ImageView
+            android:id="@+id/ivUserAvatar"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="18dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="18dp"
+            android:contentDescription="@string/none"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/tvMemberSince"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/dog_cat_horse2" />
+
+        <Button
+            android:id="@+id/btnLogout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:background="@drawable/button_shape_selector"
+            android:text="@string/logout"
+            android:textAllCaps="false"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvTotalPets"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="18dp"
+            android:text="@string/total_pets"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/tvMemberSince" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <View
         android:id="@+id/view"
         android:layout_width="wrap_content"
         android:layout_height="10dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="5dp"
         android:background="@color/colorAccent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ivUserAvatar" />
-
-    <Button
-        android:id="@+id/btnLogout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/button_shape_selector"
-        android:text="@string/logout"
-        android:textAllCaps="false"
-        android:visibility="invisible"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view" />
-
-    <Button
-        android:id="@+id/btnAddPet"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/button_shape_selector"
-        android:text="@string/add_pets"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view" />
+        app:layout_constraintTop_toBottomOf="@id/cl" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/postingLayout"
@@ -118,11 +149,11 @@
         android:id="@+id/rvCards"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="20dp"
+        android:background="#BA477FEF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnLogout">
+        app:layout_constraintTop_toBottomOf="@+id/view">
 
 
     </androidx.recyclerview.widget.RecyclerView>
