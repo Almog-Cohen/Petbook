@@ -16,7 +16,6 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
     <string name="full_name">Full name</string>
-    <string name="register">Register</string>
     <string name="register_to_post">Register to post</string>
     <string name="disconnected_from_petbook">Disconnected From PetBook</string>
     <string name="add_feed">New Advertising</string>
@@ -52,6 +51,12 @@
     <string name="login">Login</string>
     <string name="remove_pet">Remove pet</string>
     <string name="related_post_would_be_removed">Once you remove this pet\nAll related posts would be removed!</string>
-    <string name="chat_with_owner">Chat with</string>
+    <string name="chat_with_owner">Chat with owner</string>
+    <string name="reset">Reset</string>
+    <string name="register">Register</string>
+    <string name="must_give_permission">Must give permissions</string>
+    <string name="horse">"Horse - "</string>
+    <string name="dog">"Dog - "</string>
+    <string name="cat">"Cat - "</string>
 
 </resources>

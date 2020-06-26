@@ -97,17 +97,17 @@
 
             </LinearLayout>
 
-            <ImageView
-                android:id="@+id/ivFeedPhoto"
-                android:layout_width="wrap_content"
-                android:layout_height="168dp"
-                android:layout_marginStart="116dp"
-                android:contentDescription="@string/string"
-                android:maxWidth="200dp"
-                android:maxHeight="186dp"
-                android:visibility="gone" />
-
         </LinearLayout>
+
+        <ImageView
+            android:id="@+id/ivFeedPhoto"
+            android:layout_width="160dp"
+            android:layout_height="90dp"
+            android:layout_below="@+id/tvPostOwner"
+            android:layout_alignParentEnd="true"
+            android:contentDescription="@string/string"
+            android:visibility="visible"
+            app:srcCompat="@drawable/missing" />
 
         <TextView
             android:id="@+id/tvPay"

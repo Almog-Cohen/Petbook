@@ -69,6 +69,21 @@
         app:layout_constraintTop_toBottomOf="@+id/etPassword"
         app:layout_constraintEnd_toStartOf="parent"/>
 
+    <TextView
+        android:id="@+id/tvResetPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:text="Forgot password"
+        android:textColor="@color/colorAccent"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/etName" />
+
     <Button
         android:id="@+id/btnAction"
         android:layout_width="wrap_content"
@@ -100,4 +115,5 @@
         app:layout_constraintStart_toStartOf="@+id/etPassword"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.3" />
+
 </androidx.constraintlayout.motion.widget.MotionLayout>

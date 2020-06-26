@@ -1,8 +1,6 @@
 package com.thegalos.petbook.adapters;
 
 import android.content.Context;
-import android.content.Intent;
-import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,13 +8,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.thegalos.petbook.MessageActivity;
 import com.thegalos.petbook.R;
 
 import java.util.List;
@@ -49,7 +42,7 @@ public class UserAdapter  extends RecyclerView.Adapter<UserAdapter.ViewHolder>  
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        View view = LayoutInflater.from(context).inflate(R.layout.user_item,parent,false);
+        View view = LayoutInflater.from(context).inflate(R.layout.card_chats,parent,false);
         return new UserAdapter.ViewHolder(view);
 
     }

@@ -8,8 +8,7 @@
     <RelativeLayout
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true">
+        android:layout_alignParentEnd="true">
 
     <ImageView
         android:layout_width="wrap_content"
@@ -17,7 +16,7 @@
         android:src="@mipmap/ic_launcher"
         android:id="@+id/profile_image"
         android:visibility="gone"
-        android:contentDescription="TODO" />
+        android:contentDescription="@string/none" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -27,9 +26,8 @@
         android:id="@+id/show_message"
         android:textSize="18sp"
         android:textColor="#fff"
-        android:layout_alignParentRight="true"
-        android:layout_marginLeft="5dp"
-        android:text="hello"
+        android:layout_marginStart="5dp"
+        android:text="@string/string"
         android:padding="8dp"/>
 
     </RelativeLayout>

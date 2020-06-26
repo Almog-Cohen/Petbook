@@ -15,7 +15,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -28,7 +27,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.thegalos.petbook.fragments.AddPet;
 import com.thegalos.petbook.fragments.Profile;
 import com.thegalos.petbook.objects.Pet;
 import com.thegalos.petbook.R;
@@ -38,7 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MyPetsAdapter extends RecyclerView.Adapter<MyPetsAdapter.MyPetsViewHolder> {
+public class PetAdapter extends RecyclerView.Adapter<PetAdapter.MyPetsViewHolder> {
     private final FragmentManager manager;
     private final Context context;
     private List<Pet> petList;
@@ -52,7 +50,7 @@ public class MyPetsAdapter extends RecyclerView.Adapter<MyPetsAdapter.MyPetsView
         this.listener = listener;
     }
 
-    public MyPetsAdapter(FragmentManager manager, Context context, List<Pet> petList) {
+    public PetAdapter(FragmentManager manager, Context context, List<Pet> petList) {
         this.manager = manager;
         this.context = context;
         this.petList = petList;
@@ -61,28 +59,25 @@ public class MyPetsAdapter extends RecyclerView.Adapter<MyPetsAdapter.MyPetsView
     public class MyPetsViewHolder extends RecyclerView.ViewHolder{
 
         final TextView tvPetName;
-        final TextView tvAnimalType;
         final TextView tvAge;
         final TextView tvGender;
         final TextView tvBreed;
+        final TextView cbVaccine;
+        final TextView cbPureBred;
         final ImageView ivPetType;
         final ImageView ivDelete;
-        final CheckedTextView cbVaccine;
-        final CheckedTextView cbPureBred;
-
 
         MyPetsViewHolder(@NonNull View itemView) {
             super(itemView);
 
             tvPetName = itemView.findViewById(R.id.tvPetName);
-            tvAnimalType = itemView.findViewById(R.id.tvAnimalType);
             tvAge =  itemView.findViewById(R.id.tvAge);
             tvGender = itemView.findViewById(R.id.tvGender);
             tvBreed = itemView.findViewById(R.id.tvBreed);
             ivPetType =  itemView.findViewById(R.id.ivPetType);
             ivDelete = itemView.findViewById(R.id.ivDelete);
-            cbPureBred = itemView.findViewById(R.id.cbPureBred);
-            cbVaccine = itemView.findViewById(R.id.cbVaccine);
+            cbPureBred = itemView.findViewById(R.id.tvPureBred);
+            cbVaccine = itemView.findViewById(R.id.tvVaccine);
 
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
@@ -109,23 +104,17 @@ public class MyPetsAdapter extends RecyclerView.Adapter<MyPetsAdapter.MyPetsView
         final Pet pet = petList.get(position);
         String str = "";
         holder.tvPetName.setText(pet.getName());
-        holder.tvAnimalType.setText(pet.getAnimalType());
         str = context.getString(R.string.age_space) + pet.getAge();
         holder.tvAge.setText(str);
         holder.tvGender.setText(pet.getGender());
         holder.tvBreed.setText(pet.getBreed());
         if (pet.getVaccine()){
-            holder.cbVaccine.setChecked(true);
-            holder.cbVaccine.setCheckMarkDrawable(R.drawable.vector_check);
+            holder.cbVaccine.setVisibility(View.VISIBLE);
         }
         if (pet.getPureBred()){
-            holder.cbPureBred.setChecked(true);
-            holder.cbPureBred.setCheckMarkDrawable(R.drawable.vector_check);
+            holder.cbPureBred.setVisibility(View.VISIBLE);
         }
 
-//        if (pet.getCurrentImagePath() == null)
-//            Glide.with(holder.ivPetType.getContext()).load(R.drawable.missing).into(holder.ivPetType);
-//        else {
 
         switch (pet.getAnimalType()) {
             case "Horse":

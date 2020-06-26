@@ -1,11 +1,17 @@
 package com.thegalos.petbook.fragments;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +28,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -38,15 +46,20 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 import com.thegalos.petbook.objects.Pet;
 import com.thegalos.petbook.R;
+import com.yalantis.ucrop.UCrop;
 
+import java.io.File;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import static android.app.Activity.RESULT_OK;
+import static androidx.core.content.ContextCompat.checkSelfPermission;
 
 
 public class AddFeed extends Fragment {
@@ -56,7 +69,10 @@ public class AddFeed extends Fragment {
     private static List<Pet> petArrayList = new ArrayList<>();
     private static List<String> petNameList = new ArrayList<>();
     SharedPreferences preferences;
-    private static final int PICK_IMAGE_REQUEST = 999;
+    private static final int PICK_FROM_GALLERY = 999;
+    private static final int CAMERA_REQUEST = 999;
+//    TextView tvTakePhoto;
+    TextView tvPickPhoto;
     ImageView ivPhoto;
     Uri uri;
     ProgressBar progressBar;
@@ -69,10 +85,15 @@ public class AddFeed extends Fragment {
     Button btnPostFeed;
     ConstraintLayout postingLayout;
     boolean PhotoSelected = false;
+    boolean isLocal = true;
     RadioGroup rgIsFree, rgWhoPays;
     EditText etAmount;
     boolean isFree = true;
-Context context;
+    Context context;
+    private File file;
+    private Uri imageUri = null;
+
+
 
 
     public AddFeed() {
@@ -100,6 +121,9 @@ Context context;
         rgIsFree = view.findViewById(R.id.rgIsFree);
         rgWhoPays = view.findViewById(R.id.rgWhoPays);
         etAmount = view.findViewById(R.id.etAmount);
+        ivPhoto = view.findViewById(R.id.ivPhoto);
+//        tvTakePhoto = view.findViewById(R.id.tvTakePhoto);
+        tvPickPhoto = view.findViewById(R.id.tvPickPhoto);
 
         rgIsFree.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -132,30 +156,29 @@ Context context;
 
 
         loadData();
-        ivPhoto = view.findViewById(R.id.tvAddPhoto);
+
         ArrayAdapter<String> nameAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, petNameList);
         nameAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spnPet.setAdapter(nameAdapter);
 
-        ivPhoto.setOnClickListener(new View.OnClickListener() {
+//        tvTakePhoto.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if(Build.VERSION.SDK_INT>=23) {
+//                    int hasWritePermission = ActivityCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+//                    if(hasWritePermission != PackageManager.PERMISSION_GRANTED){
+//                        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, CAMERA_REQUEST);
+//                    } else
+//                        takePicture();
+//                } else
+//                    takePicture();
+//            }
+//        });
+
+        tvPickPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
-
-                //method 1
-//                Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//                startActivityForResult(i, PICK_IMAGE_REQUEST);
-
-
-
-
-//                Intent intent = new Intent();
-//                intent.setType("Image/*");
-//                intent.setAction(Intent.ACTION_GET_CONTENT);
-//                startActivityForResult(intent, PICK_IMAGE_REQUEST);
+                pickFromGallery();
             }
         });
 
@@ -187,6 +210,29 @@ Context context;
 
         });
     }
+    //Upload picture from gallery
+    private void pickFromGallery() {
+        // start picker to get image for cropping and then use the image in cropping activity
+        CropImage.activity()
+                .setGuidelines(CropImageView.Guidelines.ON)
+                .setAspectRatio(16,9)
+                .start(context, this);
+//        Intent intent = new Intent();
+//        intent.setType("image/*");
+//        intent.setAction(Intent.ACTION_GET_CONTENT);
+//        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_FROM_GALLERY);
+    }
+
+    private void takePicture(){
+        String pictureName = String.valueOf(System.currentTimeMillis());
+        file = new File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), pictureName + ".jpg");
+        imageUri = FileProvider.getUriForFile(context,"com.thegalos.petbook.provider", file);
+
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+        startActivityForResult(intent, CAMERA_REQUEST);
+    }
 
     private void showProgress(Boolean show) {
         if (show){
@@ -194,7 +240,7 @@ Context context;
             btnPostFeed.setEnabled(false);
             etDetails.setEnabled(false);
             spnPet.setEnabled(false);
-            ivPhoto.setEnabled(false);
+//            tvTakePhoto.setEnabled(false);
             postingLayout.setVisibility(View.VISIBLE);
             if (PhotoSelected)
                 uploadFiles();
@@ -204,7 +250,7 @@ Context context;
             btnPostFeed.setEnabled(true);
             etDetails.setEnabled(true);
             spnPet.setEnabled(true);
-            ivPhoto.setEnabled(true);
+//            tvTakePhoto.setEnabled(true);
             postingLayout.setVisibility(View.GONE);
         }
 
@@ -244,7 +290,7 @@ Context context;
 //        //TODO if we add option to update name after Sign up we need to use getUID and make sure to load correct name in fragments
         showProgress(false);
         changeFragment();
-        Toast.makeText(context, "Uploaded no ", Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, "Uploaded no photo", Toast.LENGTH_SHORT).show();
 
     }
 
@@ -352,15 +398,65 @@ Context context;
 
     public void onActivityResult(int requestCode, int resultCode,  Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            PhotoSelected = true;
-            uri = data.getData();
-            Glide.with(this).load(uri).into(ivPhoto);
-            Toast.makeText(context, "uri is: " + uri, Toast.LENGTH_SHORT).show();
-            Log.d("URI_Galos", "uri is: " + uri);
 
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                PhotoSelected = true;
+//                uri = CropImage.getPickImageResultUri(context, data);
+                uri = result.getUri();
+                Glide.with(this).load(uri).into(ivPhoto);
+                Log.d("URI_Galos", "uri is: " + uri + " imageUri is: " + imageUri + " resultUri is: "/* + resultUri*/);
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
+            }
         }
+//        if (requestCode == PICK_FROM_GALLERY && resultCode == RESULT_OK && data != null && data.getData() != null) {
+//            PhotoSelected = true;
+//            uri = data.getData();
+//            Glide.with(this).load(uri).into(tvTakePhoto);
+//            Toast.makeText(context, "uri is: " + uri, Toast.LENGTH_SHORT).show();
+//            Log.d("URI_Galos", "uri is: " + uri);
+
+        //New photo taken
+        if (requestCode == CAMERA_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                PhotoSelected = true;
+                Log.d("URI_Galos", "uri is: " + uri + " imageUri is: " + imageUri);
+                Toast.makeText(context, "uri is: " + imageUri, Toast.LENGTH_SHORT).show();
+                uri = imageUri;
+                UCrop.of(imageUri, uri)
+                        .withAspectRatio(16, 10)
+                        .withMaxResultSize(300, 200)
+                        .start(getActivity());
+            }
+        }
+        //Picked photo from gallery
+//        if (requestCode == PICK_FROM_GALLERY) {
+//            if (resultCode == Activity.RESULT_OK) {
+//                if (data != null && data.getData() != null) {
+//                    PhotoSelected = true;
+//                    uri = data.getData();
+////                    Glide.with(this).load(uri).into(tvPickPhoto);
+//                    Toast.makeText(context, "uri is: " + uri, Toast.LENGTH_SHORT).show();
+//                    Log.d("URI_Galos", "uri is: " + uri);
+//                    UCrop.of(uri, uri)
+//                            .withAspectRatio(16, 9)
+//                            .withMaxResultSize(300, 200)
+//                            .start(getActivity());
+//                }
+//            }
+//        }
+
+        if (resultCode == RESULT_OK && requestCode == UCrop.REQUEST_CROP) {
+            final Uri resultUri = UCrop.getOutput(data);
+        } else if (resultCode == UCrop.RESULT_ERROR) {
+            final Throwable cropError = UCrop.getError(data);
+        }
+//        Glide.with(this).load(uri).into(ivPhoto);
     }
+
+
 
     // load data
     private void loadData() {
@@ -375,6 +471,19 @@ Context context;
         }
         for (Pet pet : petArrayList){
             petNameList.add(pet.getName());
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(requestCode==CAMERA_REQUEST){
+            if(grantResults[0]!=PackageManager.PERMISSION_GRANTED){
+                Toast.makeText(context, R.string.must_give_permission, Toast.LENGTH_SHORT).show();
+            }
+            else{
+                takePicture();
+            }
         }
     }
 

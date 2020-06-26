@@ -7,22 +7,29 @@
     android:layout_height="match_parent"
     tools:context=".fragments.Chats">
 
-    <TextView
-        android:id="@+id/tvMatches"
+    <RelativeLayout
+        android:id="@+id/rlChats"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="@string/your_chats"
-        android:textSize="30sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="?attr/actionBarSize"
+        android:background="@drawable/background_top">
+
+        <TextView
+            android:id="@+id/tvMatches"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/your_chats"
+            android:textSize="30sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </RelativeLayout>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/chat_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/chat_recycler_view"
-        android:layout_below="@+id/tvMatches"/>
+        android:layout_below="@id/rlChats" />
 
 
 </RelativeLayout>

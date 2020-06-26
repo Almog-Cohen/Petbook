@@ -4,59 +4,71 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MessageActivity"
-    android:background="#e6e6e6">
+    tools:context=".MessageActivity">
 
-    <TextView
-        android:layout_marginTop="10dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/user_name_tv"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:text="Username"
-        android:layout_marginLeft="25dp"
-        android:layout_marginStart="25dp"
-        android:background="#fff"/>
+    <RelativeLayout
+        android:id="@+id/rlConversation"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@drawable/background_top">
+
+        <TextView
+            android:id="@+id/user_name_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="Reciver name"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/chat_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/chat_recycler_view"
-        android:layout_below="@id/user_name_tv"
-        android:layout_above="@id/bottom_rl"/>
-
+        android:layout_above="@id/bottom_rl"
+        android:layout_below="@id/rlConversation" />
 
 
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="5dp"
         android:id="@+id/bottom_rl"
-        android:layout_alignParentBottom="true"
-        android:background="#fff">
-
-    
-    <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Type a message..."
-        android:background="@android:color/transparent"
-        android:layout_centerVertical="true"
-        android:layout_toLeftOf="@id/btn_send"
-        android:id="@+id/msg_et"/>
-    
-    <ImageButton
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:background="@drawable/ic_launcher_background"
-        android:id="@+id/btn_send"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:contentDescription="@string/none" />
+        android:layout_alignParentBottom="true"
+        android:background="#fff"
+        android:padding="5dp">
+
+
+        <EditText
+            android:id="@+id/etMessageText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@+id/btn_send"
+            android:background="@android:color/transparent"
+            android:hint="Type a message..."
+            android:inputType="textMultiLine"
+            android:textSize="18sp" />
+
+        <RelativeLayout
+            android:id="@+id/btn_send"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentEnd="true"
+            android:background="@drawable/back_fab"
+            android:elevation="4dp">
+
+            <ImageView
+                android:id="@+id/ivFab"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_centerInParent="true"
+                android:contentDescription="@string/none"
+                android:src="@android:drawable/ic_media_play"
+                android:tint="#fff" />
+        </RelativeLayout>
 
     </RelativeLayout>
-
 
 
 </RelativeLayout>

@@ -2,14 +2,18 @@ package com.thegalos.petbook;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.EditText;
-import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,8 +45,8 @@ public class MessageActivity extends Fragment {
     List<Chat> chatList;
     RecyclerView recyclerView;
     SharedPreferences sp;
-    ImageButton sendBtn;
-    EditText messageEt;
+    RelativeLayout sendBtn;
+    EditText etMessageText;
     String ownerId;
     String userId;
     String userName;
@@ -68,7 +72,7 @@ public class MessageActivity extends Fragment {
         context = getContext();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         userNameTv = view.findViewById(R.id.user_name_tv);
-        messageEt = view.findViewById(R.id.msg_et);
+        etMessageText = view.findViewById(R.id.etMessageText);
         sendBtn = view.findViewById(R.id.btn_send);
         recyclerView = view.findViewById(R.id.chat_recycler_view);
 
@@ -109,13 +113,16 @@ public class MessageActivity extends Fragment {
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String msg = messageEt.getText().toString();
+                String msg = etMessageText.getText().toString();
+                ImageView ivFab = view.findViewById(R.id.ivFab);
+                Bitmap img = BitmapFactory.decodeResource(getResources(), android.R.drawable.ic_media_play);
+                ImageViewAnimatedChange(ivFab, img);
                 if (!msg.equals("")){
                     sendMessage(userId,ownerId,msg);
                 } else {
                     Toast.makeText(context, "You can not send empty message", Toast.LENGTH_SHORT).show();
                 }
-                messageEt.setText("");
+                etMessageText.setText("");
             }
         });
     }
@@ -191,6 +198,30 @@ public class MessageActivity extends Fragment {
 //            }
 //        });
 
+    }
 
+    private void ImageViewAnimatedChange(final ImageView v, final Bitmap new_image) {
+        final Animation anim_out = AnimationUtils.loadAnimation(context, R.anim.zoom_out);
+        final Animation anim_in  = AnimationUtils.loadAnimation(context, R.anim.zoom_in);
+        anim_out.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {}
+            @Override
+            public void onAnimationRepeat(Animation animation) {}
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                v.setImageBitmap(new_image);
+                anim_in.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {}
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {}
+                    @Override
+                    public void onAnimationEnd(Animation animation) {}
+                });
+                v.startAnimation(anim_in);
+            }
+        });
+        v.startAnimation(anim_out);
     }
 }

@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.thegalos.petbook.fragments.Chats;
 import com.thegalos.petbook.fragments.MainFeed;
@@ -26,7 +27,6 @@ public class MainActivity extends AppCompatActivity {
         final SmoothBottomBar smoothBottomBar = findViewById(R.id.bottomBar);
         smoothBottomBar.setVisibility(View.INVISIBLE);
         getSupportFragmentManager().beginTransaction().add(R.id.mainLayout, new Splash(),"splash").commit();
-
         smoothBottomBar.setOnItemSelectedListener(new OnItemSelectedListener() {
             @Override
             public boolean onItemSelect(int position) {
@@ -55,6 +55,13 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    void snakeBar(){
+//        View parentLayout = findViewById(android.R.id.content);
+//        Snackbar.make(parentLayout, "This is main activity", Snackbar.LENGTH_LONG).show();
+//        Snackbar snackbar = Snackbar.make(, R.string.disconnected_from_petbook, Snackbar.LENGTH_SHORT);
+//        snackbar.show();
+
+    }
     void handleFragment(Fragment fragment, String mainFeed) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.flFragment, fragment, mainFeed);

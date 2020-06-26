@@ -48,7 +48,6 @@ public class MainFeed extends Fragment {
     FirebaseUser user;
     ProgressBar progressBar;
     int keepY;
-    TextView tvFeedUser;
     Context context;
     SharedPreferences.Editor editor;
     int maxProgress = 0;
@@ -72,7 +71,6 @@ public class MainFeed extends Fragment {
         Button btnFeedAction = view.findViewById(R.id.btnFeedAction);
         context = getContext();
         progressBar = view.findViewById(R.id.progressBar2);
-        tvFeedUser = view.findViewById(R.id.tvFeedUser);
         constraintLayout = view.findViewById(R.id.loadingLayout);
         user = FirebaseAuth.getInstance().getCurrentUser();
         sp = PreferenceManager.getDefaultSharedPreferences(context);
@@ -85,7 +83,6 @@ public class MainFeed extends Fragment {
         } else {
             String str = "Hi " + user.getDisplayName();
             editor.putString("Name", user.getDisplayName());
-            tvFeedUser.setText(str);
             if (sp.getLong("MemberSince", 0) == 0) {
                 DatabaseReference db = FirebaseDatabase.getInstance().getReference().child("Users").child(user.getUid()).child("Details");
                 db.addListenerForSingleValueEvent(new ValueEventListener() {
