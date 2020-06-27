@@ -42,6 +42,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import me.ibrahimsn.lib.SmoothBottomBar;
+
 public class Login extends Fragment {
 
     private EditText etEmail, etPassword, etName;
@@ -246,6 +248,8 @@ public class Login extends Fragment {
 
 
     private void signInTransaction() {
+        SmoothBottomBar smoothBottomBar = getActivity().findViewById(R.id.bottomBar);
+        smoothBottomBar.setItemActiveIndex(0);
         FragmentTransaction ft = getParentFragmentManager().beginTransaction();
         ft.replace(R.id.flFragment, new MainFeed(), "main_fragment").commit();
 

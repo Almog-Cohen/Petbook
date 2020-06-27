@@ -2,10 +2,15 @@ package com.thegalos.petbook.fragments;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,12 +21,16 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -47,13 +56,13 @@ public class MainFeed extends Fragment {
     private static List<Feed> feedList = new ArrayList<>();
     FirebaseUser user;
     ProgressBar progressBar;
-    int keepY;
     Context context;
     SharedPreferences.Editor editor;
     int maxProgress = 0;
     SwipeRefreshLayout refreshLayout;
     SharedPreferences sp;
     ConstraintLayout constraintLayout;
+    String str;
 
 
     public MainFeed() {
@@ -68,20 +77,22 @@ public class MainFeed extends Fragment {
     @Override
     public void onViewCreated(@NonNull final View view, Bundle savedInstanceState) {
         final RecyclerView recyclerView = view.findViewById(R.id.rvFeed);
-        Button btnFeedAction = view.findViewById(R.id.btnFeedAction);
+        FloatingActionButton fabFeed = view.findViewById(R.id.fabFeed);
         context = getContext();
         progressBar = view.findViewById(R.id.progressBar2);
         constraintLayout = view.findViewById(R.id.loadingLayout);
         user = FirebaseAuth.getInstance().getCurrentUser();
         sp = PreferenceManager.getDefaultSharedPreferences(context);
-
+        progressBar.bringToFront();
         editor = sp.edit();
         refreshLayout = view.findViewById(R.id.mainLayout);
 
         if (user == null) {
-            btnFeedAction.setText(R.string.login);
+            str = getString(R.string.app_name);
+            fabFeed.setVisibility(View.GONE);
         } else {
-            String str = "Hi " + user.getDisplayName();
+            fabFeed.setVisibility(View.VISIBLE);
+            str = getString(R.string.app_name) + " - " + user.getDisplayName();
             editor.putString("Name", user.getDisplayName());
             if (sp.getLong("MemberSince", 0) == 0) {
                 DatabaseReference db = FirebaseDatabase.getInstance().getReference().child("Users").child(user.getUid()).child("Details");
@@ -90,7 +101,7 @@ public class MainFeed extends Fragment {
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if (dataSnapshot.exists()) {
                             editor.putLong("MemberSince", dataSnapshot.child("MemberSince").getValue(Long.class)).apply();
-                            Toast.makeText(context, "saved MemberSince to prefs", Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(context, "saved MemberSince to prefs", Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -102,20 +113,15 @@ public class MainFeed extends Fragment {
             }
         }
 
-        btnFeedAction.setOnClickListener(new View.OnClickListener() {
+        fabFeed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (user != null) {
-                    if (sp.contains("PetList")) {
-                        FragmentTransaction ft = getParentFragmentManager().beginTransaction();
-                        ft.replace(R.id.flFragment, new AddFeed(), "AddFeed").addToBackStack("AddFeed").commit();
-                    } else {
-                        Toast.makeText(context, "Please add Pets first in Profile screen", Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    FragmentTransaction ft = getParentFragmentManager().beginTransaction();
-                    ft.replace(R.id.flFragment, new Login(), "Login").addToBackStack("Login").commit();
 
+                if (sp.contains("PetList")) {
+                    FragmentTransaction ft = getParentFragmentManager().beginTransaction();
+                    ft.replace(R.id.flFragment, new AddFeed(), "AddFeed").addToBackStack("AddFeed").commit();
+                } else {
+                    Toast.makeText(context, "Please add Pets first in Profile screen", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -147,22 +153,7 @@ public class MainFeed extends Fragment {
                             feed.setFree("Looking");
                         feed.setPostOwner(snapshot.child("Owner").getValue(String.class));
                         feed.setOwnerUID(snapshot.child("OwnerUID").getValue(String.class));
-//                        if (dataSnapshot.hasChild("Pet")) {
-                            feed.setPet(snapshot.child("Pet").getValue(Pet.class));
-//                        } else {
-//                            Pet pet = new Pet();
-//                            pet.setAge("");
-//                            pet.setAnimalType("");
-//                            pet.setBreed("");
-//                            pet.setCurrentImagePath("null");
-//                            pet.setGender("");
-//                            pet.setName("");
-//                            pet.setPetUID("");
-//                            pet.setPureBred(false);
-//                            pet.setVaccine(false);
-//                            feed.setPet(pet);
-//
-//                        }
+                        feed.setPet(snapshot.child("Pet").getValue(Pet.class));
                         feed.setPostText(snapshot.child("PostText").getValue(String.class));
                         feed.setSelectedPet(snapshot.child("SelectedPet").getValue(String.class));
                         feed.setWhoPays(snapshot.child("WhoPays").getValue(String.class));
@@ -172,23 +163,13 @@ public class MainFeed extends Fragment {
                         SimpleDateFormat sfd = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
                         String text = sfd.format(date);
                         feed.setTime(text);
-
-                        //////////////////////////////////////////
                         feedList.add(feed);
                     }
                     Collections.reverse(feedList);
                     feedAdapter.notifyDataSetChanged();
                     constraintLayout.setVisibility(View.GONE);
 
-//                    Log.d("progress_galos", "range is: " + range);
-//                    Log.d("progress_galos", "max is: " + recyclerView.getMeasuredHeight()* (feedList.size()-3));
-//                    Log.d("progress_galos", "max * 3 is: " + recyclerView.getHeight()*3);
-//                    Log.d("progress_galos", "max is: " + recyclerView.getMeasuredHeightAndState());
-//                    Log.d("progress_galos", "max is: " + recyclerView.getMinimumHeight());
-//                    Log.d("progress_galos", "max is: " + recyclerView.getLayoutManager().getMinimumHeight());
-//                    Log.d("progress_galos", "max is: " + recyclerView.getLayoutManager().getHeight());
-//                    Log.d("progress_galos", "max is: " + recyclerView.getLayoutManager().getMinimumHeight());
-//                    Log.d("progress_galos", "getHeight/feedList is: " + recyclerView.getLayoutManager().getHeight()/feedList.size());
+//                    Log.d("progress_galos", "getHeight/feedList is: " + recyclerView.getLayoutManager().getHeight()/(feedList.size()-1));
 //                    Log.d("progress_galos", "getMinimumHeight is: " + recyclerView.getLayoutManager().getMinimumHeight());
 //                    Log.d("progress_galos", "getMinimumHeight is: " + recyclerView.getMinimumHeight());
 //                    Log.d("progress_galos", "computeVerticalScrollRange is: " + recyclerView.computeVerticalScrollRange());
@@ -197,15 +178,20 @@ public class MainFeed extends Fragment {
 
 //                    progressBar.setMax(size);
                 }
-//                recyclerView.scrollToPosition();
-                int size = recyclerView.getBottom() * (feedList.size() / 3);
-                Log.d("progress_galos", "getBottom is: " + size);
-                Log.d("progress_galos", "getHeight is: " + recyclerView.getHeight());
-                Log.d("progress_galos", "getHeight is: " + ((recyclerView.getHeight() * recyclerView.getAdapter().getItemCount() - 1)));
-                Log.d("progress_galos", "getHeight is: " + ((recyclerView.getHeight() * recyclerView.getAdapter().getItemCount() - 1)) / 2.5);
-                maxProgress = (int) ((recyclerView.getHeight() * (recyclerView.getAdapter().getItemCount() - 1)) / 3);
+                int height = Resources.getSystem().getDisplayMetrics().heightPixels;
+//                Log.d("progress_galos", " Y is: " + (height - 1200));
+
+//                int size = feedList.size();
+//                Log.d("progress_galos", " dpToPx is: " + dpToPx(height));
+//                Log.d("progress_galos", " pxToDp is: " + pxToDp(height));
+//                Log.d("progress_galos", "some math --- is: " + ((height-recyclerView.getHeight())*(size-1)));
+//                Log.d("progress_galos", "getHeight is: " + recyclerView.getHeight());
+//                maxProgress = (int) ((recyclerView.getHeight() * (recyclerView.getAdapter().getItemCount() - 4)) / 2.7);
+
+
+                maxProgress = height - 1200;
                 progressBar.setMax(maxProgress);
-                Log.d("progress_galos", "maxProgress: " + maxProgress);
+                Log.d("progress_galos", "maxProgress claculated: " + maxProgress);
             }
 
             @Override
@@ -214,6 +200,29 @@ public class MainFeed extends Fragment {
             }
         });
 
+
+        //Show label when uncollapsing
+        final CollapsingToolbarLayout collapsingToolbarLayout = /*(CollapsingToolbarLayout)*/ view.findViewById(R.id.collapsingToolbar);
+        AppBarLayout appBarLayout = /*(AppBarLayout)*/ view.findViewById(R.id.appBar);
+        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            boolean isShow = true;
+            int scrollRange = -1;
+
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                if (scrollRange == -1) {
+                    scrollRange = appBarLayout.getTotalScrollRange();
+                }
+                if (scrollRange + verticalOffset == 0) {
+                    collapsingToolbarLayout.setTitle(str);
+                    isShow = true;
+                } else if(isShow) {
+                    collapsingToolbarLayout.setCollapsedTitleTextColor(Color.WHITE);
+                    collapsingToolbarLayout.setTitle("");//careful there should a space between double quote otherwise it wont work
+                    isShow = false;
+                }
+            }
+        });
 
         // Limiters
 
@@ -225,27 +234,20 @@ public class MainFeed extends Fragment {
             }
         });
 
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        NestedScrollView nestedScrollView = view.findViewById(R.id.nestedscroll);
+        nestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-            }
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                if (scrollY > maxProgress)
+                    maxProgress = scrollY;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+                    progressBar.setProgress(scrollY, true);
+                else
+                    progressBar.setProgress(scrollY);
+                Log.d("progress_galos", "v.getMeasuredHeight() " + v.getMeasuredHeight() + " scrollY " + scrollY + " maxProgress: " + maxProgress);
 
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                keepY += dy;
-                if (maxProgress < keepY)
-                    maxProgress = keepY;
-                progressBar.setMax(maxProgress);
-                Log.d("progress_galos", ": keepY: " + keepY + " dy: " + dy + " maxProgress: " + maxProgress);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    progressBar.setProgress(keepY, true);
-                } else
-                    progressBar.setProgress(keepY);
             }
         });
-
 
         feedAdapter.setListener(new FeedAdapter.myFeedListener() {
             @Override
@@ -263,6 +265,14 @@ public class MainFeed extends Fragment {
                 }
             }
         });
+    }
+
+    public static int dpToPx(int dp) {
+        return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
+    }
+
+    public static int pxToDp(int px) {
+        return (int) (px / Resources.getSystem().getDisplayMetrics().density);
     }
 
     private void startRefresh() {

@@ -80,6 +80,7 @@ public class Profile extends Fragment {
         final Button btnLogout = view.findViewById(R.id.btnLogout);
         final FloatingActionButton btnAddPet = view.findViewById(R.id.btnAddPet);
 
+
         manager = getParentFragmentManager();
         if (user != null) {
             tvUserName.setText(user.getDisplayName());
@@ -87,6 +88,8 @@ public class Profile extends Fragment {
             SimpleDateFormat sfd = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
             String text = sfd.format(date);
             tvMemberSince.setText(text);
+        } else {
+            btnLogout.setText(R.string.login);
         }
         recyclerView = view.findViewById(R.id.rvCards);
         recyclerView.setHasFixedSize(true);
@@ -102,8 +105,11 @@ public class Profile extends Fragment {
                 if (user != null) {
                     FragmentTransaction ft = getParentFragmentManager().beginTransaction();
                     ft.replace(R.id.flFragment, new AddPet(), "AddPet").addToBackStack("AddPet").commit();
-                } else
-                    Toast.makeText(getContext(), "Please Sign in", Toast.LENGTH_SHORT).show();
+                } else {
+                    Snackbar snackbar = Snackbar.make(getView(), R.string.sign_in_first, Snackbar.LENGTH_SHORT);
+                    snackbar.setAnchorView(R.id.bottomBar);
+                    snackbar.show();
+                }
             }
         });
 
@@ -128,18 +134,23 @@ public class Profile extends Fragment {
                     snackbar.show();
                     sp.edit().clear().apply();
 
-                } else
-                    Toast.makeText(getContext(), "Must be logged in order to logout", Toast.LENGTH_SHORT).show();
+                } else {
+                    //if user isnt connected
+                    FragmentTransaction ft = getParentFragmentManager().beginTransaction();
+                    ft.replace(R.id.flFragment, new Login(), "Login").addToBackStack("Login").commit();
+                }
             }
         });
 
         //Load User Details
 
         //load pets - if first time from Firebase else from shared prefs
-        if (downloadedPets)
-            loadLocalData();
-        else
-            loadFirebaseData();
+        if (user != null) {
+            if (downloadedPets)
+                loadLocalData();
+            else
+                loadFirebaseData();
+        }
     }
 
     private void loadFirebaseData() {
@@ -181,16 +192,11 @@ public class Profile extends Fragment {
                 }
             });
         }
-        Toast.makeText(getContext(), "Loaded from Firebase", Toast.LENGTH_SHORT).show();
+//        Snackbar snackbar = Snackbar.make(getView(), getString(R.string.loaded_from_firebase), Snackbar.LENGTH_SHORT);
+//        snackbar.setAnchorView(R.id.bottomBar);
+//        snackbar.show();
     }
 
-    private void saveLocaly() {
-        SharedPreferences.Editor editor = sp.edit();
-        Gson gson = new Gson();
-        String json = gson.toJson(petList);
-        editor.putString("PetList", json);
-        editor.apply();
-    }
 
     private void loadLocalData() {
         Gson gson = new Gson();
@@ -202,12 +208,6 @@ public class Profile extends Fragment {
         if (petList == null) {
             petList = new ArrayList<>();
         }
-//        petAdapter = new PetAdapter(manager, getContext(), petList);
-//        recyclerView.setAdapter(petAdapter);
-//        petAdapter.notifyDataSetChanged();
-//        petCount = "Pets: " + petList.size();
-//        tvTotalPets.setText(petCount);
-//        Toast.makeText(getContext(), "Loaded from Shared Prefs", Toast.LENGTH_SHORT).show();
         setAdapter(true);
     }
 
@@ -216,15 +216,16 @@ public class Profile extends Fragment {
         recyclerView.setAdapter(petAdapter);
         if (!b){
             Collections.reverse(petList);
-            Toast.makeText(getContext(), "Loaded from FireBase", Toast.LENGTH_SHORT).show();
+            Snackbar snackbar = Snackbar.make(getView(), R.string.loaded_from_firebase, Snackbar.LENGTH_SHORT);
+            snackbar.setAnchorView(R.id.bottomBar);
+            snackbar.show();
             SharedPreferences.Editor editor = sp.edit();
             Gson gson = new Gson();
             String json = gson.toJson(petList);
             editor.putBoolean("downloadedPets", true);
             editor.putString("PetList", json);
             editor.apply();
-        } else
-            Toast.makeText(getContext(), "Loaded from Shared Prefs", Toast.LENGTH_SHORT).show();
+        }
         petAdapter.notifyDataSetChanged();
         petCount = "Pets: " + petList.size();
         tvTotalPets.setText(petCount);
@@ -235,23 +236,15 @@ public class Profile extends Fragment {
                 Toast.makeText(getContext(), "Long clicked position: " + position, Toast.LENGTH_SHORT).show();
             }
         });
-
     }
 
-
-//    petAdapter = new PetAdapter(manager, getContext(), petList);
-//        recyclerView.setAdapter(petAdapter);
-//        petAdapter.notifyDataSetChanged();
-//    petCount = "Pets: " + petList.size();
-//        tvTotalPets.setText(petCount);
-//        Toast.makeText(getContext(), "Loaded from Shared Prefs", Toast.LENGTH_SHORT).show();
-
-    //    petAdapter = new PetAdapter(manager, getContext(), petList);
-//                        recyclerView.setAdapter(petAdapter);
-//                        Collections.reverse(petList);
-//                        petAdapter.notifyDataSetChanged();
-//    petCount = "Pets: " + petList.size();
-//                        tvTotalPets.setText(petCount);
+//      private void saveLocaly() {
+//        SharedPreferences.Editor editor = sp.edit();
+//        Gson gson = new Gson();
+//        String json = gson.toJson(petList);
+//        editor.putString("PetList", json);
+//        editor.apply();
+//    }
 
 }
 

@@ -2,7 +2,6 @@ package com.thegalos.petbook.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,9 +14,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.thegalos.petbook.R;
 import com.thegalos.petbook.objects.Feed;
 import com.thegalos.petbook.objects.Pet;
-import com.thegalos.petbook.R;
 
 import java.util.List;
 
@@ -65,11 +64,6 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyFeedViewHold
             tvName = itemView.findViewById(R.id.tvName);
             tvPetAge = itemView.findViewById(R.id.tvAge);
             ivType = itemView.findViewById(R.id.ivType);
-//            ivIsFree = itemView.findViewById(R.id.ivIsFree);
-
-            itemView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-            int height = itemView.getMeasuredHeight();
-            Log.d("Galos_height", String.valueOf(height));
 
 
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -80,16 +74,6 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyFeedViewHold
                     }
                 }
             });
-
-//            itemView.setOnLongClickListener(new View.OnLongClickListener() {
-//                @Override
-//                public boolean onLongClick(View view) {
-//                    if (listener != null)
-//                        listener.onCardLongClicked();
-//                    return true;
-//                }
-//            });
-
         }
     }
 
@@ -132,8 +116,6 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyFeedViewHold
 
         /////////////FEED//////NEED 9//////////
         if (!feed.getImageURL().equals("null")) {
-//            holder.ivFeedPhoto.setVisibility(View.GONE);
-//            Glide.with(holder.ivFeedPhoto.getContext()).load(feed.getImageURL()).into(holder.ivFeedPhoto);
             holder.ivFeedPhoto.setVisibility(View.VISIBLE);
             Glide.with(holder.ivFeedPhoto.getContext())
                     .load(feed.getImageURL())
@@ -148,18 +130,15 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyFeedViewHold
         str = feed.getFree();
         if (str.equals("yes")) {
 //             item is free
-            holder.tvPay.setText("Free");
-//            Glide.with(context).load(R.drawable.vector_money_off).into(holder.ivIsFree);
+            holder.tvPay.setText(R.string.free);
         } else if (str.equals("Looking")) {
-            holder.tvPay.setText("Looking");
+            holder.tvPay.setText(R.string.looking);
         } else {
-//            item isn't free
-//            Glide.with(context).load(R.drawable.vector_money).into(holder.ivIsFree);
             if (feed.getWhoPays().equals("user")) {
-                holder.tvPay.setText("Pay");
+                holder.tvPay.setText(R.string.pay);
                 holder.tvPay.setTextColor(Color.RED);
             } else {
-                holder.tvPay.setText("Earn");
+                holder.tvPay.setText(R.string.earn);
                 holder.tvPay.setVisibility(View.VISIBLE);
                 holder.tvPay.setTextColor(Color.GREEN);
             }

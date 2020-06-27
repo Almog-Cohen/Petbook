@@ -38,30 +38,21 @@ public class MainActivity extends AppCompatActivity {
                         if (FirebaseAuth.getInstance().getCurrentUser() != null)
                             handleFragment(new Chats(), "Chats");
                         else {
-                            Toast.makeText(MainActivity.this, "Sign in First", Toast.LENGTH_SHORT).show();
+                            Snackbar snackbar = Snackbar.make(smoothBottomBar, R.string.sign_in_first, Snackbar.LENGTH_SHORT);
+                            snackbar.setAnchorView(R.id.bottomBar);
+                            snackbar.show();
                             smoothBottomBar.setItemActiveIndex(0);
                         }
                         break;
                     case 2:
-                        if (FirebaseAuth.getInstance().getCurrentUser() != null)
-                            handleFragment(new Profile(), "Profile");
-                        else {
-                            Toast.makeText(MainActivity.this, "Sign in First", Toast.LENGTH_SHORT).show();
-                            smoothBottomBar.setItemActiveIndex(0);
-                        }
+                        handleFragment(new Profile(), "Profile");
+                        break;
                 }
                 return false;
             }
         });
     }
 
-    void snakeBar(){
-//        View parentLayout = findViewById(android.R.id.content);
-//        Snackbar.make(parentLayout, "This is main activity", Snackbar.LENGTH_LONG).show();
-//        Snackbar snackbar = Snackbar.make(, R.string.disconnected_from_petbook, Snackbar.LENGTH_SHORT);
-//        snackbar.show();
-
-    }
     void handleFragment(Fragment fragment, String mainFeed) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.flFragment, fragment, mainFeed);

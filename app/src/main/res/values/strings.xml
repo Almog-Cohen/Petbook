@@ -40,7 +40,6 @@
     <string name="chats">Chats</string>
     <string name="profile">Profile</string>
     <string name="pet_feed">Pet Feed</string>
-    <string name="free">Free</string>
     <string name="pay_space">"Pay "</string>
     <string name="earn_space">"Earn "</string>
     <string name="owned_by_space">"Owned by "</string>
@@ -58,5 +57,12 @@
     <string name="horse">"Horse - "</string>
     <string name="dog">"Dog - "</string>
     <string name="cat">"Cat - "</string>
+    <string name="free">Free</string>
+    <string name="looking">Looking</string>
+    <string name="pay">Pay</string>
+    <string name="earn">Earn</string>
+    <string name="sign_in_first">Sign in First</string>
+    <string name="loaded_from_firebase">Loaded from Firebase</string>
+    <string name="loaded_shared_prefs">Loaded from Shared Prefs</string>
 
 </resources>
