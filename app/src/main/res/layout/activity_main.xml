@@ -13,13 +13,13 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:alpha="0.3"
+        android:contentDescription="@string/none"
         android:scaleType="fitXY"
         android:src="@drawable/bgr3"
-        app:layout_constraintBottom_toTopOf="@id/bottomBar"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:contentDescription="@string/none" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <FrameLayout
         android:id="@+id/flFragment"

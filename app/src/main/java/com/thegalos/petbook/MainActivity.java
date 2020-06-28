@@ -1,11 +1,14 @@
 package com.thegalos.petbook;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -19,6 +22,8 @@ import me.ibrahimsn.lib.OnItemSelectedListener;
 import me.ibrahimsn.lib.SmoothBottomBar;
 
 public class MainActivity extends AppCompatActivity {
+
+    boolean doubleBackToExitPressedOnce = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,5 +62,46 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.flFragment, fragment, mainFeed);
         ft.commit();
+    }
+
+    @Override
+    public void onBackPressed() {
+        Fragment fragment;
+//        fragment = getSupportFragmentManager().findFragmentByTag("Login");
+//        if (fragment != null && fragment.isVisible())
+//            getSupportFragmentManager().popBackStack();
+        if (getSupportFragmentManager().findFragmentByTag("AddFeed") != null && getSupportFragmentManager().findFragmentByTag("AddFeed").isVisible())
+            getSupportFragmentManager().popBackStack();
+        else if (getSupportFragmentManager().findFragmentByTag("AddPet") != null && getSupportFragmentManager().findFragmentByTag("AddPet").isVisible())
+            getSupportFragmentManager().popBackStack();
+        else if (getSupportFragmentManager().findFragmentByTag("Login") != null && getSupportFragmentManager().findFragmentByTag("Login").isVisible())
+            getSupportFragmentManager().popBackStack();
+        else if (getSupportFragmentManager().findFragmentByTag("ViewPost") != null && getSupportFragmentManager().findFragmentByTag("ViewPost").isVisible())
+            getSupportFragmentManager().popBackStack();
+        else if (getSupportFragmentManager().findFragmentByTag("Conversation") != null && getSupportFragmentManager().findFragmentByTag("Conversation").isVisible())
+            getSupportFragmentManager().popBackStack();
+//         fragment = getSupportFragmentManager().findFragmentByTag("MainFeed");
+        else if ((getSupportFragmentManager().findFragmentByTag("MainFeed") != null &&
+                getSupportFragmentManager().findFragmentByTag("MainFeed").isVisible()) ||
+                (getSupportFragmentManager().findFragmentByTag("Chats") != null &&
+                        getSupportFragmentManager().findFragmentByTag("Chats").isVisible()) ||
+                (getSupportFragmentManager().findFragmentByTag("Profile") != null
+                        && getSupportFragmentManager().findFragmentByTag("Profile").isVisible())) {
+            if (doubleBackToExitPressedOnce) {
+                super.onBackPressed();
+            } else {
+                doubleBackToExitPressedOnce = true;
+                Toast.makeText(MainActivity.this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+                new Handler().postDelayed(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        Toast.makeText(MainActivity.this, "changed back to false", Toast.LENGTH_SHORT).show();
+                        doubleBackToExitPressedOnce=false;
+                    }
+                }, 2000);
+            }
+        }
+
     }
 }

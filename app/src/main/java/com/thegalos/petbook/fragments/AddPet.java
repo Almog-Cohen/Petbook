@@ -169,7 +169,7 @@ public class AddPet extends Fragment {
                     petArrayList.add(pet);
                     saveData();
                     FragmentTransaction ft = getParentFragmentManager().beginTransaction();
-                    ft.replace(R.id.flFragment, new Profile());
+                    ft.replace(R.id.flFragment, new Profile(), "Profile");
                     ft.commit();
 
                 }

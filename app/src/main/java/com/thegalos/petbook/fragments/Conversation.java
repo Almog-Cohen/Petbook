@@ -1,4 +1,4 @@
-package com.thegalos.petbook;
+package com.thegalos.petbook.fragments;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -37,6 +37,7 @@ import com.thegalos.petbook.Notifications.Data;
 import com.thegalos.petbook.Notifications.MyResponse;
 import com.thegalos.petbook.Notifications.Sender;
 import com.thegalos.petbook.Notifications.Token;
+import com.thegalos.petbook.R;
 import com.thegalos.petbook.adapters.MessageAdapter;
 import com.thegalos.petbook.objects.Chat;
 
@@ -48,7 +49,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MessageActivity extends Fragment {
+public class Conversation extends Fragment {
 
     DatabaseReference reference;
     TextView userNameTv;
@@ -67,13 +68,13 @@ public class MessageActivity extends Fragment {
     boolean notify = false;
 
 
-    public MessageActivity() {
+    public Conversation() {
     }
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.activity_message, container, false);
+        return inflater.inflate(R.layout.conversation, container, false);
     }
 
     @Override
@@ -81,7 +82,7 @@ public class MessageActivity extends Fragment {
 //    @Override
 //    protected void onCreate(Bundle savedInstanceState) {
 //        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_message);
+//        setContentView(R.layout.conversation);
         sp = PreferenceManager.getDefaultSharedPreferences(getContext());
         context = getContext();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();

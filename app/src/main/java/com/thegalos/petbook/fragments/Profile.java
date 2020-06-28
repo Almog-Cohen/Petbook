@@ -78,28 +78,30 @@ public class Profile extends Fragment {
         tvTotalPets = view.findViewById(R.id.tvTotalPets);
         tvMemberSince = view.findViewById(R.id.tvMemberSince);
         final Button btnLogout = view.findViewById(R.id.btnLogout);
-        final FloatingActionButton btnAddPet = view.findViewById(R.id.btnAddPet);
-
-
+        final FloatingActionButton fabAddPet = view.findViewById(R.id.fabAddPet);
+        recyclerView = view.findViewById(R.id.rvCards);
         manager = getParentFragmentManager();
+
         if (user != null) {
             tvUserName.setText(user.getDisplayName());
+            fabAddPet.setVisibility(View.VISIBLE);
             Date date = new Date(sp.getLong("MemberSince",0));
             SimpleDateFormat sfd = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
             String text = sfd.format(date);
             tvMemberSince.setText(text);
+            if (downloadedPets)
+                loadLocalData();
+            else
+                loadFirebaseData();
         } else {
+            fabAddPet.setVisibility(View.INVISIBLE);
             btnLogout.setText(R.string.login);
         }
-        recyclerView = view.findViewById(R.id.rvCards);
+
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-//            loadData();
 
-        // Change to add pet fragment
-
-
-        btnAddPet.setOnClickListener(new View.OnClickListener() {
+        fabAddPet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (user != null) {
@@ -118,13 +120,14 @@ public class Profile extends Fragment {
             @Override
             public void onClick(View v) {
                 if (user != null) {
+                    //Firebase change
+                    FirebaseAuth.getInstance().signOut();
+                    //UI logout update
                     tvUserName.setText(getString(R.string.details_would_show_once_signed_in));
                     tvTotalPets.setText("");
                     tvMemberSince.setText("");
+                    fabAddPet.setVisibility(View.INVISIBLE);
                     petList.clear();
-//                    petAdapter.notifyDataSetChanged();
-                    FirebaseAuth.getInstance().signOut();
-
                     Snackbar snackbar = Snackbar.make(view, R.string.disconnected_from_petbook, Snackbar.LENGTH_SHORT);
                     snackbar.setAnchorView(R.id.bottomBar);
                     FragmentTransaction ft = getParentFragmentManager().beginTransaction();
@@ -133,24 +136,12 @@ public class Profile extends Fragment {
                     smoothBottomBar.setItemActiveIndex(0);
                     snackbar.show();
                     sp.edit().clear().apply();
-
                 } else {
-                    //if user isnt connected
                     FragmentTransaction ft = getParentFragmentManager().beginTransaction();
                     ft.replace(R.id.flFragment, new Login(), "Login").addToBackStack("Login").commit();
                 }
             }
         });
-
-        //Load User Details
-
-        //load pets - if first time from Firebase else from shared prefs
-        if (user != null) {
-            if (downloadedPets)
-                loadLocalData();
-            else
-                loadFirebaseData();
-        }
     }
 
     private void loadFirebaseData() {
@@ -174,6 +165,7 @@ public class Profile extends Fragment {
                             pet.setPetUID(snapshot.getKey());
                             petList.add(pet);
                         }
+                        setAdapter(false);
 //                        petAdapter = new PetAdapter(manager, getContext(), petList);
 //                        recyclerView.setAdapter(petAdapter);
 //                        Collections.reverse(petList);
@@ -181,7 +173,6 @@ public class Profile extends Fragment {
 //                        petCount = "Pets: " + petList.size();
 //                        tvTotalPets.setText(petCount);
 //                        sp.edit().putBoolean("downloadedPets", true).apply();
-                        setAdapter(false);
 //                        saveLocaly();
                     }
                 }
@@ -192,11 +183,7 @@ public class Profile extends Fragment {
                 }
             });
         }
-//        Snackbar snackbar = Snackbar.make(getView(), getString(R.string.loaded_from_firebase), Snackbar.LENGTH_SHORT);
-//        snackbar.setAnchorView(R.id.bottomBar);
-//        snackbar.show();
     }
-
 
     private void loadLocalData() {
         Gson gson = new Gson();
@@ -204,17 +191,16 @@ public class Profile extends Fragment {
         Type type = new TypeToken<ArrayList<Pet>>() {
         }.getType();
         petList = gson.fromJson(json, type);
-
         if (petList == null) {
             petList = new ArrayList<>();
         }
         setAdapter(true);
     }
 
-    private void setAdapter(boolean b) {
+    private void setAdapter(boolean bool) {
         petAdapter = new PetAdapter(manager, getContext(), petList);
         recyclerView.setAdapter(petAdapter);
-        if (!b){
+        if (!bool){
             Collections.reverse(petList);
             Snackbar snackbar = Snackbar.make(getView(), R.string.loaded_from_firebase, Snackbar.LENGTH_SHORT);
             snackbar.setAnchorView(R.id.bottomBar);
@@ -237,7 +223,6 @@ public class Profile extends Fragment {
             }
         });
     }
-
 //      private void saveLocaly() {
 //        SharedPreferences.Editor editor = sp.edit();
 //        Gson gson = new Gson();
@@ -245,6 +230,5 @@ public class Profile extends Fragment {
 //        editor.putString("PetList", json);
 //        editor.apply();
 //    }
-
 }
 

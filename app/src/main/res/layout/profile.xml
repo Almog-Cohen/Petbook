@@ -118,15 +118,14 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btnAddPet"
+        android:id="@+id/fabAddPet"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="10dp"
         android:backgroundTint="@color/colorPrimaryDark"
-        android:src="@drawable/vector_twotone_add_circle"
+        android:src="@drawable/vector_add"
         android:text="@string/add_pets"
-        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@+id/rvCards"
         app:layout_constraintEnd_toEndOf="parent" />
 

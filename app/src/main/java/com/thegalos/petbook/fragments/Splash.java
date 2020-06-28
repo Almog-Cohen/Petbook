@@ -55,7 +55,7 @@ public class Splash extends Fragment {
     private void signInTransaction() {
         FragmentTransaction ft = getParentFragmentManager().beginTransaction();
         Fragment fragment = getParentFragmentManager().findFragmentByTag("splash");
-        ft.remove(fragment).replace(R.id.flFragment, new MainFeed(), "main_fragment");
+        ft.remove(fragment).replace(R.id.flFragment, new MainFeed(), "MainFeed");
         SmoothBottomBar smoothBottomBar = getActivity().findViewById(R.id.bottomBar);
         smoothBottomBar.setVisibility(View.VISIBLE);
         ft.commit();

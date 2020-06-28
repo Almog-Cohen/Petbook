@@ -251,7 +251,7 @@ public class Login extends Fragment {
         SmoothBottomBar smoothBottomBar = getActivity().findViewById(R.id.bottomBar);
         smoothBottomBar.setItemActiveIndex(0);
         FragmentTransaction ft = getParentFragmentManager().beginTransaction();
-        ft.replace(R.id.flFragment, new MainFeed(), "main_fragment").commit();
+        ft.replace(R.id.flFragment, new MainFeed(), "MainFeed").commit();
 
     }
 }

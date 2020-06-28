@@ -23,7 +23,6 @@ import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.thegalos.petbook.MessageActivity;
 import com.thegalos.petbook.R;
 import com.thegalos.petbook.objects.Feed;
 import com.thegalos.petbook.objects.Pet;
@@ -137,7 +136,7 @@ public class ViewPost2 extends Fragment {
 
                 sp.edit().putString("ownerId", ownerId).apply();
                 FragmentTransaction ft = getParentFragmentManager().beginTransaction();
-                ft.replace(R.id.flFragment, new MessageActivity(), "MessageActivity").addToBackStack("MessageActivity").commit();
+                ft.replace(R.id.flFragment, new Conversation(), "Conversation").addToBackStack("Conversation").commit();
             }
         });
 

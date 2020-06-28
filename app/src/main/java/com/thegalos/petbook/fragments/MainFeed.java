@@ -7,10 +7,12 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,6 +65,8 @@ public class MainFeed extends Fragment {
     SharedPreferences sp;
     ConstraintLayout constraintLayout;
     String str;
+    boolean doubleBackToExitPressedOnce = false;
+
 
 
     public MainFeed() {
@@ -238,8 +242,10 @@ public class MainFeed extends Fragment {
         nestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                if (scrollY > maxProgress)
+                if (scrollY > maxProgress) {
                     maxProgress = scrollY;
+                    progressBar.setMax(maxProgress);
+                }
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
                     progressBar.setProgress(scrollY, true);
                 else
@@ -265,6 +271,8 @@ public class MainFeed extends Fragment {
                 }
             }
         });
+
+
     }
 
     public static int dpToPx(int dp) {
@@ -279,4 +287,5 @@ public class MainFeed extends Fragment {
         FragmentTransaction ft = getParentFragmentManager().beginTransaction();
         ft.replace(R.id.flFragment, new MainFeed(), "MainFeed").commit();
     }
+
 }

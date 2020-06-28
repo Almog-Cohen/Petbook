@@ -392,7 +392,7 @@ public class AddFeed extends Fragment {
     private void changeFragment() {
         progressBar.setVisibility(View.GONE);
         FragmentTransaction ft = getParentFragmentManager().beginTransaction();
-        ft.replace(R.id.flFragment, new MainFeed()).commit();
+        ft.replace(R.id.flFragment, new MainFeed(), "MainFeed").commit();
     }
 
 

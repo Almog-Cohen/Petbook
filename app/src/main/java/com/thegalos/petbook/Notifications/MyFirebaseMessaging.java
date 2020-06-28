@@ -1,7 +1,6 @@
 package com.thegalos.petbook.Notifications;
 
 import android.app.Notification;
-import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -21,7 +20,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-import com.thegalos.petbook.MessageActivity;
+import com.thegalos.petbook.fragments.Conversation;
 
 public class MyFirebaseMessaging extends FirebaseMessagingService {
 
@@ -57,7 +56,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         RemoteMessage.Notification notification = remoteMessage.getNotification();
         int j = Integer.parseInt(user.replaceAll("[\\D]",""));
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
-        Intent intent = new Intent(this, MessageActivity.class);
+        Intent intent = new Intent(this, Conversation.class);
         Bundle bundle = new Bundle();
 //        bundle.putString("userid",user);
         sp.edit().putString("ownerId", user).apply();
@@ -105,7 +104,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         RemoteMessage.Notification notification = remoteMessage.getNotification();
         int j = Integer.parseInt(user.replaceAll("[\\D]",""));
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
-        Intent intent = new Intent(this, MessageActivity.class);
+        Intent intent = new Intent(this, Conversation.class);
         Bundle bundle = new Bundle();
 //        bundle.putString("userid",user);
         sp.edit().putString("ownerId", user).apply();

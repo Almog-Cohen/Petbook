@@ -64,5 +64,8 @@
     <string name="sign_in_first">Sign in First</string>
     <string name="loaded_from_firebase">Loaded from Firebase</string>
     <string name="loaded_shared_prefs">Loaded from Shared Prefs</string>
+    <string name="pet_name">Pet name</string>
+    <string name="amount">Amount</string>
+    <string name="advertise_text">Advertise Text</string>
 
 </resources>
