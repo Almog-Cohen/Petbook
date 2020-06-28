@@ -1,5 +1,6 @@
 package com.thegalos.petbook.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -19,6 +20,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -26,7 +28,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.thegalos.petbook.MessageActivity;
+import com.thegalos.petbook.Notifications.Token;
 import com.thegalos.petbook.R;
 import com.thegalos.petbook.adapters.UserAdapter;
 import com.thegalos.petbook.objects.Chat;
@@ -137,9 +142,26 @@ public class Chats extends Fragment {
             }
         });
 
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener((Activity) context, new OnSuccessListener<InstanceIdResult>() {
+            @Override
+            public void onSuccess(InstanceIdResult instanceIdResult) {
+                String newToken = instanceIdResult.getToken();
+                Log.e("MAGI", newToken);
+                updateToken(newToken);
+
+            }
+        });
 
 
+    }
 
+    private void updateToken(String newToken){
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
+
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Tokens");
+        Token token1 = new Token(newToken);
+        reference.child(firebaseUser.getUid()).setValue(token1);
 
     }
 }

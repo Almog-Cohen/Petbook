@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,13 +29,24 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.thegalos.petbook.Notifications.APIService;
+import com.thegalos.petbook.Notifications.Client;
+import com.thegalos.petbook.Notifications.Data;
+import com.thegalos.petbook.Notifications.MyResponse;
+import com.thegalos.petbook.Notifications.Sender;
+import com.thegalos.petbook.Notifications.Token;
 import com.thegalos.petbook.adapters.MessageAdapter;
 import com.thegalos.petbook.objects.Chat;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MessageActivity extends Fragment {
 
@@ -51,6 +63,8 @@ public class MessageActivity extends Fragment {
     String userId;
     String userName;
     String ownerUserName;
+    APIService apiService;
+    boolean notify = false;
 
 
     public MessageActivity() {
@@ -81,6 +95,7 @@ public class MessageActivity extends Fragment {
         linearLayoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(linearLayoutManager);
 
+        apiService = Client.getClient("https://fcm.googleapis.com/").create(APIService.class);
 
         ownerId = sp.getString("ownerId", "");
 
@@ -113,6 +128,7 @@ public class MessageActivity extends Fragment {
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                notify = true;
                 String msg = etMessageText.getText().toString();
                 ImageView ivFab = view.findViewById(R.id.ivFab);
                 Bitmap img = BitmapFactory.decodeResource(getResources(), android.R.drawable.ic_media_play);
@@ -127,7 +143,7 @@ public class MessageActivity extends Fragment {
         });
     }
 
-    private void sendMessage(String sender,String receiver, String message){
+    private void sendMessage(String sender, final String receiver, String message){
         HashMap<String,Object> hashMap = new HashMap<>();
         hashMap.put("sender", sender);
         hashMap.put("receiver",receiver);
@@ -141,6 +157,69 @@ public class MessageActivity extends Fragment {
         FirebaseDatabase.getInstance().getReference().child("Messages").child(ownerId).child(userId).child("1").setValue(userName);
         FirebaseDatabase.getInstance().getReference().child("Messages").child(userId).child(ownerId).child("1").setValue(ownerUserName);
 
+        final String msg = message;
+
+        reference = FirebaseDatabase.getInstance().getReference().child("Users").child(userId);
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                if (notify) {
+                    sendNotification(receiver, userName, msg);
+
+                }
+                notify=false;
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    private void sendNotification(String receiver, final String userName, final String msg) {
+        DatabaseReference tokens = FirebaseDatabase.getInstance().getReference().child("Tokens");
+        Query query = tokens.orderByKey().equalTo(receiver);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+
+                    Token token = snapshot.getValue(Token.class);
+                    //n.setToken(snapshot.getValue(Token.class));
+                    Data data = new Data(userId , R.mipmap.ic_launcher , userName + ": " + msg , "New Message" , ownerId);
+
+                    final Sender sender = new Sender(data,token.getToken());
+
+                    apiService.sendNotification(sender)
+                            .enqueue(new Callback<MyResponse>() {
+                                @Override
+                                public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
+
+                                    if (response.code() == 200){
+
+                                        if (response.body().success != 1){
+                                            Toast.makeText(context, "Failed notif", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<MyResponse> call, Throwable t) {
+
+                                    Log.d("PRAG", "onFailure: " + t.toString());
+                                }
+                            });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void readMessages(final String myId , final String userid){
