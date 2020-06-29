@@ -15,11 +15,11 @@
         android:alpha="0.3"
         android:contentDescription="@string/none"
         android:scaleType="fitXY"
-        android:src="@drawable/bgr3"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/bgr3" />
 
     <FrameLayout
         android:id="@+id/flFragment"
