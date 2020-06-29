@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
                 switch (position) {
                     case 0:
                         handleFragment(new MainFeed(),"MainFeed");
+                        getSupportFragmentManager().popBackStack();
                         break;
                     case 1:
                         if (FirebaseAuth.getInstance().getCurrentUser() != null)
@@ -46,9 +47,11 @@ public class MainActivity extends AppCompatActivity {
                             snackbar.show();
                             smoothBottomBar.setItemActiveIndex(0);
                         }
+                        getSupportFragmentManager().popBackStack();
                         break;
                     case 2:
                         handleFragment(new Profile(), "Profile");
+                        getSupportFragmentManager().popBackStack();
                         break;
                 }
                 return false;

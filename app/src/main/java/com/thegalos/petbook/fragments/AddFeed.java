@@ -75,12 +75,10 @@ public class AddFeed extends Fragment {
     FirebaseUser user;
     DatabaseReference db;
     TextView etDetails;
-    String selectedPet, postText;
     Spinner spnPet;
     Button btnPostFeed;
     ConstraintLayout postingLayout;
     boolean PhotoSelected = false;
-    boolean isLocal = true;
     RadioGroup rgIsFree, rgWhoPays;
     EditText etAmount;
     boolean isFree = true;
@@ -107,8 +105,6 @@ public class AddFeed extends Fragment {
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
         user = FirebaseAuth.getInstance().getCurrentUser();
         spnPet = view.findViewById(R.id.spnPet);
-//        etBreed = view.findViewById(R.id.etBreed);
-//        etName = view.findViewById(R.id.etName);
         progressBar = view.findViewById(R.id.progressBar);
         etDetails = view.findViewById(R.id.etDetails);
         btnPostFeed = view.findViewById(R.id.btnPostFeed);
@@ -117,7 +113,6 @@ public class AddFeed extends Fragment {
         rgWhoPays = view.findViewById(R.id.rgWhoPays);
         etAmount = view.findViewById(R.id.etAmount);
         ivPhoto = view.findViewById(R.id.ivPhoto);
-//        tvTakePhoto = view.findViewById(R.id.tvTakePhoto);
         ivPickPhoto = view.findViewById(R.id.ivPickPhoto);
 
         rgIsFree.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -149,27 +144,10 @@ public class AddFeed extends Fragment {
             }
         });
 
-
         loadData();
-
         ArrayAdapter<String> nameAdapter = new ArrayAdapter<>(getActivity(), R.layout.color_spinner_layout, petNameList);
         nameAdapter.setDropDownViewResource(R.layout.spinner_dropdown_layout);
         spnPet.setAdapter(nameAdapter);
-
-//        tvTakePhoto.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (Build.VERSION.SDK_INT>=23) {
-//                    int hasWritePermission = ActivityCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-//                    if (hasWritePermission != PackageManager.PERMISSION_GRANTED) {
-//                        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, CAMERA_REQUEST);
-//                    } else
-//                        takePicture();
-//                } else
-//                    takePicture();
-//            }
-//        });
-
         ivPickPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -183,7 +161,6 @@ public class AddFeed extends Fragment {
                 if (etDetails.getText().toString().equals("")) {
                     Toast.makeText(context, R.string.please_add_details_to_your_post, Toast.LENGTH_SHORT).show();
                     return;
-
                 }
                 if ((rgIsFree.getCheckedRadioButtonId() == R.id.rbPay)
                         && (rgWhoPays.getCheckedRadioButtonId() == R.id.rbToPay
@@ -197,10 +174,7 @@ public class AddFeed extends Fragment {
                     Toast.makeText(context, R.string.must_add_a_pet_to_advertise, Toast.LENGTH_SHORT).show();
                     return;
                 }
-
                 showProgress(true);
-//                addToStorage();
-
             }
 
         });
@@ -212,10 +186,6 @@ public class AddFeed extends Fragment {
                 .setGuidelines(CropImageView.Guidelines.ON)
                 .setAspectRatio(16,9)
                 .start(context, this);
-//        Intent intent = new Intent();
-//        intent.setType("image/*");
-//        intent.setAction(Intent.ACTION_GET_CONTENT);
-//        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_FROM_GALLERY);
     }
 
     private void takePicture() {
@@ -231,11 +201,9 @@ public class AddFeed extends Fragment {
 
     private void showProgress(Boolean show) {
         if (show) {
-            //        progressBar.setVisibility(View.VISIBLE);
             btnPostFeed.setEnabled(false);
             etDetails.setEnabled(false);
             spnPet.setEnabled(false);
-//            tvTakePhoto.setEnabled(false);
             postingLayout.setVisibility(View.VISIBLE);
             if (PhotoSelected)
                 uploadFiles();
@@ -245,7 +213,6 @@ public class AddFeed extends Fragment {
             btnPostFeed.setEnabled(true);
             etDetails.setEnabled(true);
             spnPet.setEnabled(true);
-//            tvTakePhoto.setEnabled(true);
             postingLayout.setVisibility(View.GONE);
         }
 
@@ -282,17 +249,12 @@ public class AddFeed extends Fragment {
         StorageReference storageReference;
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
-        if (uri != null)
-        {
-//            final ProgressDialog progressDialog = new ProgressDialog(context);
-//            progressDialog.setTitle("Uploading...");
-//            progressDialog.show();
+        if (uri != null) {
             final StorageReference ref = storageReference.child(user.getUid()).child("images/"+ UUID.randomUUID().toString());
             ref.putFile(uri)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-
                             db = FirebaseDatabase.getInstance().getReference().child("Posts").push();
                             db.child("Time").setValue(ServerValue.TIMESTAMP);
                             db.child("PostText").setValue(etDetails.getText().toString());
@@ -322,51 +284,15 @@ public class AddFeed extends Fragment {
                                     changeFragment();
                                 }
                             });
-
-//                            db = FirebaseDatabase.getInstance().getReference().child("Posts").push();
-//                            db.child("Time").setValue(ServerValue.TIMESTAMP);
-//                            db.child("PostText").setValue(etDetails.getText().toString());
-//                            db.child("SelectedPet").setValue(spnPet.getSelectedItem().toString());
-//                            db.child("Pet").setValue(petArrayList.get(spnPet.getSelectedItemPosition()));
-//                            db.child("Owner").setValue(user.getDisplayName());
-//                            db.child("OwnerUID").setValue(user.getUid());
-//                            if (!isFree) {
-//                                db.child("IsFree").setValue("no");
-//                                if (rgWhoPays.getCheckedRadioButtonId() == R.id.rbToGet)
-//                                    db.child("WhoPays").setValue("user");
-//                                else
-//                                    db.child("WhoPays").setValue("owner");
-//
-//                                db.child("Amount").setValue(etAmount.getText().toString());
-//                            } else {
-//                                db.child("IsFree").setValue("yes");
-//                                db.child("WhoPays").setValue("free");
-//                                db.child("Amount").setValue("0");
-//                            }
-//                            showProgress(false);
-//                            changeFragment();
-
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-//                            progressDialog.dismiss();
                             showProgress(false);
                             Toast.makeText(context, "Failed "+e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });
-
-//                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-//                        @Override
-//                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-//                            double progress = (100.0*taskSnapshot.getBytesTransferred()/taskSnapshot
-//                                    .getTotalByteCount());
-//
-////                            progressDialog.setMessage("Uploaded "+(int)progress+"%");
-//                        }
-//                    });
-
         }
     }
 
@@ -410,7 +336,6 @@ public class AddFeed extends Fragment {
         } else if (resultCode == UCrop.RESULT_ERROR) {
             final Throwable cropError = UCrop.getError(data);
         }
-//        Glide.with(this).load(uri).into(ivPhoto);
     }
 
 
@@ -420,28 +345,23 @@ public class AddFeed extends Fragment {
         petNameList.clear();
         Gson gson = new Gson();
         String json = preferences.getString("PetList", null);
-        Type type = new TypeToken<ArrayList<Pet>>() {
-        }.getType();
+        Type type = new TypeToken<ArrayList<Pet>>() { }.getType();
         petArrayList = gson.fromJson(json, type);
-        if (petArrayList == null) {
+        if (petArrayList == null)
             petArrayList = new ArrayList<>();
-        }
-        for (Pet pet : petArrayList) {
+
+        for (Pet pet : petArrayList)
             petNameList.add(pet.getName());
-        }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode==CAMERA_REQUEST) {
-            if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+            if (grantResults[0] != PackageManager.PERMISSION_GRANTED)
                 Toast.makeText(context, R.string.must_give_permission, Toast.LENGTH_SHORT).show();
-            }
-            else{
+            else
                 takePicture();
-            }
         }
     }
-
 }

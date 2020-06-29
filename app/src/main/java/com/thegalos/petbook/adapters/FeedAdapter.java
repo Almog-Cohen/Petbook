@@ -46,20 +46,15 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyFeedViewHold
         final TextView tvPostText;
         final TextView tvPay, tvName, tvPetAge, tvPostTime;
         final ImageView ivFeedPhoto;
-        final ImageView ivType/*, ivIsFree*/;
-        //////////////////////////////////////////////////////////////////////////////////////////
-
-        //////////////////////////////////////////////////////////////////////////////////////////
+        final ImageView ivType;
 
         MyFeedViewHolder(@NonNull View itemView) {
             super(itemView);
 
             tvPostOwner = itemView.findViewById(R.id.tvPostOwner);
             tvPostText = itemView.findViewById(R.id.tvPostText);
-//            tvSelectedPet =  itemView.findViewById(R.id.tvPostTime);
             ivFeedPhoto =  itemView.findViewById(R.id.ivFeedPhoto);
             tvPostTime = itemView.findViewById(R.id.tvPostTime);
-
             tvPay = itemView.findViewById(R.id.tvPay);
             tvName = itemView.findViewById(R.id.tvName);
             tvPetAge = itemView.findViewById(R.id.tvAge);
@@ -113,15 +108,13 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyFeedViewHold
                 break;
         }
 
-
-        /////////////FEED//////NEED 9//////////
         if (!feed.getImageURL().equals("null")) {
             holder.ivFeedPhoto.setVisibility(View.VISIBLE);
-            Glide.with(holder.ivFeedPhoto.getContext())
-                    .load(feed.getImageURL())
-                    .diskCacheStrategy(DiskCacheStrategy.DATA)
-                    .thumbnail(0.05f).transition(DrawableTransitionOptions.withCrossFade())
-                    .into(holder.ivFeedPhoto);
+            Glide.with(holder.ivFeedPhoto.getContext()).load(feed.getImageURL()).diskCacheStrategy(DiskCacheStrategy.DATA)
+                    .thumbnail(0.05f).transition(DrawableTransitionOptions.withCrossFade()).into(holder.ivFeedPhoto);
+        } else {
+            holder.ivFeedPhoto.setVisibility(View.VISIBLE);
+            Glide.with(holder.ivFeedPhoto.getContext()).load(R.drawable.missing_no_txt).into(holder.ivFeedPhoto);
         }
         holder.tvPostTime.setText(feed.getTime());
         holder.tvPostOwner.setText(feed.getPostOwner());
