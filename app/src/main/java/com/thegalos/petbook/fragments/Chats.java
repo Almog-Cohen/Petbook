@@ -67,7 +67,7 @@ public class Chats extends Fragment {
         userNamesList = new ArrayList<>();
         usersRecyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
-        linearLayoutManager.setStackFromEnd(true);
+//        linearLayoutManager.setStackFromEnd(true);
         usersRecyclerView.setLayoutManager(linearLayoutManager);
 
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();

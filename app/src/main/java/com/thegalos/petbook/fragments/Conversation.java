@@ -134,7 +134,9 @@ public class Conversation extends Fragment {
                 ImageView ivFab = view.findViewById(R.id.ivFab);
                 Bitmap img = BitmapFactory.decodeResource(getResources(), android.R.drawable.ic_media_play);
                 ImageViewAnimatedChange(ivFab, img);
+                msg = msg.trim();
                 if (!msg.equals("")){
+
                     sendMessage(userId,ownerId,msg);
                 } else {
                     Toast.makeText(context, "You can not send empty message", Toast.LENGTH_SHORT).show();

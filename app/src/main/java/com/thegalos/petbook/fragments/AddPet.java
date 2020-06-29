@@ -40,25 +40,31 @@ public class AddPet extends Fragment {
     CheckedTextView ctvVaccine, ctvPurebred;
     private static List<Pet> petArrayList = new ArrayList<>();
     SharedPreferences preferences;
+    Context context;
 
     public AddPet() {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.add_pet, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull final View view,  Bundle savedInstanceState) {
-        preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        context = getContext();
+        preferences = PreferenceManager.getDefaultSharedPreferences(context);
         final Spinner spnGender = view.findViewById(R.id.spnGender);
         final Spinner spnAge = view.findViewById(R.id.spnAge);
         etBreed = view.findViewById(R.id.etBreed);
         etName = view.findViewById(R.id.etName);
         ctvVaccine = view.findViewById(R.id.ctvVaccine);
+        RadioGroup rGroup = view.findViewById(R.id.rGroup);
+        ctvPurebred = view.findViewById(R.id.ctvPurebred);
+        Button btnFinish = view.findViewById(R.id.btnFinish);
+        final List<String> listAge = new ArrayList<>();
+        final List<String> listGender = new ArrayList<>();
+
         ctvVaccine.setChecked(false);
         ctvVaccine.setCheckMarkDrawable(null);
         ctvVaccine.setOnClickListener(new View.OnClickListener() {
@@ -74,7 +80,6 @@ public class AddPet extends Fragment {
             }
         });
 
-        ctvPurebred = view.findViewById(R.id.ctvPurebred);
         ctvPurebred.setChecked(false);
         ctvPurebred.setCheckMarkDrawable(null);
         ctvPurebred.setOnClickListener(new View.OnClickListener() {
@@ -83,29 +88,26 @@ public class AddPet extends Fragment {
                 if (ctvPurebred.isChecked()) {
                     ctvPurebred.setChecked(false);
                     ctvPurebred.setCheckMarkDrawable(null);
-
                 } else {
                     ctvPurebred.setChecked(true);
                     ctvPurebred.setCheckMarkDrawable(R.drawable.vector_check);
-
                 }
             }
         });
 
-        final List<String> listAge = new ArrayList<>();
-        final List<String> listGender = new ArrayList<>();
-        for (int i = 0; i <= 20; i++) {
+
+        listAge.add("");
+        for (int i = 1; i <= 20; i++)
             listAge.add(i + "");
-        }
+
+        listGender.add("");
         listGender.add(getString(R.string.male));
         listGender.add(getString(R.string.female));
-        RadioGroup rGroup = view.findViewById(R.id.rGroup);
-
-        ArrayAdapter<String> genderAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, listGender);
-        genderAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<String> genderAdapter = new ArrayAdapter<>(getActivity(),  R.layout.color_spinner_layout, listGender);
+        ArrayAdapter<String> ageAdapter = new ArrayAdapter<>(getActivity(), R.layout.color_spinner_layout, listAge);
+        genderAdapter.setDropDownViewResource(R.layout.spinner_dropdown_layout);
+        ageAdapter.setDropDownViewResource(R.layout.spinner_dropdown_layout);
         spnGender.setAdapter(genderAdapter);
-        ArrayAdapter<String> ageAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, listAge);
-        ageAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spnAge.setAdapter(ageAdapter);
 
 
@@ -128,33 +130,32 @@ public class AddPet extends Fragment {
             }
         });
 
-        Button btnFinish = view.findViewById(R.id.btnFinish);
         btnFinish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if (spnAge.getSelectedItem().toString().equals("0")) {
-                    Toast.makeText(getContext(), "Age must not be 0", Toast.LENGTH_SHORT).show();
+                if (spnAge.getSelectedItem().toString().equals("")) {
+                    Toast.makeText(context, R.string.must_select_age, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (spnGender.getSelectedItem().toString().equals("")) {
+                    Toast.makeText(context, R.string.must_select_gender, Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (animalType.equals("")) {
-                    Toast.makeText(getContext(), "Must select animal type", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.must_select_type, Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (etBreed.getText().toString().equals("")) {
-                    Toast.makeText(getContext(), "Breed must not be empty", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.must_select_breed, Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (etName.getText().toString().equals("")) {
-                    Toast.makeText(getContext(), "Name must not be empty", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.must_select_name, Toast.LENGTH_SHORT).show();
                     return;
                 }
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 if (user != null){
                     DatabaseReference db = FirebaseDatabase.getInstance().getReference().child("Users").child(user.getUid()).child("Pets").push();
-                    Toast.makeText(getContext(), "post sent", Toast.LENGTH_SHORT).show();
-                    //TODO if we add option to update name after sign up we need to use getUID and make sure to load correct name in fragments
-//                    db.child("Owner").setValue(user.getUid());
                     Pet pet = new Pet();
                     pet.setAge(spnAge.getSelectedItem().toString());
                     pet.setGender(spnGender.getSelectedItem().toString());
@@ -178,7 +179,7 @@ public class AddPet extends Fragment {
     }
 
 
-    // save data
+    // Save data to Shared Preferences
     private void saveData() {
         SharedPreferences.Editor editor = preferences.edit();
         Gson gson = new Gson();
@@ -187,16 +188,14 @@ public class AddPet extends Fragment {
         editor.apply();
     }
 
-    // load data
+    // Load data from Shared Preferences
     private void loadData() {
         Gson gson = new Gson();
         String json = preferences.getString("PetList", null);
         Type type = new TypeToken<ArrayList<Pet>>() {
         }.getType();
         petArrayList = gson.fromJson(json, type);
-
-        if (petArrayList == null) {
+        if (petArrayList == null)
             petArrayList = new ArrayList<>();
-        }
     }
 }

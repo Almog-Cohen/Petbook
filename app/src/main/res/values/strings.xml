@@ -67,6 +67,11 @@
     <string name="pet_name">Pet name</string>
     <string name="amount">Amount</string>
     <string name="advertise_text">Advertise Text</string>
-    <string name="type_a_message">Type a message...</string>
+    <string name="type_a_message">Type a message…</string>
+    <string name="must_select_age">Must select animal age</string>
+    <string name="must_select_type">Must select animal type</string>
+    <string name="must_select_name">Must select name</string>
+    <string name="must_select_breed">Must select breed</string>
+    <string name="must_select_gender">Must select animal gender</string>
 
 </resources>

@@ -32,7 +32,8 @@
         android:id="@+id/chat_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/rlChats" />
+        android:layout_below="@id/rlChats"
+        tools:listitem="@layout/card_chats"/>
 
 
 </RelativeLayout>

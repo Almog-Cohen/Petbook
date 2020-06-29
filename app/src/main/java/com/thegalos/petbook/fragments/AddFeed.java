@@ -1,13 +1,10 @@
 package com.thegalos.petbook.fragments;
 
-import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
@@ -28,7 +25,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -59,7 +55,6 @@ import java.util.List;
 import java.util.UUID;
 
 import static android.app.Activity.RESULT_OK;
-import static androidx.core.content.ContextCompat.checkSelfPermission;
 
 
 public class AddFeed extends Fragment {
@@ -72,7 +67,7 @@ public class AddFeed extends Fragment {
     private static final int PICK_FROM_GALLERY = 999;
     private static final int CAMERA_REQUEST = 999;
 //    TextView tvTakePhoto;
-    TextView tvPickPhoto;
+    ImageView ivPickPhoto;
     ImageView ivPhoto;
     Uri uri;
     ProgressBar progressBar;
@@ -123,16 +118,16 @@ public class AddFeed extends Fragment {
         etAmount = view.findViewById(R.id.etAmount);
         ivPhoto = view.findViewById(R.id.ivPhoto);
 //        tvTakePhoto = view.findViewById(R.id.tvTakePhoto);
-        tvPickPhoto = view.findViewById(R.id.tvPickPhoto);
+        ivPickPhoto = view.findViewById(R.id.ivPickPhoto);
 
         rgIsFree.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if (checkedId == R.id.rbFree) {
-                    rgWhoPays.setVisibility(View.INVISIBLE);
                     rgWhoPays.clearCheck();
-                    etAmount.setVisibility(View.INVISIBLE);
+                    rgWhoPays.setVisibility(View.INVISIBLE);
                     etAmount.setText("");
+                    etAmount.setVisibility(View.INVISIBLE);
                     isFree = true;
                 } else if (checkedId == R.id.rbPay) {
                     rgWhoPays.setVisibility(View.VISIBLE);
@@ -157,8 +152,8 @@ public class AddFeed extends Fragment {
 
         loadData();
 
-        ArrayAdapter<String> nameAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, petNameList);
-        nameAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<String> nameAdapter = new ArrayAdapter<>(getActivity(), R.layout.color_spinner_layout, petNameList);
+        nameAdapter.setDropDownViewResource(R.layout.spinner_dropdown_layout);
         spnPet.setAdapter(nameAdapter);
 
 //        tvTakePhoto.setOnClickListener(new View.OnClickListener() {
@@ -175,7 +170,7 @@ public class AddFeed extends Fragment {
 //            }
 //        });
 
-        tvPickPhoto.setOnClickListener(new View.OnClickListener() {
+        ivPickPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 pickFromGallery();

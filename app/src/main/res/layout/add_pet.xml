@@ -15,6 +15,7 @@
         android:layout_marginEnd="20dp"
         android:gravity="center"
         android:text="@string/add_pets"
+        android:textColor="@android:color/white"
         android:textSize="26sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -22,14 +23,14 @@
 
     <RadioGroup
         android:id="@+id/rGroup"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginStart="20dp"
         android:layout_marginTop="30dp"
-        android:layout_marginEnd="20dp"
+        android:background="@drawable/radio_group_selector"
         android:gravity="center"
         android:orientation="horizontal"
+        android:padding="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView">
@@ -38,10 +39,8 @@
             android:id="@+id/rbHorse"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
             android:background="@drawable/radio_group_selector"
-            android:button="@drawable/icon_horse" />
+            android:button="@drawable/icon_horse1" />
 
         <RadioButton
             android:id="@+id/rbDog"
@@ -50,16 +49,14 @@
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:background="@drawable/radio_group_selector"
-            android:button="@drawable/icon_dog" />
+            android:button="@drawable/icon_dog1" />
 
         <RadioButton
             android:id="@+id/rbCat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
             android:background="@drawable/radio_group_selector"
-            android:button="@drawable/icon_cat" />
+            android:button="@drawable/icon_cat1" />
 
 
     </RadioGroup>
@@ -71,6 +68,8 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
+        android:textColorHint="@android:color/white"
+        app:hintTextColor="@color/colorPrimaryDark"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/rGroup">
@@ -79,7 +78,10 @@
             android:id="@+id/etName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/name" />
+            android:backgroundTint="@android:color/white"
+            android:hint="@string/name"
+            android:textColor="@android:color/white" />
+
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -89,9 +91,9 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
-
+        android:textColorHint="@android:color/white"
+        app:hintTextColor="@color/colorPrimaryDark"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textInputLayout0">
 
@@ -99,63 +101,62 @@
             android:id="@+id/etBreed"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/breed" />
+            android:backgroundTint="@android:color/white"
+            android:hint="@string/breed"
+            android:textColor="@android:color/white" />
+
     </com.google.android.material.textfield.TextInputLayout>
 
     <CheckedTextView
         android:id="@+id/ctvVaccine"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="12dp"
         android:checkMark="@drawable/vector_check"
-        android:gravity="center"
+        android:hapticFeedbackEnabled="true"
         android:text="@string/vaccinated_question"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayout1" />
-
-    <Spinner
-        android:id="@+id/spnAge"
-        android:layout_width="100dp"
-        android:layout_height="30dp"
-        android:layout_marginTop="30dp"
-        android:backgroundTint="@color/colorAccent"
-        android:hapticFeedbackEnabled="true"
-        android:popupBackground="@color/colorPrimary"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/spnGender"
-        app:layout_constraintTop_toBottomOf="@+id/ctvPurebred" />
-
-    <Spinner
-        android:id="@+id/spnGender"
-        android:layout_width="100dp"
-        android:layout_height="30dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginEnd="106dp"
-        android:backgroundTint="@color/colorAccent"
-        android:hapticFeedbackEnabled="true"
-        android:popupBackground="@color/colorPrimary"
-        app:layout_constraintEnd_toStartOf="@+id/spnAge"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ctvPurebred" />
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="@+id/spnAge"
+        app:layout_constraintStart_toStartOf="@+id/textView8"
+        app:layout_constraintTop_toBottomOf="@+id/spnAge" />
 
     <CheckedTextView
         android:id="@+id/ctvPurebred"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
         android:checkMark="@drawable/vector_check"
-        android:gravity="center"
+        android:hapticFeedbackEnabled="true"
         android:text="@string/purebred_question"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="@+id/ctvVaccine"
+        app:layout_constraintStart_toStartOf="@+id/ctvVaccine"
         app:layout_constraintTop_toBottomOf="@+id/ctvVaccine" />
+
+    <Spinner
+        android:id="@+id/spnGender"
+        android:layout_width="140dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="@android:color/white"
+        android:hapticFeedbackEnabled="true"
+        android:popupTheme="@android:style/Widget.Holo.DropDownItem"
+        app:layout_constraintEnd_toEndOf="@+id/textInputLayout1"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout1" />
+
+    <Spinner
+        android:id="@+id/spnAge"
+        android:layout_width="140dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="@android:color/white"
+        android:hapticFeedbackEnabled="true"
+        android:popupBackground="@android:color/white"
+        app:layout_constraintEnd_toEndOf="@+id/spnGender"
+        app:layout_constraintTop_toBottomOf="@+id/spnGender" />
 
     <Button
         android:id="@+id/btnFinish"
@@ -167,6 +168,28 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:text="@string/gender"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/spnGender"
+        app:layout_constraintStart_toStartOf="@+id/textInputLayout1"
+        app:layout_constraintTop_toTopOf="@+id/spnGender" />
+
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:text="@string/age"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/spnAge"
+        app:layout_constraintStart_toStartOf="@+id/textView9"
+        app:layout_constraintTop_toTopOf="@id/spnAge" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:backgroundTint="@color/colorAccent"
     tools:context=".fragments.AddFeed">
 
     <TextView
@@ -13,7 +12,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="@string/add_feed"
+        android:textColor="@android:color/white"
         android:textSize="26sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -24,8 +25,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="30dp"
+        android:background="@drawable/radio_group_selector"
         android:gravity="center"
         android:orientation="horizontal"
+        android:padding="5dp"
         app:layout_constraintEnd_toEndOf="@+id/spnPet"
         app:layout_constraintStart_toStartOf="@+id/textView3"
         app:layout_constraintTop_toBottomOf="@id/spnPet">
@@ -66,20 +69,22 @@
 
         <RadioButton
             android:id="@+id/rbToGet"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:text="I get"
+            android:layout_margin="5dp"
+            android:buttonTint="@color/colorPrimaryDark"
+            android:text="@string/earn"
+            android:textColor="@android:color/white"
             android:textSize="16sp" />
 
         <RadioButton
             android:id="@+id/rbToPay"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:text="I Pay"
+            android:layout_margin="5dp"
+            android:buttonTint="@color/colorPrimaryDark"
+            android:text="@string/pay"
+            android:textColor="@android:color/white"
             android:textSize="16sp" />
     </RadioGroup>
 
@@ -87,13 +92,17 @@
         android:id="@+id/etAmount"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:backgroundTint="@android:color/white"
         android:hint="Amount"
         android:inputType="number|numberDecimal"
-        android:text="amount"
+        android:textColor="@android:color/white"
+        android:textColorHint="@android:color/white"
         android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="@+id/rgWhoPays"
-        app:layout_constraintStart_toStartOf="@+id/rgWhoPays"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/rgWhoPays" />
 
     <EditText
@@ -104,26 +113,28 @@
         android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
         android:autofillHints=""
+        android:backgroundTint="@android:color/white"
         android:hint="@string/enter_post_details"
         android:inputType="textMultiLine"
+        android:textColor="@android:color/white"
+        android:textColorHint="@android:color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/etAmount" />
 
     <Spinner
         android:id="@+id/spnPet"
-        style="@style/Platform.Widget.AppCompat.Spinner"
-        android:layout_width="100dp"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:backgroundTint="@color/colorAccent"
+        android:layout_marginEnd="20dp"
+        android:backgroundTint="@android:color/white"
         android:hapticFeedbackEnabled="true"
-        android:popupBackground="@color/colorPrimary"
+        android:popupTheme="@android:style/Widget.Holo.DropDownItem"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textView3"
         app:layout_constraintTop_toBottomOf="@id/textView" />
 
-   <!-- <TextView
+    <!-- <TextView
         android:id="@+id/tvTakePhoto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -137,14 +148,13 @@
         app:layout_constraintStart_toEndOf="@+id/tvPickPhoto"
         app:layout_constraintTop_toBottomOf="@+id/etDetails" />-->
 
-    <TextView
-        android:id="@+id/tvPickPhoto"
+    <ImageView
+        android:id="@+id/ivPickPhoto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
         android:contentDescription="@string/none"
-        android:drawableTop="@drawable/vector_add_photo"
-        android:gravity="center"
-        android:textStyle="bold"
+        android:src="@drawable/vector_add_photo"
         app:layout_constraintBottom_toTopOf="@+id/ivPhoto"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -152,15 +162,12 @@
 
     <ImageView
         android:id="@+id/ivPhoto"
-        android:layout_width="243dp"
-        android:layout_height="132dp"
-        android:layout_marginTop="18dp"
-        android:layout_marginBottom="70dp"
-        android:src="@drawable/checked"
-        app:layout_constraintBottom_toTopOf="@+id/btnPostFeed"
+        android:layout_width="240dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvPickPhoto" />
+        app:layout_constraintTop_toBottomOf="@+id/ivPickPhoto" />
 
     <Button
         android:id="@+id/btnPostFeed"
@@ -212,10 +219,11 @@
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Select pet"
+        android:layout_marginStart="20dp"
+        android:text="Pet"
+        android:textColor="@android:color/white"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="@+id/spnPet"
-        app:layout_constraintEnd_toStartOf="@+id/spnPet"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/spnPet" />
 
