@@ -138,7 +138,7 @@
         android:backgroundTint="@color/colorPrimaryDark"
         android:src="@drawable/vector_add"
         android:text="@string/add_pets"
-        app:layout_constraintBottom_toBottomOf="@+id/rvCards"
+        app:layout_constraintBottom_toBottomOf="@+id/rvPets"
         app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -12,7 +12,7 @@
         android:background="@drawable/background_top">
 
         <TextView
-            android:id="@+id/user_name_tv"
+            android:id="@+id/tvConversationWith"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
@@ -24,15 +24,15 @@
     </RelativeLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/chat_recycler_view"
+        android:id="@+id/rvChats"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/bottom_rl"
+        android:layout_above="@id/rlBottom"
         android:layout_below="@id/rlConversation" />
 
 
     <RelativeLayout
-        android:id="@+id/bottom_rl"
+        android:id="@+id/rlBottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

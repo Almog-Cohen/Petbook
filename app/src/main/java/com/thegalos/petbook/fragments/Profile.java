@@ -74,7 +74,7 @@ public class Profile extends Fragment {
         tvMemberSince = view.findViewById(R.id.tvMemberSince);
         final Button btnLogout = view.findViewById(R.id.btnLogout);
         final FloatingActionButton fabAddPet = view.findViewById(R.id.fabAddPet);
-        recyclerView = view.findViewById(R.id.rvCards);
+        recyclerView = view.findViewById(R.id.rvPets);
         manager = getParentFragmentManager();
 
         if (user != null) {

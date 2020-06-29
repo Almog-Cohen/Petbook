@@ -62,7 +62,7 @@ public class Chats extends Fragment {
         context = getContext();
         sp = PreferenceManager.getDefaultSharedPreferences(context);
 
-        usersRecyclerView = view.findViewById(R.id.chat_recycler_view);
+        usersRecyclerView = view.findViewById(R.id.rvChats);
         usersList = new ArrayList<>();
         userNamesList = new ArrayList<>();
         usersRecyclerView.setHasFixedSize(true);

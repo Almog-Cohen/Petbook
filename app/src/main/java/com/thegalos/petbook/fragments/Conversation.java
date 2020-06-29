@@ -86,10 +86,10 @@ public class Conversation extends Fragment {
         sp = PreferenceManager.getDefaultSharedPreferences(getContext());
         context = getContext();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        userNameTv = view.findViewById(R.id.user_name_tv);
+        userNameTv = view.findViewById(R.id.tvConversationWith);
         etMessageText = view.findViewById(R.id.etMessageText);
         sendBtn = view.findViewById(R.id.btn_send);
-        recyclerView = view.findViewById(R.id.chat_recycler_view);
+        recyclerView = view.findViewById(R.id.rvChats);
 
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);

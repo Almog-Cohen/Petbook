@@ -10,7 +10,7 @@
             motion:layout_constraintStart_toStartOf="parent"
             motion:layout_constraintEnd_toEndOf="parent"
             android:layout_width="wrap_content"
-            android:id="@+id/imageView2"
+            android:id="@+id/ivSplashImage"
             motion:layout_editor_absoluteY="731dp"
             motion:layout_constraintTop_toTopOf="parent" />
     </ConstraintSet>
