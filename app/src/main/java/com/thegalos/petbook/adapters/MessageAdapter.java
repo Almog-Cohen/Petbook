@@ -27,7 +27,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     private Context context;
     private List<Chat> chatList;
 
-    public MessageAdapter(Context context, List<Chat> chatList){
+    public MessageAdapter(Context context, List<Chat> chatList) {
 
         this.chatList = chatList;
         this.context = context;
@@ -36,7 +36,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     @NonNull
     @Override
     public MessageAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        if (viewType == MSG_TYPE_RIGHT){
+        if (viewType == MSG_TYPE_RIGHT) {
             View view = LayoutInflater.from(context).inflate(R.layout.chat_item_right,parent,false);
             return  new MessageAdapter.ViewHolder(view);
         } else {
@@ -68,7 +68,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        if (chatList.get(position).getSender().equals(firebaseUser.getUid())){
+        if (chatList.get(position).getSender().equals(firebaseUser.getUid())) {
             return MSG_TYPE_RIGHT;
         } else {
             return MSG_TYPE_LEFT;

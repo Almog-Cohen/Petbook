@@ -96,7 +96,6 @@ public class MainFeed extends Fragment {
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if (dataSnapshot.exists()) {
                             editor.putLong("MemberSince", dataSnapshot.child("MemberSince").getValue(Long.class)).apply();
-//                            Toast.makeText(context, "saved MemberSince to prefs", Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -116,7 +115,7 @@ public class MainFeed extends Fragment {
                     FragmentTransaction ft = getParentFragmentManager().beginTransaction();
                     ft.replace(R.id.flFragment, new AddFeed(), "AddFeed").addToBackStack("AddFeed").commit();
                 } else {
-                    Toast.makeText(context, "Please add Pets first in Profile screen", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.add_pets_first, Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -211,7 +210,7 @@ public class MainFeed extends Fragment {
                 if (scrollRange + verticalOffset == 0) {
                     collapsingToolbarLayout.setTitle(str);
                     isShow = true;
-                } else if(isShow) {
+                } else if (isShow) {
                     collapsingToolbarLayout.setCollapsedTitleTextColor(Color.WHITE);
                     collapsingToolbarLayout.setTitle("");//careful there should a space between double quote otherwise it wont work
                     isShow = false;
@@ -258,7 +257,7 @@ public class MainFeed extends Fragment {
                     FragmentTransaction ft = getParentFragmentManager().beginTransaction();
                     ft.replace(R.id.flFragment, new ViewPost(), "ViewPost").addToBackStack("ViewPost").commit();
                 } else {
-                    Toast.makeText(context, "Must be logged to view full post", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.log_in_to_view_full_post, Toast.LENGTH_SHORT).show();
                 }
             }
         });

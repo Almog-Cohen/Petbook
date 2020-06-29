@@ -22,7 +22,7 @@ public class MyFireBaseIdService extends FirebaseMessagingService {
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
 
-        if (firebaseUser!=null){
+        if (firebaseUser != null) {
 
             FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener((Activity) getApplicationContext(), new OnSuccessListener<InstanceIdResult>() {
                 @Override
@@ -38,7 +38,7 @@ public class MyFireBaseIdService extends FirebaseMessagingService {
 
     }
 
-    private void updateToken(String refreshToken){
+    private void updateToken(String refreshToken) {
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Tokens");

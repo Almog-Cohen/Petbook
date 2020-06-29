@@ -8,10 +8,8 @@ import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckedTextView;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
@@ -27,9 +25,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.thegalos.petbook.R;
 import com.thegalos.petbook.fragments.Profile;
 import com.thegalos.petbook.objects.Pet;
-import com.thegalos.petbook.R;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -46,7 +44,7 @@ public class PetAdapter extends RecyclerView.Adapter<PetAdapter.MyPetsViewHolder
         void onCardLongClicked(int position);
     }
 
-    public void setListener(myPetsListener listener){
+    public void setListener(myPetsListener listener) {
         this.listener = listener;
     }
 
@@ -84,7 +82,6 @@ public class PetAdapter extends RecyclerView.Adapter<PetAdapter.MyPetsViewHolder
                 public boolean onLongClick(View view) {
                     if (listener != null)
                         listener.onCardLongClicked(getAdapterPosition());
-//                    Toast.makeText(context, "Long clicked position: " + getAdapterPosition(), Toast.LENGTH_SHORT).show();
                     ivDelete.setVisibility(View.VISIBLE);
                     return true;
                 }
@@ -108,10 +105,10 @@ public class PetAdapter extends RecyclerView.Adapter<PetAdapter.MyPetsViewHolder
         holder.tvAge.setText(str);
         holder.tvGender.setText(pet.getGender());
         holder.tvBreed.setText(pet.getBreed());
-        if (pet.getVaccine()){
+        if (pet.getVaccine()) {
             holder.cbVaccine.setVisibility(View.VISIBLE);
         }
-        if (pet.getPureBred()){
+        if (pet.getPureBred()) {
             holder.cbPureBred.setVisibility(View.VISIBLE);
         }
 
@@ -167,8 +164,6 @@ public class PetAdapter extends RecyclerView.Adapter<PetAdapter.MyPetsViewHolder
         json = gson.toJson(petList);
         editor.putString("PetList", json);
         editor.apply();
-
-        Toast.makeText(context, "removed from prefs", Toast.LENGTH_SHORT).show();
         manager.beginTransaction().replace(R.id.flFragment, new Profile(), "Profile").commit();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
@@ -180,7 +175,7 @@ public class PetAdapter extends RecyclerView.Adapter<PetAdapter.MyPetsViewHolder
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
-                        for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             if (snapshot.child("Pet").child("petUID").getValue().equals(petUID)) {
                                 String str = snapshot.getKey();
                                 finalDatabaseReference.child(str).removeValue();

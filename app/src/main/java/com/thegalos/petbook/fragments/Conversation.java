@@ -135,18 +135,18 @@ public class Conversation extends Fragment {
                 Bitmap img = BitmapFactory.decodeResource(getResources(), android.R.drawable.ic_media_play);
                 ImageViewAnimatedChange(ivFab, img);
                 msg = msg.trim();
-                if (!msg.equals("")){
+                if (!msg.equals("")) {
 
                     sendMessage(userId,ownerId,msg);
                 } else {
-                    Toast.makeText(context, "You can not send empty message", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.message_cant_be_empty, Toast.LENGTH_SHORT).show();
                 }
                 etMessageText.setText("");
             }
         });
     }
 
-    private void sendMessage(String sender, final String receiver, String message){
+    private void sendMessage(String sender, final String receiver, String message) {
         HashMap<String,Object> hashMap = new HashMap<>();
         hashMap.put("sender", sender);
         hashMap.put("receiver",receiver);
@@ -188,7 +188,7 @@ public class Conversation extends Fragment {
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
                     Token token = snapshot.getValue(Token.class);
                     //n.setToken(snapshot.getValue(Token.class));
@@ -201,9 +201,9 @@ public class Conversation extends Fragment {
                                 @Override
                                 public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
 
-                                    if (response.code() == 200){
+                                    if (response.code() == 200) {
 
-                                        if (response.body().success != 1){
+                                        if (response.body().success != 1) {
                                             Toast.makeText(context, "Failed notif", Toast.LENGTH_SHORT).show();
                                         }
                                     }
@@ -225,7 +225,7 @@ public class Conversation extends Fragment {
         });
     }
 
-    private void readMessages(final String myId , final String userid){
+    private void readMessages(final String myId , final String userid) {
 
         DatabaseReference chatRef = FirebaseDatabase.getInstance().getReference().child("Messages").child(myId).child(userid);
         chatRef.addValueEventListener(new ValueEventListener() {
@@ -234,9 +234,9 @@ public class Conversation extends Fragment {
                 chatList = new ArrayList<>();
                 chatList.clear();
 
-                if (dataSnapshot.exists()){
+                if (dataSnapshot.exists()) {
 
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         if (!snapshot.getKey().equals("1")) {
                             Chat chat = snapshot.getValue(Chat.class);
                             chatList.add(chat);
@@ -260,7 +260,7 @@ public class Conversation extends Fragment {
 //
 //                chatList = new ArrayList<>();
 //                chatList.clear();
-//                if (dataSnapshot.exists()){
+//                if (dataSnapshot.exists()) {
 //
 //                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 //                        Chat chat = snapshot.getValue(Chat.class);

@@ -159,9 +159,9 @@ public class AddFeed extends Fragment {
 //        tvTakePhoto.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
-//                if(Build.VERSION.SDK_INT>=23) {
+//                if (Build.VERSION.SDK_INT>=23) {
 //                    int hasWritePermission = ActivityCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-//                    if(hasWritePermission != PackageManager.PERMISSION_GRANTED){
+//                    if (hasWritePermission != PackageManager.PERMISSION_GRANTED) {
 //                        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, CAMERA_REQUEST);
 //                    } else
 //                        takePicture();
@@ -181,7 +181,7 @@ public class AddFeed extends Fragment {
             @Override
             public void onClick(View v) {
                 if (etDetails.getText().toString().equals("")) {
-                    Toast.makeText(context, "Please add details to your post", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.please_add_details_to_your_post, Toast.LENGTH_SHORT).show();
                     return;
 
                 }
@@ -189,12 +189,12 @@ public class AddFeed extends Fragment {
                         && (rgWhoPays.getCheckedRadioButtonId() == R.id.rbToPay
                         || rgWhoPays.getCheckedRadioButtonId() == R.id.rbToGet)
                         && etAmount.getText().toString().equals("")) {
-                    Toast.makeText(context, "Please set Amount", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.please_set_amount, Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 if (spnPet == null || spnPet.getSelectedItem() == null) {
-                    Toast.makeText(context, "Must Add A pet in order to advertise", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.must_add_a_pet_to_advertise, Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -218,7 +218,7 @@ public class AddFeed extends Fragment {
 //        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_FROM_GALLERY);
     }
 
-    private void takePicture(){
+    private void takePicture() {
         String pictureName = String.valueOf(System.currentTimeMillis());
         file = new File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), pictureName + ".jpg");
         imageUri = FileProvider.getUriForFile(context,"com.thegalos.petbook.provider", file);
@@ -230,7 +230,7 @@ public class AddFeed extends Fragment {
     }
 
     private void showProgress(Boolean show) {
-        if (show){
+        if (show) {
             //        progressBar.setVisibility(View.VISIBLE);
             btnPostFeed.setEnabled(false);
             etDetails.setEnabled(false);
@@ -260,7 +260,7 @@ public class AddFeed extends Fragment {
         db.child("Owner").setValue(user.getDisplayName());
         db.child("OwnerUID").setValue(user.getUid());
         db.child("ImageURL").setValue("null");
-        if (!isFree){
+        if (!isFree) {
             db.child("IsFree").setValue("no");
             if (rgWhoPays.getCheckedRadioButtonId() == R.id.rbToGet)
                 db.child("WhoPays").setValue("user");
@@ -273,20 +273,8 @@ public class AddFeed extends Fragment {
             db.child("Amount").setValue("0");
         }
 
-
-//        Feed feed = new Feed();
-//        feed.setSelectedPet(spnPet.getSelectedItem().toString());
-//        feed.setPostText(etDetails.getText().toString());
-//        feed.setOwnerUID(user.getUid());
-//        feed.setPet(petArrayList.get(spnPet.getSelectedItemPosition()));
-//        feed.setPostOwner(user.getDisplayName());
-//        db.setValue(feed);
-//        db.child("Time").setValue(ServerValue.TIMESTAMP);
-//        //TODO if we add option to update name after Sign up we need to use getUID and make sure to load correct name in fragments
         showProgress(false);
         changeFragment();
-        Toast.makeText(context, "Uploaded no photo", Toast.LENGTH_SHORT).show();
-
     }
 
     private void uploadFiles() {
@@ -313,7 +301,7 @@ public class AddFeed extends Fragment {
                             db.child("Owner").setValue(user.getDisplayName());
                             db.child("OwnerUID").setValue(user.getUid());
                             db.child("ImageURL").setValue("null");
-                            if (!isFree){
+                            if (!isFree) {
                                 db.child("IsFree").setValue("no");
                                 if (rgWhoPays.getCheckedRadioButtonId() == R.id.rbToGet)
                                     db.child("WhoPays").setValue("user");
@@ -330,7 +318,6 @@ public class AddFeed extends Fragment {
                                 public void onSuccess(Uri uri) {
                                     imageLink = (uri.toString());
                                     db.child("ImageURL").setValue(imageLink);
-//                                    Toast.makeText(context, "image link: " + imageLink, Toast.LENGTH_LONG).show();
                                     showProgress(false);
                                     changeFragment();
                                 }
@@ -343,7 +330,7 @@ public class AddFeed extends Fragment {
 //                            db.child("Pet").setValue(petArrayList.get(spnPet.getSelectedItemPosition()));
 //                            db.child("Owner").setValue(user.getDisplayName());
 //                            db.child("OwnerUID").setValue(user.getUid());
-//                            if (!isFree){
+//                            if (!isFree) {
 //                                db.child("IsFree").setValue("no");
 //                                if (rgWhoPays.getCheckedRadioButtonId() == R.id.rbToGet)
 //                                    db.child("WhoPays").setValue("user");
@@ -359,7 +346,6 @@ public class AddFeed extends Fragment {
 //                            showProgress(false);
 //                            changeFragment();
 
-                            Toast.makeText(context, "Uploaded with photo", Toast.LENGTH_SHORT).show();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -406,19 +392,12 @@ public class AddFeed extends Fragment {
                 Exception error = result.getError();
             }
         }
-//        if (requestCode == PICK_FROM_GALLERY && resultCode == RESULT_OK && data != null && data.getData() != null) {
-//            PhotoSelected = true;
-//            uri = data.getData();
-//            Glide.with(this).load(uri).into(tvTakePhoto);
-//            Toast.makeText(context, "uri is: " + uri, Toast.LENGTH_SHORT).show();
-//            Log.d("URI_Galos", "uri is: " + uri);
 
         //New photo taken
         if (requestCode == CAMERA_REQUEST) {
             if (resultCode == RESULT_OK) {
                 PhotoSelected = true;
                 Log.d("URI_Galos", "uri is: " + uri + " imageUri is: " + imageUri);
-                Toast.makeText(context, "uri is: " + imageUri, Toast.LENGTH_SHORT).show();
                 uri = imageUri;
                 UCrop.of(imageUri, uri)
                         .withAspectRatio(16, 10)
@@ -426,23 +405,6 @@ public class AddFeed extends Fragment {
                         .start(getActivity());
             }
         }
-        //Picked photo from gallery
-//        if (requestCode == PICK_FROM_GALLERY) {
-//            if (resultCode == Activity.RESULT_OK) {
-//                if (data != null && data.getData() != null) {
-//                    PhotoSelected = true;
-//                    uri = data.getData();
-////                    Glide.with(this).load(uri).into(tvPickPhoto);
-//                    Toast.makeText(context, "uri is: " + uri, Toast.LENGTH_SHORT).show();
-//                    Log.d("URI_Galos", "uri is: " + uri);
-//                    UCrop.of(uri, uri)
-//                            .withAspectRatio(16, 9)
-//                            .withMaxResultSize(300, 200)
-//                            .start(getActivity());
-//                }
-//            }
-//        }
-
         if (resultCode == RESULT_OK && requestCode == UCrop.REQUEST_CROP) {
             final Uri resultUri = UCrop.getOutput(data);
         } else if (resultCode == UCrop.RESULT_ERROR) {
@@ -464,7 +426,7 @@ public class AddFeed extends Fragment {
         if (petArrayList == null) {
             petArrayList = new ArrayList<>();
         }
-        for (Pet pet : petArrayList){
+        for (Pet pet : petArrayList) {
             petNameList.add(pet.getName());
         }
     }
@@ -472,8 +434,8 @@ public class AddFeed extends Fragment {
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(requestCode==CAMERA_REQUEST){
-            if(grantResults[0]!=PackageManager.PERMISSION_GRANTED){
+        if (requestCode==CAMERA_REQUEST) {
+            if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(context, R.string.must_give_permission, Toast.LENGTH_SHORT).show();
             }
             else{

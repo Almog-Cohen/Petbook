@@ -25,7 +25,7 @@ public class UserAdapter  extends RecyclerView.Adapter<UserAdapter.ViewHolder>  
     }
 
 
-    public void setListener(MyUserListener myUserListener){
+    public void setListener(MyUserListener myUserListener) {
         this.myUserListener=myUserListener;
     }
 
@@ -85,9 +85,8 @@ public class UserAdapter  extends RecyclerView.Adapter<UserAdapter.ViewHolder>  
                 @Override
                 public void onClick(View v) {
 
-                    if (myUserListener!=null){
+                    if (myUserListener!= null)
                         myUserListener.onUserClicked(getAdapterPosition(),v);
-                    }
                 }
             });
 
@@ -95,7 +94,7 @@ public class UserAdapter  extends RecyclerView.Adapter<UserAdapter.ViewHolder>  
 
     }
 
-    private  void lastMessage(String userId , TextView last_msg){
+    private  void lastMessage(String userId , TextView last_msg) {
 
     }
 }

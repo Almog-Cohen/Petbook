@@ -34,13 +34,11 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
 
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        if (firebaseUser!=null && sented.equals(firebaseUser.getUid())){
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+        if (firebaseUser != null && sented.equals(firebaseUser.getUid())) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
                 sendOreoNotification(remoteMessage);
-            }else {
+            else
                 sendNotification(remoteMessage);
-            }
         }
     }
 
@@ -70,9 +68,9 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         Notification.Builder builder = oreoNotification.getOreoNotification(title , body ,pendingIntent , defaultSound , icon) ;
 
         int i = 0;
-        if (j>0){
+        if (j>0)
             i=j;
-        }
+
 
         oreoNotification.getManger().notify(i,builder.build());
 
@@ -90,7 +88,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         String title = remoteMessage.getData().get("title");
         String body = remoteMessage.getData().get("body");
 
-//        if(Build.VERSION.SDK_INT>=26){
+//        if (Build.VERSION.SDK_INT>=26) {
 //
 //            channelId="news_channel";
 //            CharSequence channelName = "News channel";
@@ -127,9 +125,8 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
 
         int i = 0;
-        if (j>0){
+        if (j>0)
             i=j;
-        }
 
         notificationManager.notify(i,builder.build());
 

@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -57,15 +56,11 @@ public class Profile extends Fragment {
     TextView tvUserName;
     FragmentManager manager;
 
+    public Profile() { }
 
-
-    public Profile() {
-
-    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.profile, container, false);
     }
 
@@ -166,14 +161,6 @@ public class Profile extends Fragment {
                             petList.add(pet);
                         }
                         setAdapter(false);
-//                        petAdapter = new PetAdapter(manager, getContext(), petList);
-//                        recyclerView.setAdapter(petAdapter);
-//                        Collections.reverse(petList);
-//                        petAdapter.notifyDataSetChanged();
-//                        petCount = "Pets: " + petList.size();
-//                        tvTotalPets.setText(petCount);
-//                        sp.edit().putBoolean("downloadedPets", true).apply();
-//                        saveLocaly();
                     }
                 }
 
@@ -191,16 +178,15 @@ public class Profile extends Fragment {
         Type type = new TypeToken<ArrayList<Pet>>() {
         }.getType();
         petList = gson.fromJson(json, type);
-        if (petList == null) {
+        if (petList == null)
             petList = new ArrayList<>();
-        }
         setAdapter(true);
     }
 
     private void setAdapter(boolean bool) {
         petAdapter = new PetAdapter(manager, getContext(), petList);
         recyclerView.setAdapter(petAdapter);
-        if (!bool){
+        if (!bool) {
             Collections.reverse(petList);
             Snackbar snackbar = Snackbar.make(getView(), R.string.loaded_from_firebase, Snackbar.LENGTH_SHORT);
             snackbar.setAnchorView(R.id.bottomBar);
@@ -215,20 +201,6 @@ public class Profile extends Fragment {
         petAdapter.notifyDataSetChanged();
         petCount = "Pets: " + petList.size();
         tvTotalPets.setText(petCount);
-
-        petAdapter.setListener(new PetAdapter.myPetsListener() {
-            @Override
-            public void onCardLongClicked(int position) {
-                Toast.makeText(getContext(), "Long clicked position: " + position, Toast.LENGTH_SHORT).show();
-            }
-        });
     }
-//      private void saveLocaly() {
-//        SharedPreferences.Editor editor = sp.edit();
-//        Gson gson = new Gson();
-//        String json = gson.toJson(petList);
-//        editor.putString("PetList", json);
-//        editor.apply();
-//    }
 }
 

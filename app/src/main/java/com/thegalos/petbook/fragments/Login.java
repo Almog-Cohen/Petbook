@@ -125,7 +125,7 @@ public class Login extends Fragment {
             @Override
             public void onClick(View v) {
                 if (!android.util.Patterns.EMAIL_ADDRESS.matcher(etEmail.getText().toString()).matches()) {
-                    Toast.makeText(context, "Not a valid Email", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.email_isnt_valid, Toast.LENGTH_SHORT).show();
                     return;
                 }
                 String email = etEmail.getText().toString();
@@ -136,7 +136,7 @@ public class Login extends Fragment {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {
-                                        Toast.makeText(context, "Recover email sent", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(context, R.string.password_recovery_email_sent, Toast.LENGTH_SHORT).show();
                                     }
                                 }
                             });
@@ -144,7 +144,7 @@ public class Login extends Fragment {
                 }
 
                 if (etPassword.getText().toString().length() < 6) {
-                    Toast.makeText(context, "Min pass length is 6 characters", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.password_length_must_be_more, Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -161,14 +161,14 @@ public class Login extends Fragment {
                             } else {
                                 Log.d("auth", "signInWithCredential:failure", task.getException());
                                 if (task.getException() instanceof FirebaseAuthInvalidUserException) {
-                                    Toast.makeText(context, "No such user, please register", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(context, R.string.nu_such_user_please_register, Toast.LENGTH_SHORT).show();
                                     motionLayout.setTransition(R.id.end, R.id.login_name);
                                     motionLayout.transitionToEnd();
                                     isRegister = true;
                                     btnAction.setText(getString(R.string.register));
                                     readyToRegister = true;
                                 } else if (task.getException() instanceof FirebaseAuthInvalidCredentialsException)
-                                    Toast.makeText(context, "Wrong Code Entered", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(context, R.string.wrong_code_entered, Toast.LENGTH_SHORT).show();
                                 // The verification code entered was invalid
                             }
                         }
@@ -208,7 +208,7 @@ public class Login extends Fragment {
                             }
                         });
                     } else
-                        Toast.makeText(context, "Name cannot be empty", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, R.string.name_cannot_be_empty, Toast.LENGTH_SHORT).show();
 
                 }
             }
@@ -243,7 +243,6 @@ public class Login extends Fragment {
                 }
             });
         }
-        Toast.makeText(context, "Loaded from Firebase", Toast.LENGTH_SHORT).show();
     }
 
 

@@ -154,7 +154,7 @@ public class AddPet extends Fragment {
                     return;
                 }
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                if (user != null){
+                if (user != null) {
                     DatabaseReference db = FirebaseDatabase.getInstance().getReference().child("Users").child(user.getUid()).child("Pets").push();
                     Pet pet = new Pet();
                     pet.setAge(spnAge.getSelectedItem().toString());

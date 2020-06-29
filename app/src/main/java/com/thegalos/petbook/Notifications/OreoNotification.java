@@ -16,15 +16,14 @@ public class OreoNotification extends ContextWrapper {
     private static final String CHANNEL_NAME = "petbook";
     private NotificationManager notificationManager;
 
-    public OreoNotification(Context base){
+    public OreoNotification(Context base) {
         super(base);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
             createChannel();
-        }
     }
+
 @TargetApi(Build.VERSION_CODES.O)
-private void createChannel(){
+private void createChannel() {
 
     NotificationChannel channel = new NotificationChannel(CHANNEL_ID,CHANNEL_NAME,NotificationManager.IMPORTANCE_DEFAULT);
     channel.enableLights(false);
@@ -35,16 +34,16 @@ private void createChannel(){
 
 }
 
-public NotificationManager getManger(){
+public NotificationManager getManger() {
 
-        if (notificationManager == null){
+        if (notificationManager == null) {
             notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
         }
         return notificationManager;
 }
 
     @TargetApi(Build.VERSION_CODES.O)
-public  Notification.Builder getOreoNotification(String title, String body , PendingIntent pendingIntent, Uri soundUri , String icon){
+public  Notification.Builder getOreoNotification(String title, String body , PendingIntent pendingIntent, Uri soundUri , String icon) {
 
         return new Notification.Builder(getApplicationContext(),CHANNEL_ID)
                 .setContentIntent(pendingIntent)

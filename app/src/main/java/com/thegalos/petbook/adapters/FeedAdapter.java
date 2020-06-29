@@ -31,7 +31,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyFeedViewHold
 //        void onCardLongClicked();
     }
 
-    public void setListener(myFeedListener listener){
+    public void setListener(myFeedListener listener) {
         this.listener = listener;
     }
 
@@ -69,7 +69,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyFeedViewHold
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (listener != null){
+                    if (listener != null) {
                         listener.onFeedListener(getAdapterPosition());
                     }
                 }

@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
                 super.onBackPressed();
             } else {
                 doubleBackToExitPressedOnce = true;
-                Toast.makeText(MainActivity.this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, R.string.please_click_back_again, Toast.LENGTH_SHORT).show();
                 new Handler().postDelayed(new Runnable() {
 
                     @Override

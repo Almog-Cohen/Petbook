@@ -114,11 +114,11 @@ public class Chats extends Fragment {
 //                           userNameChat. = snapshot.getValue(Chat.class);
 //                        Chat chat = snapshot.getValue(Chat.class);
 //
-//                        if (chat.getSender().equals(userId)){
+//                        if (chat.getSender().equals(userId)) {
 //                            usersList.add(chat.getReceiver());
 //                            Log.d("SHAG", "onDataChange:sssss " + chat.getSender() +chat.getReceiver());
 //                        }
-//                        if (chat.getReceiver().equals(userId)){
+//                        if (chat.getReceiver().equals(userId)) {
 //                            usersList.add(chat.getSender());
 //                            Log.d("SHAG", "onDataChange:sssss " + chat.getReceiver());
 //                        }
@@ -149,7 +149,7 @@ public class Chats extends Fragment {
 
     }
 
-    private void updateToken(String newToken){
+    private void updateToken(String newToken) {
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
 

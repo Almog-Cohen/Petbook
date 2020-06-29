@@ -94,6 +94,7 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="false"
             android:layout_centerInParent="true"
+            android:layout_marginEnd="8dp"
             android:contentDescription="@string/none"
             android:visibility="invisible"
             app:srcCompat="@drawable/vector_trash" />

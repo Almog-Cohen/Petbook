@@ -73,5 +73,18 @@
     <string name="must_select_name">Must select name</string>
     <string name="must_select_breed">Must select breed</string>
     <string name="must_select_gender">Must select animal gender</string>
+    <string name="please_click_back_again">Please click BACK again to exit</string>
+    <string name="please_add_details_to_your_post">Please add details to your post</string>
+    <string name="please_set_amount">Please set Amount</string>
+    <string name="must_add_a_pet_to_advertise">Must Add A pet in order to advertise</string>
+    <string name="message_cant_be_empty">Message can\'t be empty</string>
+    <string name="email_isnt_valid">Email is not valid</string>
+    <string name="password_recovery_email_sent">Password recovery Email sent</string>
+    <string name="password_length_must_be_more">Password length must be more than 6 characters</string>
+    <string name="nu_such_user_please_register">No such user, please register</string>
+    <string name="wrong_code_entered">Wrong Code Entered</string>
+    <string name="name_cannot_be_empty">Name can not be empty</string>
+    <string name="add_pets_first">Add Pets in order to post</string>
+    <string name="log_in_to_view_full_post">Log in to view full post</string>
 
 </resources>

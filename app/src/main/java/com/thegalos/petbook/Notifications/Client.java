@@ -8,14 +8,14 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Client {
 
-    private  static Retrofit retrofit=null;
+    private  static Retrofit retrofit= null;
 
 //      public static Gson gson = new GsonBuilder()
 //            .setLenient()
 //            .create();
 
-    public static Retrofit getClient(String url){
-        if (retrofit==null){
+    public static Retrofit getClient(String url) {
+        if (retrofit== null) {
             retrofit=new Retrofit.Builder()
                     .baseUrl(url)
                     .addConverterFactory(GsonConverterFactory.create())
