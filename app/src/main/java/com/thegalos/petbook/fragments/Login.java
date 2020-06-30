@@ -21,6 +21,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -34,13 +35,17 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.google.gson.Gson;
 import com.thegalos.petbook.R;
 import com.thegalos.petbook.objects.Pet;
+import com.thegalos.petbook.objects.Token;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.Executor;
 
 import me.ibrahimsn.lib.SmoothBottomBar;
 
@@ -247,10 +252,34 @@ public class Login extends Fragment {
 
 
     private void signInTransaction() {
+
+
+
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener( getActivity(), new OnSuccessListener<InstanceIdResult>() {
+            @Override
+            public void onSuccess(InstanceIdResult instanceIdResult) {
+                String newToken = instanceIdResult.getToken();
+                Log.e("MAGI", newToken);
+                updateToken(newToken);
+            }
+        });
+
+
         SmoothBottomBar smoothBottomBar = getActivity().findViewById(R.id.bottomBar);
         smoothBottomBar.setItemActiveIndex(0);
         FragmentTransaction ft = getParentFragmentManager().beginTransaction();
         ft.replace(R.id.flFragment, new MainFeed(), "MainFeed").commit();
 
     }
+
+    private void updateToken(String newToken) {
+
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Tokens");
+        Token token1 = new Token(newToken);
+        reference.child(user.getUid()).setValue(token1);
+
+    }
+
 }

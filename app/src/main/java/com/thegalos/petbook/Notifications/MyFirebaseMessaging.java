@@ -21,6 +21,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.thegalos.petbook.MainActivity;
+import com.thegalos.petbook.R;
 
 public class MyFirebaseMessaging extends FirebaseMessagingService {
 
@@ -53,10 +54,8 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         int j = Integer.parseInt(user.replaceAll("[\\D]",""));
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         Intent intent = new Intent(this, MainActivity.class);
-        Bundle bundle = new Bundle();
         intent.putExtra("boolNotification",passToFragment);
 
-//        bundle.putString("userid",user);
         sp.edit().putString("ownerId", user).apply();
         Log.d("TAGI", "sendNotification: "+ user);
 //        intent.putExtras(bundle);
@@ -102,7 +101,8 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         Uri defaultSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext())
-                .setSmallIcon(Integer.parseInt(icon))
+//                .setSmallIcon(Integer.parseInt(icon))
+                .setSmallIcon(R.drawable.pet_logo_new)
                 .setContentTitle(title)
                 .setContentText(body)
                 .setAutoCancel(true)

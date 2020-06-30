@@ -190,28 +190,27 @@ public class Chats extends Fragment {
 
         });
 
-        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener((Activity) context, new OnSuccessListener<InstanceIdResult>() {
-            @Override
-            public void onSuccess(InstanceIdResult instanceIdResult) {
-                String newToken = instanceIdResult.getToken();
-                Log.e("MAGI", newToken);
-                updateToken(newToken);
-
-            }
-        });
+//        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener((Activity) context, new OnSuccessListener<InstanceIdResult>() {
+////            @Override
+////            public void onSuccess(InstanceIdResult instanceIdResult) {
+////                String newToken = instanceIdResult.getToken();
+////                Log.e("MAGI", newToken);
+////                updateToken(newToken);
+////            }
+////        });
 
 
     }
 
-    private void updateToken(String newToken) {
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-
-
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Tokens");
-        Token token1 = new Token(newToken);
-        reference.child(firebaseUser.getUid()).setValue(token1);
-
-    }
+//    private void updateToken(String newToken) {
+//        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+//
+//
+//        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Tokens");
+//        Token token1 = new Token(newToken);
+//        reference.child(firebaseUser.getUid()).setValue(token1);
+//
+//    }
 }
 
 
