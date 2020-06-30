@@ -31,13 +31,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         final SmoothBottomBar smoothBottomBar = findViewById(R.id.bottomBar);
         smoothBottomBar.setVisibility(View.INVISIBLE);
+
         //When clicking on chat notification moving to conversation fragment
         boolean msgFragment = getIntent().getBooleanExtra("boolNotification",false);
         if (msgFragment) {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.flFragment, new Chats(), "Chats").addToBackStack("Chats").commit();
-        }else
-        getSupportFragmentManager().beginTransaction().add(R.id.mainLayout, new Splash(),"splash").commit();
+            smoothBottomBar.setItemActiveIndex(1);
+            smoothBottomBar.setVisibility(View.VISIBLE);
+        } else
+            getSupportFragmentManager().beginTransaction().add(R.id.mainLayout, new Splash(),"splash").commit();
         smoothBottomBar.setOnItemSelectedListener(new OnItemSelectedListener() {
             @Override
             public boolean onItemSelect(int position) {

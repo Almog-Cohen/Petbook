@@ -250,19 +250,13 @@ public class Login extends Fragment {
 
 
     private void signInTransaction() {
-
-
-
         FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener( getActivity(), new OnSuccessListener<InstanceIdResult>() {
             @Override
             public void onSuccess(InstanceIdResult instanceIdResult) {
                 String newToken = instanceIdResult.getToken();
-                Log.e("MAGI", newToken);
                 updateToken(newToken);
             }
         });
-
-
         SmoothBottomBar smoothBottomBar = getActivity().findViewById(R.id.bottomBar);
         smoothBottomBar.setItemActiveIndex(0);
         FragmentTransaction ft = getParentFragmentManager().beginTransaction();
@@ -271,8 +265,6 @@ public class Login extends Fragment {
     }
 
     private void updateToken(String newToken) {
-
-
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Tokens");
         Token token1 = new Token(newToken);

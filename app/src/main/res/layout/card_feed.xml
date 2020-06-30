@@ -17,8 +17,10 @@
 
         <TextView
             android:id="@+id/tvPostOwner"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:gravity="left"
             android:text="@string/string"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -29,7 +31,8 @@
             android:id="@+id/tvPostTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
+            android:layout_alignParentEnd="false"
+            android:layout_alignParentRight="true"
             android:layout_marginTop="3dp"
             android:gravity="center"
             android:text="@string/string"
@@ -112,7 +115,7 @@
                 android:layout_height="match_parent"
                 android:contentDescription="@string/string"
                 android:visibility="visible"
-                app:srcCompat="@drawable/missing" />
+                app:srcCompat="@drawable/missing_no_txt" />
         </androidx.cardview.widget.CardView>
 
         <TextView
