@@ -21,7 +21,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.thegalos.petbook.MainActivity;
-import com.thegalos.petbook.fragments.Conversation;
 
 public class MyFirebaseMessaging extends FirebaseMessagingService {
 
@@ -30,15 +29,11 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
-
-
         String sented = remoteMessage.getData().get("sented");
-
         Log.d("PRAG", "onDataChange: " + sented + " " );
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-
-        if (firebaseUser != null && sented.equals(firebaseUser.getUid())) {
+        if (user != null && sented.equals(user.getUid())) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
                 sendOreoNotification(remoteMessage);
             else
@@ -47,7 +42,6 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
     }
 
     private void sendOreoNotification(RemoteMessage remoteMessage) {
-
         SharedPreferences sp;
         sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String user = remoteMessage.getData().get("user");
@@ -60,7 +54,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         Intent intent = new Intent(this, MainActivity.class);
         Bundle bundle = new Bundle();
-        intent.putExtra("msg_notif",passToFragment);
+        intent.putExtra("boolNotification",passToFragment);
 
 //        bundle.putString("userid",user);
         sp.edit().putString("ownerId", user).apply();
@@ -76,29 +70,20 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         int i = 0;
         if (j>0)
             i=j;
-
-
         oreoNotification.getManger().notify(i,builder.build());
-
     }
 
     private void sendNotification(RemoteMessage remoteMessage) {
-
         SharedPreferences sp;
         sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-
 //        String channelId = null;
-
         String user = remoteMessage.getData().get("user");
         String icon = remoteMessage.getData().get("icon");
         String title = remoteMessage.getData().get("title");
         String body = remoteMessage.getData().get("body");
-
 //        if (Build.VERSION.SDK_INT>=26) {
-//
 //            channelId="news_channel";
 //            CharSequence channelName = "News channel";
-//
 //            int importance = NotificationManager.IMPORTANCE_HIGH;
 //            NotificationChannel notificationChannel = new NotificationChannel(channelId,channelName,importance);
 //            notificationManager.createNotificationChannel(notificationChannel);
@@ -109,16 +94,12 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         int j = Integer.parseInt(user.replaceAll("[\\D]",""));
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
         Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra("msg_notif",passToFragment);
-
+        intent.putExtra("boolNotification",passToFragment);
         sp.edit().putString("ownerId", user).apply();
         Log.d("TAGI", "sendNotification: "+ user);
-//        intent.putExtras(bundle);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this,j,intent,PendingIntent.FLAG_ONE_SHOT);
         Uri defaultSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-
-
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext())
                 .setSmallIcon(Integer.parseInt(icon))
@@ -129,13 +110,9 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
                 .setContentIntent(pendingIntent);
 
         NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
-
         int i = 0;
         if (j>0)
             i=j;
-
         notificationManager.notify(i,builder.build());
-
-
     }
 }

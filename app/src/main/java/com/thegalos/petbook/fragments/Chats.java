@@ -26,7 +26,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
-import com.thegalos.petbook.Notifications.Token;
+import com.thegalos.petbook.objects.Token;
 import com.thegalos.petbook.R;
 import com.thegalos.petbook.adapters.UserAdapter;
 import com.thegalos.petbook.objects.User;

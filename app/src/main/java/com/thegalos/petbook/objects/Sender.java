@@ -1,7 +1,6 @@
-package com.thegalos.petbook.Notifications;
+package com.thegalos.petbook.objects;
 
 public class Sender {
-
     public Data data;
     public String to;
 

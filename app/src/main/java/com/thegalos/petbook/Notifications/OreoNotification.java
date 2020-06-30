@@ -11,7 +11,6 @@ import android.net.Uri;
 import android.os.Build;
 
 public class OreoNotification extends ContextWrapper {
-
     private static  final String CHANNEL_ID = "com.thegalos.petbook";
     private static final String CHANNEL_NAME = "petbook";
     private NotificationManager notificationManager;
@@ -22,29 +21,24 @@ public class OreoNotification extends ContextWrapper {
             createChannel();
     }
 
-@TargetApi(Build.VERSION_CODES.O)
-private void createChannel() {
+    @TargetApi(Build.VERSION_CODES.O)
+    private void createChannel() {
+        NotificationChannel channel = new NotificationChannel(CHANNEL_ID,CHANNEL_NAME,NotificationManager.IMPORTANCE_DEFAULT);
+        channel.enableLights(false);
+        channel.enableVibration(true);
+        channel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+        getManger().createNotificationChannel(channel);
+    }
 
-    NotificationChannel channel = new NotificationChannel(CHANNEL_ID,CHANNEL_NAME,NotificationManager.IMPORTANCE_DEFAULT);
-    channel.enableLights(false);
-    channel.enableVibration(true);
-    channel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
-
-    getManger().createNotificationChannel(channel);
-
-}
-
-public NotificationManager getManger() {
-
+    public NotificationManager getManger() {
         if (notificationManager == null) {
             notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
         }
         return notificationManager;
-}
+    }
 
     @TargetApi(Build.VERSION_CODES.O)
-public  Notification.Builder getOreoNotification(String title, String body , PendingIntent pendingIntent, Uri soundUri , String icon) {
-
+    public  Notification.Builder getOreoNotification(String title, String body , PendingIntent pendingIntent, Uri soundUri , String icon) {
         return new Notification.Builder(getApplicationContext(),CHANNEL_ID)
                 .setContentIntent(pendingIntent)
                 .setContentTitle(title)
@@ -53,5 +47,4 @@ public  Notification.Builder getOreoNotification(String title, String body , Pen
                 .setSound(soundUri)
                 .setAutoCancel(true);
     }
-
 }

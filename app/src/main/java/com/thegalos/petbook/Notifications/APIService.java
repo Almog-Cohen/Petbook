@@ -1,5 +1,7 @@
 package com.thegalos.petbook.Notifications;
 
+import com.thegalos.petbook.objects.Sender;
+
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Headers;

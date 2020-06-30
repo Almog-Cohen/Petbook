@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         final SmoothBottomBar smoothBottomBar = findViewById(R.id.bottomBar);
         smoothBottomBar.setVisibility(View.INVISIBLE);
         //When clicking on chat notification moving to conversation fragment
-        boolean msgFragment = getIntent().getBooleanExtra("msg_notif",false);
+        boolean msgFragment = getIntent().getBooleanExtra("boolNotification",false);
         if (msgFragment) {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.flFragment, new Chats(), "Chats").addToBackStack("Chats").commit();

@@ -1,4 +1,4 @@
-package com.thegalos.petbook.Notifications;
+package com.thegalos.petbook.objects;
 
 public class Token {
 
