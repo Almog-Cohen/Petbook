@@ -41,12 +41,12 @@ public class UserAdapter  extends RecyclerView.Adapter<UserAdapter.ViewHolder>  
         View view = LayoutInflater.from(context).inflate(R.layout.card_chats,parent,false);
         return new UserAdapter.ViewHolder(view);
     }
-;
+
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 //        User user = userList.get(position);
         holder.userNameTv.setText(userList.get(position).getUserName());
-        holder.lastMesssageTv.setText(userList.get(position).getLastMessage());
+        holder.lastMassageTv.setText(userList.get(position).getLastMessage());
 //        if (userList.get(position).getIsMessageSeen().equals("true")) {
 //            holder.isReadTv.setVisibility(View.INVISIBLE);
 //        }else {
@@ -62,13 +62,13 @@ public class UserAdapter  extends RecyclerView.Adapter<UserAdapter.ViewHolder>  
     public class ViewHolder extends RecyclerView.ViewHolder{
         final TextView userNameTv;
         final ImageView profileImage;
-        final TextView lastMesssageTv;
+        final TextView lastMassageTv;
         final ImageView isReadTv;
         ViewHolder(@NonNull View itemView) {
             super(itemView);
             userNameTv = itemView.findViewById(R.id.user_name);
             profileImage = itemView.findViewById(R.id.profile_image);
-            lastMesssageTv = itemView.findViewById(R.id.last_msg);
+            lastMassageTv = itemView.findViewById(R.id.last_msg);
             isReadTv = itemView.findViewById(R.id.new_message);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

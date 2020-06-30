@@ -130,7 +130,7 @@ public class Login extends Fragment {
             @Override
             public void onClick(View v) {
                 if (!android.util.Patterns.EMAIL_ADDRESS.matcher(etEmail.getText().toString()).matches()) {
-                    Toast.makeText(context, R.string.email_isnt_valid, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.email_is_not_valid, Toast.LENGTH_SHORT).show();
                     return;
                 }
                 String email = etEmail.getText().toString();

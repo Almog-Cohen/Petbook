@@ -3,7 +3,6 @@
 
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    layout_height=""
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:cardCornerRadius="6dp"
@@ -21,7 +20,8 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginStart="5dp"
-            android:src="@mipmap/ic_launcher" />
+            android:src="@mipmap/ic_launcher"
+            android:contentDescription="@string/none" />
 
         <LinearLayout
             android:layout_width="190dp"
@@ -35,7 +35,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:text="username"
                 android:textSize="18sp"
 
                 />
@@ -47,7 +46,6 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:maxLines="1"
-                android:text="last message text"
 
                 android:textColor="@color/colorPrimary" />
 
@@ -65,8 +63,8 @@
                 android:id="@+id/new_message"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@mipmap/ic_launcher" />
-
+                android:src="@mipmap/ic_launcher"
+                android:contentDescription="@string/none" />
 
         </LinearLayout>
 

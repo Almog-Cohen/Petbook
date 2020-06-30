@@ -1,12 +1,10 @@
 package com.thegalos.petbook;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -14,20 +12,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
 import com.thegalos.petbook.fragments.Chats;
 import com.thegalos.petbook.fragments.Conversation;
 import com.thegalos.petbook.fragments.MainFeed;
 import com.thegalos.petbook.fragments.Profile;
 import com.thegalos.petbook.fragments.Splash;
-import com.thegalos.petbook.objects.Token;
 
 import me.ibrahimsn.lib.OnItemSelectedListener;
 import me.ibrahimsn.lib.SmoothBottomBar;
@@ -35,7 +26,6 @@ import me.ibrahimsn.lib.SmoothBottomBar;
 public class MainActivity extends AppCompatActivity {
 
     boolean doubleBackToExitPressedOnce = false;
-    FirebaseUser firebaseUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,12 +36,10 @@ public class MainActivity extends AppCompatActivity {
         //When clicking on chat notification moving to conversation fragment
         boolean msgFragment = getIntent().getBooleanExtra("boolNotification",false);
         if (msgFragment) {
-            getSupportFragmentManager().beginTransaction().add(R.id.flFragment, new Chats(),"Chats").commit();
-            smoothBottomBar.setItemActiveIndex(1);
-            smoothBottomBar.setVisibility(View.VISIBLE);
-        } else
-            getSupportFragmentManager().beginTransaction().add(R.id.mainLayout, new Splash(),"splash").commit();
-
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.flFragment, new Chats(), "Chats").addToBackStack("Chats").commit();
+        }else
+        getSupportFragmentManager().beginTransaction().add(R.id.mainLayout, new Splash(),"splash").commit();
         smoothBottomBar.setOnItemSelectedListener(new OnItemSelectedListener() {
             @Override
             public boolean onItemSelect(int position) {
@@ -82,10 +70,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-
     }
-
-
 
     void handleFragment(Fragment fragment, String mainFeed) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();

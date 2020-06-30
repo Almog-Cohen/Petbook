@@ -33,10 +33,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
-import com.thegalos.petbook.Notifications.APIService;
-import com.thegalos.petbook.Notifications.Client;
+import com.thegalos.petbook.notifications.APIService;
+import com.thegalos.petbook.notifications.Client;
 import com.thegalos.petbook.objects.Data;
-import com.thegalos.petbook.Notifications.MyResponse;
+import com.thegalos.petbook.notifications.MyResponse;
 import com.thegalos.petbook.objects.Sender;
 import com.thegalos.petbook.objects.Token;
 import com.thegalos.petbook.R;
@@ -127,8 +127,6 @@ public class Conversation extends Fragment {
             }
         });
 
-        /*reference = FirebaseDatabase.getInstance().getReference("Users").child(userId);*/
-
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -139,7 +137,6 @@ public class Conversation extends Fragment {
                 ImageViewAnimatedChange(ivFab, img);
                 msg = msg.trim();
                 if (!msg.equals("")) {
-
                     sendMessage(userId,ownerId,msg);
                 } else {
                     Toast.makeText(context, R.string.message_cant_be_empty, Toast.LENGTH_SHORT).show();
@@ -216,30 +213,27 @@ public class Conversation extends Fragment {
                                     if (response.code() == 200) {
 
                                         if (response.body().success != 1) {
-                                            Toast.makeText(context, "Failed notif", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(context, "Failed notifications", Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                 }
 
                                 @Override
                                 public void onFailure(Call<MyResponse> call, Throwable t) {
-
-                                    Log.d("PRAG", "onFailure: " + t.toString());
+                                    Log.d("Conversation", "onFailure: " + t.toString());
                                 }
                             });
                 }
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
         });
     }
 
-    private void readMessages(final String myId , final String userid) {
+    private void readMessages(final String myId , final String userID) {
 
-        DatabaseReference chatRef = FirebaseDatabase.getInstance().getReference().child("Messages").child(myId).child(userid);
+        DatabaseReference chatRef = FirebaseDatabase.getInstance().getReference().child("Messages").child(myId).child(userID);
         chatRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

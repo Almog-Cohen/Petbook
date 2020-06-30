@@ -67,7 +67,7 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">>
 
         <androidx.core.widget.NestedScrollView
-            android:id="@+id/nestedscroll"
+            android:id="@+id/nestedScroll"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
@@ -75,7 +75,7 @@
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <LinearLayout
-                android:id="@+id/layoutscroll"
+                android:id="@+id/layoutScroll"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
@@ -142,21 +142,3 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
-
-
-
-
-
-
-
-    <!--
-    <?xml version="1.0" encoding="utf-8"?>
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/mainLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-    -->

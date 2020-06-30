@@ -127,9 +127,6 @@ public class MainFeed extends Fragment {
         final FeedAdapter feedAdapter = new FeedAdapter(context, feedList);
         recyclerView.setAdapter(feedAdapter);
 
-//        progressBar.setMax(/*recyclerView.getLayoutManager().getHeight()*/1000);
-
-
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Posts");
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -187,7 +184,6 @@ public class MainFeed extends Fragment {
 
                 maxProgress = height - 1200;
                 progressBar.setMax(maxProgress);
-//                Log.d("progress_galos", "maxProgress claculated: " + maxProgress);
             }
 
             @Override
@@ -196,10 +192,8 @@ public class MainFeed extends Fragment {
             }
         });
 
-
-        //Show label when uncollapsing
-        final CollapsingToolbarLayout collapsingToolbarLayout = /*(CollapsingToolbarLayout)*/ view.findViewById(R.id.collapsingToolbar);
-        AppBarLayout appBarLayout = /*(AppBarLayout)*/ view.findViewById(R.id.appBar);
+        final CollapsingToolbarLayout collapsingLayout = view.findViewById(R.id.collapsingToolbar);
+        AppBarLayout appBarLayout = view.findViewById(R.id.appBar);
         appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             boolean isShow = true;
             int scrollRange = -1;
@@ -210,17 +204,15 @@ public class MainFeed extends Fragment {
                     scrollRange = appBarLayout.getTotalScrollRange();
                 }
                 if (scrollRange + verticalOffset == 0) {
-                    collapsingToolbarLayout.setTitle(str);
+                    collapsingLayout.setTitle(str);
                     isShow = true;
                 } else if (isShow) {
-                    collapsingToolbarLayout.setCollapsedTitleTextColor(Color.WHITE);
-                    collapsingToolbarLayout.setTitle("");//careful there should a space between double quote otherwise it wont work
+                    collapsingLayout.setCollapsedTitleTextColor(Color.WHITE);
+                    collapsingLayout.setTitle("");//careful there should a space between double quote otherwise it wont work
                     isShow = false;
                 }
             }
         });
-
-        // Limiters
 
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -230,7 +222,7 @@ public class MainFeed extends Fragment {
             }
         });
 
-        NestedScrollView nestedScrollView = view.findViewById(R.id.nestedscroll);
+        NestedScrollView nestedScrollView = view.findViewById(R.id.nestedScroll);
         nestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
@@ -257,24 +249,15 @@ public class MainFeed extends Fragment {
                     FragmentTransaction ft = getParentFragmentManager().beginTransaction();
                     ft.replace(R.id.flFragment, new ViewPost(), "ViewPost").addToBackStack("ViewPost").commit();
                 } else {
-                    Snackbar snack = Snackbar.make(collapsingToolbarLayout, R.string.log_in_to_view_full_post, Snackbar.LENGTH_SHORT);
+                    Snackbar snack = Snackbar.make(collapsingLayout, R.string.log_in_to_view_full_post, Snackbar.LENGTH_SHORT);
                     snack.show();
                 }
             }
         });
     }
 
-    public static int dpToPx(int dp) {
-        return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
-    }
-
-    public static int pxToDp(int px) {
-        return (int) (px / Resources.getSystem().getDisplayMetrics().density);
-    }
-
     private void startRefresh() {
         FragmentTransaction ft = getParentFragmentManager().beginTransaction();
         ft.replace(R.id.flFragment, new MainFeed(), "MainFeed").commit();
     }
-
 }

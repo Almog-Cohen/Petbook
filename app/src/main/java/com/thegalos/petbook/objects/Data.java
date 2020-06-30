@@ -6,14 +6,14 @@ public class Data {
     private int icon;
     private String body;
     private String title;
-    private String sented;
+    private String sent;
 
-    public Data(String user, int icon, String body, String title, String sented) {
+    public Data(String user, int icon, String body, String title, String sent) {
         this.user = user;
         this.icon = icon;
         this.body = body;
         this.title = title;
-        this.sented = sented;
+        this.sent = sent;
     }
 
     public Data() {
@@ -51,11 +51,11 @@ public class Data {
         this.icon = icon;
     }
 
-    public String getSented() {
-        return sented;
+    public String getSent() {
+        return sent;
     }
 
-    public void setSented(String sented) {
-        this.sented = sented;
+    public void setSent(String sent) {
+        this.sent = sent;
     }
 }

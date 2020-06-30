@@ -110,7 +110,6 @@ public class Chats extends Fragment {
                         if (!snapshot.getKey().equals("1") && !snapshot.equals("Last_Message"))
                             usersList.add(snapshot.getKey());
 //                            userObject.setId(snapshot.getKey());
-//                        Log.d("BAGA", "onDataChange: " + userList);
 
 
                         if (snapshot.child("1").getKey().equals("1"))
@@ -131,7 +130,7 @@ public class Chats extends Fragment {
 
                     }
 
-                    for (int i = 0 ; i < userNamesList.size() ; i++){
+                    for (int i = 0 ; i < userNamesList.size() ; i++) {
 
                         User user1 = new User();
                         user1.setTime(userTimeList.get(i));
@@ -150,9 +149,7 @@ public class Chats extends Fragment {
                             User u1,u2;
                             u1 = (User)o1;
                             u2 = (User)o2;
-
-                            int x = u1.getTime().compareTo(u2.getTime());
-                            return x;
+                            return u1.getTime().compareTo(u2.getTime());
                         }
                     });
 

@@ -7,7 +7,6 @@ import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -53,7 +52,7 @@ public class ViewPost extends Fragment {
         String json = sp.getString("PetSelected", "");
         Type type = new TypeToken<Feed>() {
         }.getType();
-        if (user!=null)
+        if (user!= null)
         userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
 
