@@ -60,13 +60,10 @@ import static android.app.Activity.RESULT_OK;
 public class AddFeed extends Fragment {
 
 
-    // --Commented out by Inspection (20/06/2020 1:26):EditText etBreed, etName;
     private static List<Pet> petArrayList = new ArrayList<>();
     private static List<String> petNameList = new ArrayList<>();
     SharedPreferences preferences;
-    private static final int PICK_FROM_GALLERY = 999;
     private static final int CAMERA_REQUEST = 999;
-//    TextView tvTakePhoto;
     ImageView ivPickPhoto;
     ImageView ivPhoto;
     Uri uri;
@@ -83,7 +80,6 @@ public class AddFeed extends Fragment {
     EditText etAmount;
     boolean isFree = true;
     Context context;
-    private File file;
     private Uri imageUri = null;
 
 
@@ -191,7 +187,7 @@ public class AddFeed extends Fragment {
 
     private void takePicture() {
         String pictureName = String.valueOf(System.currentTimeMillis());
-        file = new File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), pictureName + ".jpg");
+        File file = new File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), pictureName + ".jpg");
         imageUri = FileProvider.getUriForFile(context,"com.thegalos.petbook.provider", file);
 
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);

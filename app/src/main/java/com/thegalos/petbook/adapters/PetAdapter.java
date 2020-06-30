@@ -99,7 +99,7 @@ public class PetAdapter extends RecyclerView.Adapter<PetAdapter.MyPetsViewHolder
     @Override
     public void onBindViewHolder(@NonNull final MyPetsViewHolder holder, final int position) {
         final Pet pet = petList.get(position);
-        String str = "";
+        String str;
         holder.tvPetName.setText(pet.getName());
         str = context.getString(R.string.age_space) + pet.getAge();
         holder.tvAge.setText(str);

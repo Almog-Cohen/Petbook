@@ -72,7 +72,6 @@
     <string name="please_set_amount">חובה לבחור סכום</string>
     <string name="must_add_a_pet_to_advertise">חובה לבחור בעל חיים</string>
     <string name="message_cant_be_empty">הודעה לא יכולה להיות ריקה</string>
-    <string name="email_isnt_valid">אימייל לא תקין</string>
     <string name="password_recovery_email_sent">אימייל שיחזור ססמה נשלח</string>
     <string name="password_length_must_be_more">סיסמה חייבת להיות ארוכה מ6 תווים</string>
     <string name="nu_such_user_please_register">לא נמצא משתמש, יש להרשם</string>

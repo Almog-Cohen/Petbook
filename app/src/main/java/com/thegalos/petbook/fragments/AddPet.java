@@ -35,7 +35,6 @@ import java.util.List;
 
 public class AddPet extends Fragment {
 
-    int whichAnimal = 0;
     String animalType = "";
     EditText etBreed, etName;
     CheckedTextView ctvVaccine, ctvPurebred;
@@ -117,16 +116,12 @@ public class AddPet extends Fragment {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if (checkedId == R.id.rbHorse) {
-                    whichAnimal = 1;
                     animalType = "Horse";
                 } else if (checkedId == R.id.rbDog) {
-                    whichAnimal = 2;
                     animalType = "Dog";
                 } else if (checkedId == R.id.rbCat) {
-                    whichAnimal = 3;
                     animalType = "Cat";
                 } else {
-                    whichAnimal = 0;
                     animalType = "";
                 }
             }

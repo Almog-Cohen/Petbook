@@ -8,7 +8,6 @@ public class Pet {
     private Boolean vaccine;
     private Boolean pureBred;
     private String breed;
-    private String currentImagePath;
     private String petUID;
 
     public Pet() {
@@ -35,9 +34,7 @@ public class Pet {
     public Boolean getPureBred() {
         return pureBred;
     }
-    public String getCurrentImagePath() {
-        return currentImagePath;
-    }
+
     public String getPetUID() {
         return petUID;
     }
@@ -62,9 +59,6 @@ public class Pet {
     }
     public void setPureBred(Boolean pureBred) {
         this.pureBred = pureBred;
-    }
-    public void setCurrentImagePath(String currentImagePath) {
-        this.currentImagePath = currentImagePath;
     }
     public void setPetUID(String petUID) {
         this.petUID = petUID;

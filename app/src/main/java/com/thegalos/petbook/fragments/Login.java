@@ -45,7 +45,6 @@ import com.thegalos.petbook.objects.Token;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.Executor;
 
 import me.ibrahimsn.lib.SmoothBottomBar;
 
@@ -221,7 +220,6 @@ public class Login extends Fragment {
     }
 
     private void loadFirebaseDB() {
-        boolean downloadedPets = sp.getBoolean("downloadedPets" , false);
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(user.getUid()).child("Pets");

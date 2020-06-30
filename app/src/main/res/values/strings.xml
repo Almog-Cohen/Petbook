@@ -3,10 +3,7 @@
     <string name="string" translatable="false">string</string>
     <string name="male">Male</string>
     <string name="female">Female</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="none" translatable="false" />
-
-    <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
     <string name="action_sign_in_short">Sign in</string>

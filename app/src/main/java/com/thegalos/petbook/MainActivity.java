@@ -1,6 +1,5 @@
 package com.thegalos.petbook;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,7 +14,6 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.thegalos.petbook.fragments.Chats;
-import com.thegalos.petbook.fragments.Conversation;
 import com.thegalos.petbook.fragments.MainFeed;
 import com.thegalos.petbook.fragments.Profile;
 import com.thegalos.petbook.fragments.Splash;
