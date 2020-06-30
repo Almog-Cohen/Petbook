@@ -6,16 +6,27 @@ public class User {
     String userName;
     Long time;
     String lastMessage;
+    String isMessageSeen;
 
     public User() {
     }
 
-    public User( String userName, Long time , String id , String lastMessage) {
+    public User( String userName, Long time , String id , String lastMessage , String isMessageSeen) {
 
         this.userName = userName;
         this.time = time;
         this.id = id;
         this.lastMessage = lastMessage;
+        this.isMessageSeen = isMessageSeen;
+
+    }
+
+    public String getIsMessageSeen() {
+        return isMessageSeen;
+    }
+
+    public void setMessageSeen(String messageSeen) {
+        isMessageSeen = messageSeen;
     }
 
     public String getLastMessage() {

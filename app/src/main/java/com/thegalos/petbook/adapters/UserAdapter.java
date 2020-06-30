@@ -17,11 +17,12 @@ import java.util.List;
 
 public class UserAdapter  extends RecyclerView.Adapter<UserAdapter.ViewHolder>  {
 
+
+    boolean isMessageSeen=false;
     private Context context;
-//    private List<String>userNamesList;
     private List <User> userList;
     private MyUserListener myUserListener;
-//    private List<String>lastMessage;
+
 
     public interface MyUserListener {
         void onUserClicked(int position,View view);
@@ -37,9 +38,7 @@ public class UserAdapter  extends RecyclerView.Adapter<UserAdapter.ViewHolder>  
     public UserAdapter(@NonNull Context context,List<User> userList ) {
 
         this.context=context;
-//        this.userNamesList = userNamesList;
         this.userList = userList ;
-//        this.lastMessage = lastMessage;
 
 
     }
@@ -64,6 +63,12 @@ public class UserAdapter  extends RecyclerView.Adapter<UserAdapter.ViewHolder>  
         holder.userNameTv.setText(userList.get(position).getUserName());
         holder.lastMesssageTv.setText(userList.get(position).getLastMessage());
 
+//        if (userList.get(position).getIsMessageSeen().equals("true")) {
+//            holder.isReadTv.setVisibility(View.INVISIBLE);
+//        }else {
+//            holder.isReadTv.setVisibility(View.VISIBLE);
+//        }
+
 
 
 
@@ -80,7 +85,10 @@ public class UserAdapter  extends RecyclerView.Adapter<UserAdapter.ViewHolder>  
 
         public TextView userNameTv;
         public ImageView profileImage;
-        private TextView lastMesssageTv;
+        public TextView lastMesssageTv;
+
+        public ImageView isReadTv;
+
 
 
         public ViewHolder(@NonNull View itemView) {
@@ -89,6 +97,9 @@ public class UserAdapter  extends RecyclerView.Adapter<UserAdapter.ViewHolder>  
             userNameTv = itemView.findViewById(R.id.user_name);
             profileImage = itemView.findViewById(R.id.profile_image);
             lastMesssageTv = itemView.findViewById(R.id.last_msg);
+
+            isReadTv = itemView.findViewById(R.id.new_message);
+
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

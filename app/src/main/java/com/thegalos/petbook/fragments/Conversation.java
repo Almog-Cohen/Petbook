@@ -164,6 +164,10 @@ public class Conversation extends Fragment {
         FirebaseDatabase.getInstance().getReference().child("Messages").child(ownerId).child(userId).child("Time").setValue(ServerValue.TIMESTAMP);
         FirebaseDatabase.getInstance().getReference().child("Messages").child(userId).child(ownerId).child("Time").setValue(ServerValue.TIMESTAMP);
 
+        FirebaseDatabase.getInstance().getReference().child("Messages").child(userId).child(ownerId).child("Is_seen").setValue("false");
+        FirebaseDatabase.getInstance().getReference().child("Messages").child(ownerId).child(userId).child("Is_seen").setValue("false");
+
+
 
         FirebaseDatabase.getInstance().getReference().child("Messages").child(ownerId).child(userId).child("1").setValue(userName);
         FirebaseDatabase.getInstance().getReference().child("Messages").child(userId).child(ownerId).child("1").setValue(ownerUserName);
@@ -245,7 +249,10 @@ public class Conversation extends Fragment {
                 if (dataSnapshot.exists()) {
 
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        if (!snapshot.getKey().equals("1")&&!snapshot.getKey().equals("Last_Message")&&!snapshot.getKey().equals("Time")) {
+                        if (!snapshot.getKey().equals("1")
+                                && !snapshot.getKey().equals("Last_Message")
+                                && (!snapshot.getKey().equals("Time"))
+                                && (!snapshot.getKey().equals("Is_seen"))) {
                             Chat chat = snapshot.getValue(Chat.class);
                             chatList.add(chat);
                             messageAdapter = new MessageAdapter(context, chatList );
@@ -262,33 +269,6 @@ public class Conversation extends Fragment {
 
             }
         });
-
-//        DatabaseReference chatRef = FirebaseDatabase.getInstance().getReference().child("Messages");
-//        chatRef.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//
-//                chatList = new ArrayList<>();
-//                chatList.clear();
-//                if (dataSnapshot.exists()) {
-//
-//                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                        Chat chat = snapshot.getValue(Chat.class);
-//                        if (chat.getReceiver().equals(myId) && chat.getSender().equals(userid) || chat.getReceiver().equals(userid) && chat.getSender().equals(myId)) {
-//                            chatList.add(chat);
-//                            Log.d("NAG", "onDataChange: " + chat.getReceiver() +"       SENDER ::" +chat.getSender());
-//                        }
-//
-//                        messageAdapter = new MessageAdapter(context, chatList);
-//                        recyclerView.setAdapter(messageAdapter);
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//            }
-//        });
 
     }
 

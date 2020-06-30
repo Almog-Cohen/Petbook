@@ -44,11 +44,11 @@ public class Chats extends Fragment {
     private List<String> usersList;
     private List<String> userNamesList;
     private List <Long> userTimeList;
-    private List <String> lastMessage;
+    private List <String> lastMessageList;
+    private List <String> isMessageSeenList;
     private String userId;
 
     private List<User> userList;
-
 
     String userNameChat;
     SharedPreferences sp;
@@ -73,11 +73,12 @@ public class Chats extends Fragment {
         usersRecyclerView = view.findViewById(R.id.rvChats);
 
         userList = new ArrayList<>();
-
-        lastMessage = new ArrayList<>();
+        lastMessageList = new ArrayList<>();
         userTimeList = new ArrayList<>();
         usersList = new ArrayList<>();
         userNamesList = new ArrayList<>();
+        isMessageSeenList = new ArrayList<>();
+
         usersRecyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
 //        linearLayoutManager.setStackFromEnd(true);
@@ -101,7 +102,8 @@ public class Chats extends Fragment {
                     userNamesList.clear();
                     userTimeList.clear();
                     userList.clear();
-                    lastMessage.clear();
+                    lastMessageList.clear();
+                    isMessageSeenList.clear();
 
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
@@ -117,11 +119,14 @@ public class Chats extends Fragment {
 
 
                         if (snapshot.child("Last_Message").getKey().equals("Last_Message"))
-                            lastMessage.add(snapshot.child("Last_Message").getValue(String.class));
+                            lastMessageList.add(snapshot.child("Last_Message").getValue(String.class));
 
                         if (snapshot.child("Time").getKey().equals("Time"))
                             userTimeList.add(snapshot.child("Time").getValue(Long.class));
 ////                            userObject.setTime(snapshot.child("Time").getValue(Long.class));
+//                        if (snapshot.hasChild("Is_seen"))
+////                            if (snapshot.child("Is_seen").getKey().equals("Is_seen"))
+//                                isMessageSeenList.add(snapshot.child("Is_seen").getValue(String.class));
 //
 
                     }
@@ -132,8 +137,11 @@ public class Chats extends Fragment {
                         user1.setTime(userTimeList.get(i));
                         user1.setUserName(userNamesList.get(i));
                         user1.setId(usersList.get(i));
-                        user1.setLastMessage(lastMessage.get(i));
+                        user1.setLastMessage(lastMessageList.get(i));
+//                        user1.setMessageSeen(isMessageSeenList.get(i));
                         userList.add(user1);
+
+
                     }
 
                     Collections.sort(userList, new Comparator<Object>() {
@@ -142,9 +150,9 @@ public class Chats extends Fragment {
                             User u1,u2;
                             u1 = (User)o1;
                             u2 = (User)o2;
+
                             int x = u1.getTime().compareTo(u2.getTime());
                             return x;
-                            //return o1.getTime().compareTo(o2.getTime());
                         }
                     });
 
@@ -157,8 +165,6 @@ public class Chats extends Fragment {
                         public void onUserClicked(int position, View view) {
 
                             String userId = userList.get(position).getId();
-//                                    Log.d("BAGA", "onUserClicked: " + userList.get(position).getId());
-//                                    String userId = usersList.get(position);
                             sp.edit().putString("ownerId", userId).apply();
                             FragmentTransaction ft = getParentFragmentManager().beginTransaction();
                             ft.replace(R.id.flFragment, new Conversation(), "Conversation").addToBackStack("Conversation").commit();
