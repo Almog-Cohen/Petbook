@@ -30,6 +30,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.thegalos.petbook.Notifications.APIService;
 import com.thegalos.petbook.Notifications.Client;
@@ -152,11 +153,16 @@ public class Conversation extends Fragment {
         hashMap.put("receiver",receiver);
         hashMap.put("message",message);
 
-
-
-//        FirebaseDatabase.getInstance().getReference().child("Messages").push().setValue(hashMap);
         FirebaseDatabase.getInstance().getReference().child("Messages").child(ownerId).child(userId).push().setValue(hashMap);
         FirebaseDatabase.getInstance().getReference().child("Messages").child(userId).child(ownerId).push().setValue(hashMap);
+
+
+        FirebaseDatabase.getInstance().getReference().child("Messages").child(userId).child(ownerId).child("Last_Message").setValue(message);
+        FirebaseDatabase.getInstance().getReference().child("Messages").child(ownerId).child(userId).child("Last_Message").setValue(message);
+        FirebaseDatabase.getInstance().getReference().child("Messages").child(ownerId).child(userId).child("Time").setValue(ServerValue.TIMESTAMP);
+        FirebaseDatabase.getInstance().getReference().child("Messages").child(userId).child(ownerId).child("Time").setValue(ServerValue.TIMESTAMP);
+
+
         FirebaseDatabase.getInstance().getReference().child("Messages").child(ownerId).child(userId).child("1").setValue(userName);
         FirebaseDatabase.getInstance().getReference().child("Messages").child(userId).child(ownerId).child("1").setValue(ownerUserName);
 
@@ -237,13 +243,15 @@ public class Conversation extends Fragment {
                 if (dataSnapshot.exists()) {
 
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        if (!snapshot.getKey().equals("1")) {
+                        if (!snapshot.getKey().equals("1")&&!snapshot.getKey().equals("Last_Message")&&!snapshot.getKey().equals("Time")) {
                             Chat chat = snapshot.getValue(Chat.class);
                             chatList.add(chat);
-                            messageAdapter = new MessageAdapter(context, chatList);
+                            messageAdapter = new MessageAdapter(context, chatList );
                             recyclerView.setAdapter(messageAdapter);
+
                         }
                     }
+
                 }
             }
 

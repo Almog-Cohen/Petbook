@@ -29,8 +29,11 @@ import com.google.firebase.iid.InstanceIdResult;
 import com.thegalos.petbook.Notifications.Token;
 import com.thegalos.petbook.R;
 import com.thegalos.petbook.adapters.UserAdapter;
+import com.thegalos.petbook.objects.User;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class Chats extends Fragment {
@@ -40,8 +43,13 @@ public class Chats extends Fragment {
     Context context;
     private List<String> usersList;
     private List<String> userNamesList;
+    private List <Long> userTimeList;
+    private List <String> lastMessage;
     private String userId;
-    String userIdChat;
+
+    private List<User> userList;
+
+
     String userNameChat;
     SharedPreferences sp;
 
@@ -63,6 +71,11 @@ public class Chats extends Fragment {
         sp = PreferenceManager.getDefaultSharedPreferences(context);
 
         usersRecyclerView = view.findViewById(R.id.rvChats);
+
+        userList = new ArrayList<>();
+
+        lastMessage = new ArrayList<>();
+        userTimeList = new ArrayList<>();
         usersList = new ArrayList<>();
         userNamesList = new ArrayList<>();
         usersRecyclerView.setHasFixedSize(true);
@@ -80,51 +93,82 @@ public class Chats extends Fragment {
         usersChatRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                usersList.clear();
-                userNamesList.clear();
+
 
                 if (dataSnapshot.exists()) {
 
+                    usersList.clear();
+                    userNamesList.clear();
+                    userTimeList.clear();
+                    userList.clear();
+                    lastMessage.clear();
+
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
-                        if (!snapshot.getKey().equals("1"))
+                        if (!snapshot.getKey().equals("1") && !snapshot.equals("Last_Message"))
                             usersList.add(snapshot.getKey());
+//                            userObject.setId(snapshot.getKey());
+//                        Log.d("BAGA", "onDataChange: " + userList);
+
 
                         if (snapshot.child("1").getKey().equals("1"))
                             userNamesList.add(snapshot.child("1").getValue(String.class));
+//                            userObject.setUserName(snapshot.child("1").getValue(String.class));
 
 
-                        if (userNamesList != null)
-                            userAdapter = new UserAdapter(context, userNamesList);
-                            userAdapter.setListener(new UserAdapter.MyUserListener() {
-                                @Override
-                                public void onUserClicked(int position, View view) {
+                        if (snapshot.child("Last_Message").getKey().equals("Last_Message"))
+                            lastMessage.add(snapshot.child("Last_Message").getValue(String.class));
 
-                                    String userId = usersList.get(position);
-                                    sp.edit().putString("ownerId", userId).apply();
-                                    FragmentTransaction ft = getParentFragmentManager().beginTransaction();
-                                    ft.replace(R.id.flFragment, new Conversation(), "Conversation").addToBackStack("Conversation").commit();
-
-                                }
-                            });
-
-                        usersRecyclerView.setAdapter(userAdapter);
-
-                        //TODO add username as child below userid.
-//                           userNameChat. = snapshot.getValue(Chat.class);
-//                        Chat chat = snapshot.getValue(Chat.class);
+                        if (snapshot.child("Time").getKey().equals("Time"))
+                            userTimeList.add(snapshot.child("Time").getValue(Long.class));
+////                            userObject.setTime(snapshot.child("Time").getValue(Long.class));
 //
-//                        if (chat.getSender().equals(userId)) {
-//                            usersList.add(chat.getReceiver());
-//                            Log.d("SHAG", "onDataChange:sssss " + chat.getSender() +chat.getReceiver());
-//                        }
-//                        if (chat.getReceiver().equals(userId)) {
-//                            usersList.add(chat.getSender());
-//                            Log.d("SHAG", "onDataChange:sssss " + chat.getReceiver());
-//                        }
-
 
                     }
+
+                    for (int i = 0 ; i < userNamesList.size() ; i++){
+
+                        User user1 = new User();
+                        user1.setTime(userTimeList.get(i));
+                        user1.setUserName(userNamesList.get(i));
+                        user1.setId(usersList.get(i));
+                        user1.setLastMessage(lastMessage.get(i));
+                        userList.add(user1);
+                    }
+
+                    Collections.sort(userList, new Comparator<Object>() {
+                        @Override
+                        public int compare(Object o1, Object o2) {
+                            User u1,u2;
+                            u1 = (User)o1;
+                            u2 = (User)o2;
+                            int x = u1.getTime().compareTo(u2.getTime());
+                            return x;
+                            //return o1.getTime().compareTo(o2.getTime());
+                        }
+                    });
+
+                    Collections.reverse(userList);
+
+                    if (userList != null)
+                        userAdapter = new UserAdapter(context, userList );
+                    userAdapter.setListener(new UserAdapter.MyUserListener() {
+                        @Override
+                        public void onUserClicked(int position, View view) {
+
+                            String userId = userList.get(position).getId();
+//                                    Log.d("BAGA", "onUserClicked: " + userList.get(position).getId());
+//                                    String userId = usersList.get(position);
+                            sp.edit().putString("ownerId", userId).apply();
+                            FragmentTransaction ft = getParentFragmentManager().beginTransaction();
+                            ft.replace(R.id.flFragment, new Conversation(), "Conversation").addToBackStack("Conversation").commit();
+                        }
+                    });
+
+                    usersRecyclerView.setAdapter(userAdapter);
+
+
+
 
 
                 }
@@ -134,6 +178,10 @@ public class Chats extends Fragment {
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
+
+
+
+
         });
 
         FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener((Activity) context, new OnSuccessListener<InstanceIdResult>() {

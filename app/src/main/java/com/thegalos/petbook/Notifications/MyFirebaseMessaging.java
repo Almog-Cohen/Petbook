@@ -20,13 +20,17 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.thegalos.petbook.MainActivity;
 import com.thegalos.petbook.fragments.Conversation;
 
 public class MyFirebaseMessaging extends FirebaseMessagingService {
 
+    boolean passToFragment = true;
+
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
+
 
         String sented = remoteMessage.getData().get("sented");
 
@@ -54,8 +58,10 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         RemoteMessage.Notification notification = remoteMessage.getNotification();
         int j = Integer.parseInt(user.replaceAll("[\\D]",""));
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
-        Intent intent = new Intent(this, Conversation.class);
+        Intent intent = new Intent(this, MainActivity.class);
         Bundle bundle = new Bundle();
+        intent.putExtra("msg_notif",passToFragment);
+
 //        bundle.putString("userid",user);
         sp.edit().putString("ownerId", user).apply();
         Log.d("TAGI", "sendNotification: "+ user);
@@ -102,9 +108,9 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         RemoteMessage.Notification notification = remoteMessage.getNotification();
         int j = Integer.parseInt(user.replaceAll("[\\D]",""));
         ////////////////////////////////////////////////////////////////////////////////////////////////////////
-        Intent intent = new Intent(this, Conversation.class);
-        Bundle bundle = new Bundle();
-//        bundle.putString("userid",user);
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("msg_notif",passToFragment);
+
         sp.edit().putString("ownerId", user).apply();
         Log.d("TAGI", "sendNotification: "+ user);
 //        intent.putExtras(bundle);

@@ -1,6 +1,7 @@
 package com.thegalos.petbook.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,10 +28,12 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     private Context context;
     private List<Chat> chatList;
 
+
     public MessageAdapter(Context context, List<Chat> chatList) {
 
         this.chatList = chatList;
         this.context = context;
+
     }
 
     @NonNull
@@ -50,7 +53,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
         Chat chat = chatList.get(position);
-        holder.showMessage.setText(chat.getMessage());
+        holder.showMessageTv.setText(chat.getMessage());
+
 
         //TODO If defult use this if not use glide
         /*holder.profileImage.setImageResource(R.mipmap.ic_launcher);*/
@@ -77,13 +81,15 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
     public class ViewHolder extends RecyclerView.ViewHolder{
 
-        public TextView showMessage;
+        public TextView showMessageTv;
         public ImageView profileImage;
+
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            showMessage = itemView.findViewById(R.id.tvChatMessage);
+            showMessageTv = itemView.findViewById(R.id.tvChatMessage);
+
         }
 
     }

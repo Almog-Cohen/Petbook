@@ -1,5 +1,6 @@
 package com.thegalos.petbook;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -12,6 +13,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.thegalos.petbook.fragments.Chats;
+import com.thegalos.petbook.fragments.Conversation;
 import com.thegalos.petbook.fragments.MainFeed;
 import com.thegalos.petbook.fragments.Profile;
 import com.thegalos.petbook.fragments.Splash;
@@ -29,6 +31,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         final SmoothBottomBar smoothBottomBar = findViewById(R.id.bottomBar);
         smoothBottomBar.setVisibility(View.INVISIBLE);
+        //When clicking on chat notification moving to conversation fragment
+        boolean msgFragment = getIntent().getBooleanExtra("msg_notif",false);
+        if (msgFragment) {
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.flFragment, new Chats(), "Chats").addToBackStack("Chats").commit();
+        }else
         getSupportFragmentManager().beginTransaction().add(R.id.mainLayout, new Splash(),"splash").commit();
         smoothBottomBar.setOnItemSelectedListener(new OnItemSelectedListener() {
             @Override
@@ -57,6 +65,8 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+
     }
 
     void handleFragment(Fragment fragment, String mainFeed) {

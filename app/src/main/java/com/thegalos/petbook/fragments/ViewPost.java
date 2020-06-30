@@ -15,6 +15,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.thegalos.petbook.R;
@@ -27,6 +29,8 @@ public class ViewPost extends Fragment {
 
     Context context;
     SharedPreferences sp;
+    String userId;
+    FirebaseUser user ;
 
     public ViewPost() {
     }
@@ -42,11 +46,15 @@ public class ViewPost extends Fragment {
         sp = PreferenceManager.getDefaultSharedPreferences(getContext());
 //        user = FirebaseAuth.getInstance().getCurrentUser();
 
+        user = FirebaseAuth.getInstance().getCurrentUser();
         context = getContext();
         Gson gson = new Gson();
         String json = sp.getString("PetSelected", "");
         Type type = new TypeToken<Feed>() {
         }.getType();
+
+        if (user!=null)
+        userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
 
 //  Feed //////////////////////////
@@ -114,12 +122,17 @@ public class ViewPost extends Fragment {
                 Glide.with(context).load(R.drawable.missing).into(animalType);
                 break;
         }
+        final String ownerId = feed.getOwnerUID();
+
+        if (ownerId.equals(userId))
+            tvChatWith.setVisibility(View.INVISIBLE);
+
 
         tvChatWith.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //TODO Check If Chat with user Is already created, if not CREATE, change fragment,  maybe? mark as contacted
-                String ownerId = feed.getOwnerUID();
+
                 /*FirebaseDatabase.getInstance().getReference("Messages").child(ownerId).child(userId).setValue("null");*/
 
                 sp.edit().putString("ownerId", ownerId).apply();
