@@ -1,8 +1,10 @@
 package com.thegalos.petbook;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Toast;
 
@@ -44,22 +46,23 @@ public class MainActivity extends AppCompatActivity {
                 switch (position) {
                     case 0:
                         handleFragment(new MainFeed(),"MainFeed");
-                        getSupportFragmentManager().popBackStack();
+//                        getSupportFragmentManager().popBackStack();
                         break;
                     case 1:
                         if (FirebaseAuth.getInstance().getCurrentUser() != null)
                             handleFragment(new Chats(), "Chats");
                         else {
+                            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
                             Snackbar snackbar = Snackbar.make(smoothBottomBar, R.string.sign_in_first, Snackbar.LENGTH_SHORT);
                             snackbar.setAnchorView(R.id.bottomBar);
                             snackbar.show();
-                            smoothBottomBar.setItemActiveIndex(0);
+                            smoothBottomBar.setItemActiveIndex(sp.getInt("CurrentTab",0));
                         }
-                        getSupportFragmentManager().popBackStack();
+//                        getSupportFragmentManager().popBackStack();
                         break;
                     case 2:
                         handleFragment(new Profile(), "Profile");
-                        getSupportFragmentManager().popBackStack();
+//                        getSupportFragmentManager().popBackStack();
                         break;
                 }
                 return false;

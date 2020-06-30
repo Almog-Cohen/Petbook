@@ -26,6 +26,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -80,6 +81,7 @@ public class MainFeed extends Fragment {
         sp = PreferenceManager.getDefaultSharedPreferences(context);
         progressBar.bringToFront();
         editor = sp.edit();
+        editor.putInt("CurrentTab",0).apply();
         refreshLayout = view.findViewById(R.id.mainLayout);
 
         if (user == null) {
@@ -185,7 +187,7 @@ public class MainFeed extends Fragment {
 
                 maxProgress = height - 1200;
                 progressBar.setMax(maxProgress);
-                Log.d("progress_galos", "maxProgress claculated: " + maxProgress);
+//                Log.d("progress_galos", "maxProgress claculated: " + maxProgress);
             }
 
             @Override
@@ -240,8 +242,6 @@ public class MainFeed extends Fragment {
                     progressBar.setProgress(scrollY, true);
                 else
                     progressBar.setProgress(scrollY);
-                Log.d("progress_galos", "v.getMeasuredHeight() " + v.getMeasuredHeight() + " scrollY " + scrollY + " maxProgress: " + maxProgress);
-
             }
         });
 
@@ -257,12 +257,11 @@ public class MainFeed extends Fragment {
                     FragmentTransaction ft = getParentFragmentManager().beginTransaction();
                     ft.replace(R.id.flFragment, new ViewPost(), "ViewPost").addToBackStack("ViewPost").commit();
                 } else {
-                    Toast.makeText(context, R.string.log_in_to_view_full_post, Toast.LENGTH_SHORT).show();
+                    Snackbar snack = Snackbar.make(collapsingToolbarLayout, R.string.log_in_to_view_full_post, Snackbar.LENGTH_SHORT);
+                    snack.show();
                 }
             }
         });
-
-
     }
 
     public static int dpToPx(int dp) {

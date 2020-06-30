@@ -63,6 +63,7 @@
             android:background="@drawable/button_shape_selector"
             android:text="@string/logout"
             android:textAllCaps="false"
+            android:textColor="@android:color/white"
             android:visibility="visible" />
 
     </RelativeLayout>

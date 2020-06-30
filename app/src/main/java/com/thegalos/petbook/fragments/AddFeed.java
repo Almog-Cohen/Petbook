@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -101,6 +102,7 @@ public class AddFeed extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull final View view,  Bundle savedInstanceState) {
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
         context = getContext();
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
         user = FirebaseAuth.getInstance().getCurrentUser();
@@ -313,7 +315,7 @@ public class AddFeed extends Fragment {
 //                uri = CropImage.getPickImageResultUri(context, data);
                 uri = result.getUri();
                 Glide.with(this).load(uri).into(ivPhoto);
-                Log.d("URI_Galos", "uri is: " + uri + " imageUri is: " + imageUri + " resultUri is: "/* + resultUri*/);
+//                Log.d("URI_Galos", "uri is: " + uri + " imageUri is: " + imageUri + " resultUri is: "/* + resultUri*/);
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
             }
@@ -323,7 +325,7 @@ public class AddFeed extends Fragment {
         if (requestCode == CAMERA_REQUEST) {
             if (resultCode == RESULT_OK) {
                 PhotoSelected = true;
-                Log.d("URI_Galos", "uri is: " + uri + " imageUri is: " + imageUri);
+//                Log.d("URI_Galos", "uri is: " + uri + " imageUri is: " + imageUri);
                 uri = imageUri;
                 UCrop.of(imageUri, uri)
                         .withAspectRatio(16, 10)

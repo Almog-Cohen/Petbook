@@ -67,6 +67,8 @@ public class Profile extends Fragment {
     @Override
     public void onViewCreated(@NonNull final View view,  Bundle savedInstanceState) {
         sp = PreferenceManager.getDefaultSharedPreferences(getContext());
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putInt("CurrentTab",2).apply();
         downloadedPets = sp.getBoolean("downloadedPets" , false);
         user = FirebaseAuth.getInstance().getCurrentUser();
         tvUserName = view.findViewById(R.id.tvUserName);

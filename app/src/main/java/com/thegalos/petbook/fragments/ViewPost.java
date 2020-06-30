@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,6 +26,8 @@ import com.thegalos.petbook.objects.Pet;
 
 import java.lang.reflect.Type;
 
+import me.ibrahimsn.lib.SmoothBottomBar;
+
 public class ViewPost extends Fragment {
 
     Context context;
@@ -32,9 +35,7 @@ public class ViewPost extends Fragment {
     String userId;
     FirebaseUser user ;
 
-    public ViewPost() {
-    }
-
+    public ViewPost() { }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -43,28 +44,27 @@ public class ViewPost extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull final View view, Bundle savedInstanceState) {
+        SmoothBottomBar smoothBottomBar = getActivity().findViewById(R.id.bottomBar);
+        smoothBottomBar.setItemActiveIndex(0);
         sp = PreferenceManager.getDefaultSharedPreferences(getContext());
-//        user = FirebaseAuth.getInstance().getCurrentUser();
-
         user = FirebaseAuth.getInstance().getCurrentUser();
         context = getContext();
         Gson gson = new Gson();
         String json = sp.getString("PetSelected", "");
         Type type = new TypeToken<Feed>() {
         }.getType();
-
         if (user!=null)
         userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
 
-//  Feed //////////////////////////
+    //  Feed //////////////////////////
         TextView amount = view.findViewById(R.id.amount);
         ImageView imageURL = view.findViewById(R.id.imageURL);
         TextView tvChatWith = view.findViewById(R.id.tvChatWith);
         TextView postText = view.findViewById(R.id.postText);
         TextView time = view.findViewById(R.id.time);
 
-//  Pet //////////////////////////
+    //  Pet //////////////////////////
         TextView age = view.findViewById(R.id.age);
         ImageView animalType = view.findViewById(R.id.animalType);
         TextView breed = view.findViewById(R.id.breed);
@@ -85,16 +85,10 @@ public class ViewPost extends Fragment {
                 str = getString(R.string.earn_space) + feed.getAmount();
         }
         amount.setText(str);
-
         if (!feed.getImageURL().equals("null"))
             Glide.with(context).load(feed.getImageURL()).into(imageURL);
         postText.setText(feed.getPostText());
         time.setText(feed.getTime());
-//        str = getString(R.string.owned_by_space) + feed.getPostOwner();
-//        tvChatWith.setText(str);
-
-
-
         petName.setText(pet.getName());
         gender.setText(pet.getGender());
         if (pet.getVaccine()) {
@@ -132,12 +126,12 @@ public class ViewPost extends Fragment {
             @Override
             public void onClick(View v) {
                 //TODO Check If Chat with user Is already created, if not CREATE, change fragment,  maybe? mark as contacted
-
-                /*FirebaseDatabase.getInstance().getReference("Messages").child(ownerId).child(userId).setValue("null");*/
-
                 sp.edit().putString("ownerId", ownerId).apply();
                 FragmentTransaction ft = getParentFragmentManager().beginTransaction();
+                SmoothBottomBar smoothBottomBar = getActivity().findViewById(R.id.bottomBar);
+                smoothBottomBar.setItemActiveIndex(1);
                 ft.replace(R.id.flFragment, new Conversation(), "Conversation").addToBackStack("Conversation").commit();
+
             }
         });
 
