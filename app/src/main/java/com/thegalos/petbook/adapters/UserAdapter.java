@@ -1,6 +1,7 @@
 package com.thegalos.petbook.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,15 +45,19 @@ public class UserAdapter  extends RecyclerView.Adapter<UserAdapter.ViewHolder>  
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-//        User user = userList.get(position);
-        holder.userNameTv.setText(userList.get(position).getUserName());
-        holder.lastMassageTv.setText(userList.get(position).getLastMessage());
-//        if (userList.get(position).getIsMessageSeen().equals("true")) {
-//            holder.isReadTv.setVisibility(View.INVISIBLE);
-//        }else {
-//            holder.isReadTv.setVisibility(View.VISIBLE);
-//        }
-    }
+        User user = userList.get(position);
+        holder.userNameTv.setText(user.getUserName());
+        holder.lastMassageTv.setText(user.getLastMessage());
+        Log.d("TTAG", "onBindViewHolder: " + user.getIsMessageSeen());
+        if (user.getIsMessageSeen() != null && !user.getIsMessageSeen().isEmpty()){
+            Log.d("TAG", "onBindViewHolder: " );
+            if (user.getIsMessageSeen().equals("true")) {
+                holder.isReadTv.setVisibility(View.INVISIBLE);
+            } else {
+                holder.isReadTv.setVisibility(View.VISIBLE);
+            }
+        }
+   }
 
     @Override
     public int getItemCount() {

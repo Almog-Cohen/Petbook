@@ -155,13 +155,15 @@ public class Conversation extends Fragment {
         FirebaseDatabase.getInstance().getReference().child("Messages").child(ownerId).child(userId).push().setValue(hashMap);
         FirebaseDatabase.getInstance().getReference().child("Messages").child(userId).child(ownerId).push().setValue(hashMap);
 
+        HashMap<String,Object> hashMapMessage = new HashMap<>();
+//        hashMapMessage.put("id",)
 
         FirebaseDatabase.getInstance().getReference().child("Messages").child(userId).child(ownerId).child("Last_Message").setValue(message);
         FirebaseDatabase.getInstance().getReference().child("Messages").child(ownerId).child(userId).child("Last_Message").setValue(message);
         FirebaseDatabase.getInstance().getReference().child("Messages").child(ownerId).child(userId).child("Time").setValue(ServerValue.TIMESTAMP);
         FirebaseDatabase.getInstance().getReference().child("Messages").child(userId).child(ownerId).child("Time").setValue(ServerValue.TIMESTAMP);
 
-        FirebaseDatabase.getInstance().getReference().child("Messages").child(userId).child(ownerId).child("Is_seen").setValue("false");
+        FirebaseDatabase.getInstance().getReference().child("Messages").child(userId).child(ownerId).child("Is_seen").setValue("true");
         FirebaseDatabase.getInstance().getReference().child("Messages").child(ownerId).child(userId).child("Is_seen").setValue("false");
 
 

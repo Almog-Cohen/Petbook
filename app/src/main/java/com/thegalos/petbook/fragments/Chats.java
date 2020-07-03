@@ -100,11 +100,11 @@ public class Chats extends Fragment {
 
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
+                        // id
                         if (!snapshot.getKey().equals("1") && !snapshot.equals("Last_Message"))
                             usersList.add(snapshot.getKey());
 //                            userObject.setId(snapshot.getKey());
-
-
+                        // names
                         if (snapshot.child("1").getKey().equals("1"))
                             userNamesList.add(snapshot.child("1").getValue(String.class));
 //                            userObject.setUserName(snapshot.child("1").getValue(String.class));
@@ -117,8 +117,8 @@ public class Chats extends Fragment {
                             userTimeList.add(snapshot.child("Time").getValue(Long.class));
 ////                            userObject.setTime(snapshot.child("Time").getValue(Long.class));
 //                        if (snapshot.hasChild("Is_seen"))
-////                            if (snapshot.child("Is_seen").getKey().equals("Is_seen"))
-//                                isMessageSeenList.add(snapshot.child("Is_seen").getValue(String.class));
+                            if (snapshot.child("Is_seen").getKey().equals("Is_seen"))
+                                isMessageSeenList.add(snapshot.child("Is_seen").getValue(String.class));
 //
 
                     }
@@ -130,22 +130,23 @@ public class Chats extends Fragment {
                         user1.setUserName(userNamesList.get(i));
                         user1.setId(usersList.get(i));
                         user1.setLastMessage(lastMessageList.get(i));
-//                        user1.setMessageSeen(isMessageSeenList.get(i));
+                        user1.setMessageSeen(isMessageSeenList.get(i));
                         userList.add(user1);
 
 
                     }
 
-                    Collections.sort(userList, new Comparator<Object>() {
-                        @Override
-                        public int compare(Object o1, Object o2) {
-                            User u1,u2;
-                            u1 = (User)o1;
-                            u2 = (User)o2;
-                            return u1.getTime().compareTo(u2.getTime());
-                        }
-                    });
-
+                    if (userList.get(0).getTime() != null ) {
+                        Collections.sort(userList, new Comparator<Object>() {
+                            @Override
+                            public int compare(Object o1, Object o2) {
+                                User u1, u2;
+                                u1 = (User) o1;
+                                u2 = (User) o2;
+                                return u1.getTime().compareTo(u2.getTime());
+                            }
+                        });
+                    }
                     Collections.reverse(userList);
 
                     if (userList != null)
@@ -154,10 +155,11 @@ public class Chats extends Fragment {
                         @Override
                         public void onUserClicked(int position, View view) {
 
-                            String userId = userList.get(position).getId();
-                            sp.edit().putString("ownerId", userId).apply();
+                            String reciver = userList.get(position).getId();
+                            sp.edit().putString("ownerId", reciver).apply();
                             FragmentTransaction ft = getParentFragmentManager().beginTransaction();
                             ft.replace(R.id.flFragment, new Conversation(), "Conversation").addToBackStack("Conversation").commit();
+                            FirebaseDatabase.getInstance().getReference().child("Messages").child(userId).child(reciver).child("Is_seen").setValue("true");
                         }
                     });
 
